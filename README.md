@@ -1,7 +1,7 @@
 # tonejs-json-sequencer
 
-## About Automatic Translation
+[Japanese README](README.ja.md) / [English README](README.md)
 
-This project uses a system that automatically translates `README.md` into English whenever `README.ja.md` is updated.
+[Demo](https://cat2151.github.io/tonejs-json-sequencer/index.html)
 
-For detailed setup instructions, please refer to [.github/docs/TRANSLATION_SETUP.md](.github/docs/TRANSLATION_SETUP.md).
+※This README.md is automatically generated from README.ja.md using Gemini translation via GitHub Actions.
