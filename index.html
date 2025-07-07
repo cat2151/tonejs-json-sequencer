@@ -1,110 +1,11 @@
 <!DOCTYPE html>
+<!-- Local Live Server用 -->
 <html>
-<head></head>
+<head>
+    <meta http-equiv="refresh" content="0; url=./src/index.html">
+    <link rel="stylesheet" href="./src/redirect.css">
+</head>
 <body>
-  <button>play</button>
-  <div id="output"></div>
-  <textarea id="textarea3" rows="45" cols="70">
-[ {"eventType": "createNode",
-    "nodeId": 0,
-    "nodeType": "FMSynth",
-    "args": {
-      "harmonicity":7,
-      "modulationIndex":20,
-      "modulationEnvelope":
-        {"attack":0.001,"decay":0.5,"sustain":0.3,"release":0.3},
-      "envelope":
-        {"attack":0.001,"decay":0.2,"sustain":0.3,"release":0.5},
-      "portamento":0
-    }
-  },
-  {"eventType": "createNode",
-    "nodeId": 1,
-    "nodeType": "Vibrato",
-    "args": [7, 0]
-  },
-  {"eventType": "connect",
-    "nodeId": 0,
-    "connectTo": 1
-  },
-  {"eventType": "connect",
-    "nodeId": 1,
-    "connectTo": "toDestination"
-  },
-  {"eventType": "triggerAttackRelease",
-   "nodeId": 0,
-   "args": ["C4", "758i", "+0i"]},
-  {"eventType": "depth.rampTo",
-   "nodeId": 1,
-   "args": ["0.2", "192i", "+192i"]},
-  {"eventType": "depth.rampTo",
-   "nodeId": 1,
-   "args": ["0", "10i", "+758i"]},
-  {"eventType": "triggerAttackRelease",
-   "nodeId": 0,
-   "args": ["G4", "758i", "+768i"]},
-  {"eventType": "depth.rampTo",
-   "nodeId": 1,
-   "args": ["0.2", "192i", "+960i"]}
-]
-  </textarea><br>
-  <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
-  <script>
-    var outputArea, textarea1, nodes = [];
-    window.addEventListener("load", ()=>{
-      outputArea = document.getElementById('output');
-      const button = document.querySelector('button');
-      textarea1 = document.querySelector('textarea');
-      textarea1.addEventListener('input', play);
-
-      button.onclick = async ()=>{
-        await Tone.start();
-        play();
-      };
-    });
-    function play() {
-      try {
-        const json = textarea1.value;
-        const j = JSON.parse(json);
-        // dispose
-        nodes.forEach (element => element.dispose());
-        // play
-        j.forEach (element => sub(element));
-      } catch (error) {
-        console.log("error : [" + error + "]");
-      }
-    }
-    function sub(element) {
-      console.log(element);
-      switch (element.eventType) {
-      case "createNode":
-        switch (element.nodeType) {
-        case "Synth":
-          nodes[element.nodeId] = new Tone.Synth();
-          break;
-        case "FMSynth":
-          nodes[element.nodeId] = new Tone.FMSynth(element.args);
-          break;
-        case "Vibrato":
-          nodes[element.nodeId] = new Tone.Vibrato(...element.args);
-          break;
-        }
-        break;
-      case "connect":
-        if (element.connectTo == "toDestination") {
-          nodes[element.nodeId].toDestination();
-        } else {
-          nodes[element.nodeId].connect(nodes[element.connectTo]);
-        }
-        break;
-      case "triggerAttackRelease":
-        nodes[element.nodeId].triggerAttackRelease(...element.args);
-        break;
-      case "depth.rampTo":
-        nodes[element.nodeId].depth.rampTo(...element.args);
-        break;
-      }
-    }
-  </script>
+    <script>location.href = './src/index.html';</script>
 </body>
 </html>

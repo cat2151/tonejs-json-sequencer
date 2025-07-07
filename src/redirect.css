@@ -1,0 +1,69 @@
+/* リダイレクトページ用のスタイル */
+
+/* デフォルト（ライトモード）のスタイル */
+:root {
+    --bg-color: #f5f5f5;
+    --text-color: #333333;
+    --container-bg: #ffffff;
+    --link-color: #3498db;
+    --shadow-color: rgba(0,0,0,0.1);
+    --loading-bg: #f3f3f3;
+    --loading-accent: #3498db;
+}
+
+/* ダークモードのスタイル */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1e1e1e;
+        --text-color: #ffffff;
+        --container-bg: #252526;
+        --link-color: #5dade2;
+        --shadow-color: rgba(0,0,0,0.3);
+        --loading-bg: #3e3e42;
+        --loading-accent: #5dade2;
+    }
+}
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 50px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--container-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--loading-bg);
+    border-top: 3px solid var(--loading-accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+a {
+    color: var(--link-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    text-decoration: underline;
+}
