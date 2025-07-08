@@ -9,6 +9,10 @@
   --textarea-border: #cccccc;
   --output-bg: #f8f9fa;
   --output-border: #e9ecef;
+  --select-bg: #ffffff;
+  --select-border: #cccccc;
+  --select-hover: #f5f5f5;
+  --select-focus: #007acc;
 }
 
 /* ダークモードのスタイル */
@@ -23,6 +27,10 @@
     --textarea-border: #3e3e42;
     --output-bg: #252526;
     --output-border: #3e3e42;
+    --select-bg: #2d2d30;
+    --select-border: #3e3e42;
+    --select-hover: #3e3e42;
+    --select-focus: #0078d4;
   }
 }
 
@@ -53,6 +61,55 @@ button:hover {
 button:focus {
   outline: 2px solid var(--button-bg);
   outline-offset: 2px;
+}
+
+/* ドロップダウンメニューのスタイル */
+#sequenceSelector {
+  background-color: var(--select-bg);
+  color: var(--text-color);
+  border: 1px solid var(--select-border);
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  margin-left: 10px;
+  margin-bottom: 20px;
+  min-width: 180px;
+}
+
+#sequenceSelector:hover {
+  background-color: var(--select-hover);
+  border-color: var(--select-focus);
+}
+
+#sequenceSelector:focus {
+  outline: 2px solid var(--select-focus);
+  outline-offset: 2px;
+  border-color: var(--select-focus);
+}
+
+/* ドロップダウンのオプション */
+#sequenceSelector option {
+  background-color: var(--select-bg);
+  color: var(--text-color);
+  padding: 8px 16px;
+}
+
+/* コントロール部分のレイアウト */
+.controls {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.controls label {
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--text-color);
+  margin-right: 5px;
 }
 
 #output {
@@ -93,6 +150,22 @@ button:focus {
 @media (max-width: 768px) {
   body {
     margin: 10px;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .controls label {
+    margin-bottom: 5px;
+    align-self: flex-start;
+  }
+
+  #sequenceSelector {
+    margin-left: 0;
+    margin-top: 0;
+    min-width: unset;
   }
 
   #textarea3 {
