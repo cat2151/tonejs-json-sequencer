@@ -43,16 +43,61 @@ tonejs-json-sequencer では、Tone.js の構成要素（シンセ、エフェ�
 
 これにより、Tone.jsとつながる低レイヤーと、シーケンスやストリーミングなどの高レイヤーを、切り分けて柔軟に開発できます。
 
+# ロードマップ
+- ※順不同
+- ※のち2種類に切り分けて、利用しやすさ優先で1つのtopicに絞ったシンプルなサンプルと、強みがわかりやすいよう複数topicを実用的にまとめたサンプル、がよさげ
+- プログラム
+  - NDJSON streaming、内容は後述
+- 構造
+  - ■next■マルチティンバー、ギラギラしたbassと、柔らかいpad
+- 奏法
+  - 済 : ディレイビブラート
+  - ピッチエンベロープで、attack時が-200cent、のち0centまで変化 ※attack連動ではなく、ディレイビブラートのように独立しているもの
+  - Panpotをその場でLR変更するsequenceフレーズ
+  - Expressionをその場で増減するフレーズ
+  - LPFをその場で増減するフレーズ
+- Effect
+  - リバーブ
+  - コーラス
+  - ディレイ
+  - フェイザー、シンセパッドに長いsweepをかける、無理なら無理な旨をtitle等に可視化する
+  - EQ
+  - コンプレッサー
+- Lead
+  - SuperSaw音色（FatOscillator）
+  - Distortion、できればPluckでギター
+  - Overdrive風のWaveShaper設定、できればPluckでギター
+  - Chebyshevを使った過激なシンセリード
+  - long decayで倍音変化のあるFMリード、ギラギラした典型的なFMリード、modulatorにpulse、carrierにもpulseを試す、無理なら無理な旨をtitle等に可視化する
+  - アンビエント用lead、pulse音色、ランダムにかすかに揺らぐピッチ変化
+  - クセのあるlead、attack連動ピッチエンベロープで、attack時が-200cent、のち0centまで変化
+  - ポルタメントを常時かけたlead
+- シーケンス音色
+  - PulseOscillator音色で、12.5% pulse
+  - PluckSynth音色で、アコースティックギターやharp
+  - NoiseSynthにフィルターをかけて音程感のあるフレーズを鳴らす
+- Drum
+  - Tone.js内蔵のKick, Snare, Tom, Hi-Hat、909Kickが無理ならその旨title等に可視化する
+- Pad
+  - FatOscillatorで分厚いシンセパッド
+  - FMエレピ
+- Bass
+  - 硬いFMベース
+  - attack連動フィルタエンベロープを常時かけたシンセベース
+  - Overdrive風のSawシンセベース、フィルタエンベロープつき、さらにフィルタがlong sweepで変化
+- ほかTone.jsで音がわかりやすいサンプルでめぼしいのが見つかり次第追記する。現在みた限りでは上記で一段落。
+
 # 開発メモ、随時更新
-- TDDの観点からブレインストーミング
-  - test data jsonの配列を複数用意していく
-  - それぞれが想定どおりに鳴るかを耳でtestする
-    - 例、ディレイビブラート、フィルタ開閉、フィルタエンベロープ、ピッチエンベロープ、ポルタメント、superSaw音色、ポリフォニック、マルチティンバー、内蔵drum、リバーブ、コーラス、ディレイ、EQ、Overdrive、Distortion、ほかTone.jsで音がわかりやすいサンプルを一通り
-    - ひとまずドロップダウンメニューを想定、textareaがドロップダウンメニューの内容でupdateされる
-    - test data jsonはjsで別srcに切り出す、別projectのeasychord2mmlを参照
-    - test data jsonはそのままdemoにもなる
-  - しばらく試し、効率化用のデータをドッグフーディングでgetし、そのデータをもとにtest効率化していく
-    - 例えばtonejs-mml-to-jsonとの連携は、ドッグフーディング後に検討する想定
+- tonejs-mml-to-jsonとの連携
+  - 後回し。tonejs-json-sequencerの検証dataを整理してから、検討する
+- NDJSON streaming
+  - 実現したいこと
+    - ライブ編集、textareaを編集したときは、再演奏ではなく、演奏を継続したまま、編集内容が反映される
+    - ループ演奏、末尾までいったら先頭から演奏
+  - 方法
+    - 今から50msec後までに演奏されるもの、をNDJSON streaming
+    - playボタンを開始した時刻の50msec後を0tick とし、以降、sequencer部でevent発生時刻を+50msecする加工を行う。ループ時はさらに加算
+    - 別htmlの別srcに切り分ける想定
 
 # 検討中の課題
 - 課題、手でswitch caseを書いていくのが手間
