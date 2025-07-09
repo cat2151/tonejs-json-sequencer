@@ -3,6 +3,26 @@
 // シーケンスの定義
 const sequenceDefinitions = [
   {
+    name: "最小構成",
+    data: [
+      {
+        "eventType": "createNode",
+        "nodeId": 0,
+        "nodeType": "Synth",
+      },
+      {
+        "eventType": "connect",
+        "nodeId": 0,
+        "connectTo": "toDestination"
+      },
+      {
+        "eventType": "triggerAttackRelease",
+        "nodeId": 0,
+        "args": ["C5", "48i", "+0i"]
+      }
+    ]
+  },
+  {
     name: "ディレイビブラート",
     data: [
       {
@@ -71,21 +91,32 @@ const sequenceDefinitions = [
     ]
   },
   {
-    name: "test",
+    name: "マルチティンバー",
     data: [
-      {
+      { // Bass
         "eventType": "createNode",
         "nodeId": 0,
-        "nodeType": "Synth",
+        "nodeType": "FMSynth",
         "args": {
-          "oscillator": {
-            "type": "sine"
+          "harmonicity": 1,
+          "modulationIndex": 40,
+          "modulationEnvelope": {
+            "attack": 0.001,
+            "decay": 3,
+            "sustain": 0,
+            "release": 10
           },
-          "envelope": {
-            "attack": 0.1,
-            "decay": 0.2,
-            "sustain": 0.5,
-            "release": 0.8
+        }
+      },
+      { // Lead or Chord
+        "eventType": "createNode",
+        "nodeId": 1,
+        "nodeType": "PolySynth",
+        "args": {
+          options: {
+            "oscillator": {
+              "type": "sawtooth"
+            },
           }
         }
       },
@@ -95,29 +126,25 @@ const sequenceDefinitions = [
         "connectTo": "toDestination"
       },
       {
-        "eventType": "triggerAttackRelease",
-        "nodeId": 0,
-        "args": ["A4", "500i", "+0i"]
+        "eventType": "connect",
+        "nodeId": 1,
+        "connectTo": "toDestination"
       },
       {
         "eventType": "triggerAttackRelease",
         "nodeId": 0,
-        "args": ["F4", "500i", "+500i"]
+        "args": ["C2", "4n", "+0i"]
       },
       {
         "eventType": "triggerAttackRelease",
-        "nodeId": 0,
-        "args": ["C4", "500i", "+1000i"]
+        "nodeId": 1,
+        "args": ["E5", "4n", "+0i"]
+      },
+      {
+        "eventType": "triggerAttackRelease",
+        "nodeId": 1,
+        "args": ["G5", "4n", "+0i"]
       }
     ]
-  }
+  },
 ];
-
-// 後方互換性のために、オブジェクト形式も保持
-const sequenceDataCollection = {};
-sequenceDefinitions.forEach(seq => {
-  sequenceDataCollection[seq.name] = seq.data;
-});
-
-// デフォルトのシーケンスデータ
-const sequenceData = sequenceDefinitions[0].data;

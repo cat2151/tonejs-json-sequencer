@@ -1,7 +1,12 @@
 // Tone.js JSON Sequencer Main Script
 var outputArea, textarea1, sequenceSelector, nodes = [];
 
+const sequenceDataCollection = {};
+const sequenceData = sequenceDefinitions[0].data;
+
 window.addEventListener("load", () => {
+  initializeSequenceDataCollection();
+
   // outputArea = document.getElementById('output');
   const button = document.querySelector('button');
   textarea1 = document.querySelector('textarea');
@@ -17,6 +22,12 @@ window.addEventListener("load", () => {
   populateSequenceSelector();
   updateTextareaWithSelectedSequence();
 });
+
+function initializeSequenceDataCollection() {
+  sequenceDefinitions.forEach(seq => {
+    sequenceDataCollection[seq.name] = seq.data;
+  });
+}
 
 function populateSequenceSelector() {
   sequenceSelector.innerHTML = '';
