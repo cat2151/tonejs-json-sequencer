@@ -4,6 +4,11 @@
 
 [Demo](https://cat2151.github.io/tonejs-json-sequencer/src/index.html)
 
+# 3行で説明
+- Tone.jsの音色・エフェクト・演奏をJSONで記述できる軽量ライブラリ
+- コードを書かず、音をデータで制御できるため、UIやストリーミングと自然に連携
+- 時間順のイベントをデータとして扱い、緻密な演奏表現が可能に
+
 # Why
 - ※応急でChatGPTに生成させたものです。今後、書き直す可能性があります。
 - ※実際には大部分が「今後実装予定です」
@@ -49,7 +54,7 @@ tonejs-json-sequencer では、Tone.js の構成要素（シンセ、エフェ�
 - プログラム
   - NDJSON streaming、内容は後述
 - 構造
-  - ■next■マルチティンバー、ギラギラしたbassと、柔らかいpad
+  - 済 : マルチティンバー、FM Bassと、Saw Chord
 - 奏法
   - 済 : ディレイビブラート
   - ピッチエンベロープで、attack時が-200cent、のち0centまで変化 ※attack連動ではなく、ディレイビブラートのように独立しているもの
