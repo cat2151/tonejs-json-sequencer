@@ -69,7 +69,7 @@ tonejs-json-sequencer では、Tone.js の構成要素（シンセ、エフェ�
   - EQ
   - コンプレッサー
 - Lead
-  - SuperSaw音色（FatOscillator）
+  - 済 : SuperSaw音色（FatOscillator）
   - Distortion、できればPluckでギター
   - Overdrive風のWaveShaper設定、できればPluckでギター
   - Chebyshevを使った過激なシンセリード
@@ -84,7 +84,7 @@ tonejs-json-sequencer では、Tone.js の構成要素（シンセ、エフェ�
 - Drum
   - Tone.js内蔵のKick, Snare, Tom, Hi-Hat、909Kickが無理ならその旨title等に可視化する
 - Pad
-  - FatOscillatorで分厚いシンセパッド
+  - 済 : FatOscillatorで分厚いシンセパッド
   - FMエレピ
 - Bass
   - 硬いFMベース
@@ -103,6 +103,20 @@ tonejs-json-sequencer では、Tone.js の構成要素（シンセ、エフェ�
     - 今から50msec後までに演奏されるもの、をNDJSON streaming
     - playボタンを開始した時刻の50msec後を0tick とし、以降、sequencer部でevent発生時刻を+50msecする加工を行う。ループ時はさらに加算
     - 別htmlの別srcに切り分ける想定
+- Tone.Transport.schedule はまだ使わない
+  - 試しにagentにcode生成させたところ、複雑なcodeが生成された割に、発音の不自然さの改善が確認できなかった
+  - 時期尚早である、test dataが揃ってからがよい、と判断する
+  - 今後の展望
+    - 上位レイヤー(tonejs-mml-to-json)を実装する
+    - test dataを作成する
+      - 明らかにリズムがヨレることがわかるJSON
+        - 例、アルペジオ、chord、bassによるハイテンポなフレーズ
+    - 以下を実施する
+      - そのJSONをtonejs-json-sequencerで演奏し、ヨレることを確認する
+      - Tone.Transport.schedule を実装し、ヨレ改善をtestする
+      - 実績のある、postmate-midiで成功している方法を実装してtestする：
+        - JSONの時刻記述を上位レイヤーで加工して実時間指定にし、NDJSON streamingで演奏する
+        - 前述のとおり+50msec未来を指定する
 
 # 検討中の課題
 - 課題、手でswitch caseを書いていくのが手間
