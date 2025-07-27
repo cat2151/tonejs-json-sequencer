@@ -5,141 +5,175 @@
 [Demo](https://cat2151.github.io/tonejs-json-sequencer/src/index.html)
 
 # Summary (in 3 lines)
-- Lightweight library enabling JSON-based description of Tone.js instruments, effects, and playback.
+
+- A lightweight library that allows you to define Tone.js instruments, effects, and performances using JSON.
 - Enables data-driven sound control without writing code, facilitating seamless integration with UIs and streaming.
-- Treats time-ordered events as data, allowing for precise musical expression.
+- Treats time-ordered events as data, enabling precise musical expression.
 
 # Why
+
 - *Note: This section was initially generated using ChatGPT and may be revised in the future.*
 - *In reality, most features are planned for future implementation.*
 
-Tone.js is a library that enables rich musical expression on the web.  It allows for sophisticated sound design in JavaScript, including synth construction, effect chains, and trigger scheduling.
+Tone.js is a powerful library enabling rich musical expression on the web.  It allows for sophisticated sound design in JavaScript, including synth construction, effect chains, and trigger scheduling.
 
-However, this flexibility can lead to sound colors and patterns being deeply embedded in the program, making reuse and integration difficult.
+However, this flexibility can lead to instrument and pattern structures deeply embedded within the program, hindering reusability and integration.
 
-`tonejs-json-sequencer` leverages Tone.js while externalizing instrument definitions, playback details, and timing information as JSON, enabling data-driven music playback.
+`tonejs-json-sequencer` leverages the power of Tone.js while externalizing instrument definitions, performance details, and timing information as JSON, enabling data-driven music playback.
 
 Sequences are structured like SMF, explicitly listing all events in chronological order.
 
-Instrument sounds can be flexibly defined in JSON using Tone.js's synth/chain/params.
+Instrument definitions flexibly utilize Tone.js synths/chains/parameters defined in JSON.
 
-Dynamically changing instrument parameters during playback is possible, enabling expressive techniques like delay vibrato and filter sweeps.
+Dynamic parameter changes during playback are possible, enabling expressive techniques like delay vibrato and filter sweeps.
 
-It can directly receive NDJSON streams from external tools or live generation engines for real-time playback.
+Real-time playback is possible by directly receiving NDJSON streams from external tools or live generation engines.
 
-This simplifies the process of manipulating, playing, and exchanging structured musical data across UIs and networks within the Tone.js environment.
+This simplifies the process of manipulating, playing, and exchanging structured musical data via UIs and networks within the Tone.js environment.
+
 
 # Design Philosophy
+
 - *Note: This section was initially generated using ChatGPT and may be revised in the future.*
 
-`tonejs-json-sequencer` uses a direct approach:  Tone.js components (synths, effect chains, parameter changes) are described directly in JSON.
+`tonejs-json-sequencer` employs a straightforward approach: directly describing Tone.js components (synths, effect chains, parameter changes) in JSON.
 
-It avoids introducing a custom music description language or abstract layer.  Such advanced logic is left to higher-level program layers.
+It avoids introducing a custom music description language or abstract layer, delegating sophisticated logic to higher-level program layers.
 
-Instrument definitions specify constructor names like `Tone.Synth` or `Tone.FMSynth` along with argument objects.
+Instrument definitions specify constructor names (like `Tone.Synth` or `Tone.FMSynth`) and argument objects.
 
 Event definitions mirror the structure of Tone.js calls like `triggerAttackRelease`.
 
-Parameter changes during playback list function names and arguments along with event timestamps.
+Runtime parameter changes list function names, arguments, and timestamps.
 
-This achieves the goal of shifting playback logic to data, making it externally configurable without sacrificing Tone.js's expressive capabilities.
+This preserves Tone.js's expressive capabilities while shifting playback logic to data, making it configurable externally.
 
-The core `scheduleOrExecuteEvent` function is a simple source file accepting a single element, allowing higher layers to handle sequencing and NDJSON streaming.
+The core `scheduleOrExecuteEvent` function is a simple source file accepting single elements, allowing for separate handling of sequences and NDJSON streaming at higher layers.
 
-This enables flexible development by separating the low-level Tone.js integration from higher-level sequencing and streaming concerns.
+This enables flexible development by separating the low-level Tone.js integration from higher-level sequence and streaming management.
 
 
 # Roadmap
+
 - *Items are not in order.*
-- *This will be split into two types of samples: simple samples focusing on usability, and more comprehensive samples showcasing the strengths.*
-- Programming
+- *Two types of samples will be created: simple samples prioritizing ease of use, and more complex samples showcasing advanced features.*
+- **Programming:**
   - NDJSON streaming (details below)
-- Structure
-  - Complete: Multi-timbral, FM Bass, and Saw Chord
-- Playing Techniques
-  - Complete: Delay vibrato
-  - Pitch envelope: -200 cents on attack, then changing to 0 cents.  (Independent of attack, similar to delay vibrato)
-  - Sequence phrase dynamically changing panpot to L/R
-  - Phrase dynamically changing expression
-  - Phrase dynamically changing LPF
-- Effects
+- **Structure:**
+  - Completed: Multi-timbral, FM Bass, and Saw Chord
+- **Playing Techniques:**
+  - Completed: Delay vibrato
+  - Pitch envelope: -200 cents on attack, then transitioning to 0 cents. (Independent of attack, similar to delay vibrato)
+  - Sequence phrase dynamically changing panpot between left and right channels.
+  - Phrase dynamically adjusting expression.
+  - Phrase dynamically adjusting low-pass filter.
+- **Effects:**
   - Reverb
   - Chorus
   - Delay
-  - Phaser (long sweep on synth pad; indicate limitations in title if necessary)
+  - Phaser (long sweep on synth pad; indicate limitations if necessary in the title)
   - EQ
   - Compressor
-- Lead
-  - Complete: SuperSaw sound (FatOscillator)
+- **Lead Sounds:**
+  - Completed: SuperSaw sound (FatOscillator)
   - Distortion (preferably with Pluck for guitar sound)
   - Overdrive-style WaveShaper (preferably with Pluck for guitar sound)
   - Aggressive Chebyshev synth lead
-  - FM lead with long decay and evolving overtones; a typical bright FM lead (try pulse for both modulator and carrier; indicate limitations in title if necessary)
-  - Ambient lead (pulse sound, subtly fluctuating pitch randomly)
-  - Quirky lead (attack-linked pitch envelope: -200 cents on attack, then changing to 0 cents)
-  - Lead with constant portamento
-- Sequence Instruments
-  - PulseOscillator sound (12.5% pulse)
-  - PluckSynth sound (acoustic guitar or harp)
-  - NoiseSynth with filter for melodic phrases
-- Drums
-  - Tone.js built-in Kick, Snare, Tom, Hi-Hat (indicate limitations if 909 Kick is unavailable)
-- Pads
-  - Complete: Thick synth pad with FatOscillator
+  - FM lead with long decay and evolving overtones; a typical bright FM lead (using pulse wave for both modulator and carrier; indicate limitations if necessary in the title)
+  - Ambient lead with pulse wave and slightly random pitch variation.
+  - Quirky lead with attack-linked pitch envelope (-200 cents on attack, transitioning to 0 cents)
+  - Lead with constant portamento.
+- **Sequence Instruments:**
+  - PulseOscillator (12.5% pulse width)
+  - PluckSynth (acoustic guitar or harp)
+  - NoiseSynth with filter for melodic phrases.
+- **Drums:**
+  - Tone.js built-in Kick, Snare, Tom, Hi-Hat (indicate limitations if 909 Kick is unavailable in the title)
+- **Pads:**
+  - Completed: Thick synth pad with FatOscillator
   - FM electric piano
-- Bass
+- **Bass:**
   - Hard FM bass
-  - Synth bass with constant attack-linked filter envelope
-  - Overdrive-style Saw synth bass with filter envelope and long filter sweep
-- Others:  Will add more examples from Tone.js as suitable sounds are found.  For now, the above is sufficient.
+  - Synth bass with constant attack-linked filter envelope.
+  - Overdrive-style Saw synth bass with filter envelope and long filter sweep.
+- Other:  More samples will be added as suitable sounds are found within Tone.js.  The above list currently represents the main focus.
 
 # Development Notes (Updated Regularly)
+
 - Integration with `tonejs-mml-to-json`
-  - Postponed. Will be considered after organizing the test data for `tonejs-json-sequencer`.
-- NDJSON streaming
-  - Goal:
-    - Live editing: Editing a textarea should reflect changes without restarting playback.
-    - Loop playback: Playback should restart from the beginning after reaching the end.
-  - Method:
-    - Stream events to be played within the next 50ms via NDJSON.
-    - Set 50ms after the play button press as 0 tick.  Sequencer adds 50ms to event timestamps.  Further addition for looping.
-    - Planned separation into a different HTML source file.
-- Not using `Tone.Transport.schedule` yet.
-  - Code generation attempts with an agent resulted in complex code with no noticeable improvement in sound naturalness.
-  - This is premature; it's better to wait until test data is available.
-  - Future outlook:
-    - Implement higher-level layer (`tonejs-mml-to-json`)
-    - Create test data:
-      - JSON with clearly noticeable rhythm issues (e.g., arpeggios, chords, bass in high-tempo phrases)
-    - Perform the following:
-      - Play the JSON using `tonejs-json-sequencer` and confirm the rhythm issues.
-      - Implement `Tone.Transport.schedule` and test for rhythm improvement.
-      - Implement and test the successful method used in `postmate-midi`:
-        - Process JSON timestamps in the higher layer for real-time specification and play using NDJSON streaming.
-        - Specify +50ms in the future as described above.
+  - Postponed.  Will be reviewed after organizing the test data for `tonejs-json-sequencer`.
+- NDJSON Streaming
+  - Goals:
+    - Live editing:  Updates are reflected in real-time without interrupting playback.
+    - Loop playback:  Continues from the beginning after reaching the end.
+  - Approach:
+    - Stream events scheduled within the next 50ms via NDJSON.
+    - Treat 50ms after play button press as 0 tick; add 50ms to event timestamps in the sequencer.  Further additions for loops.
+    - Separate HTML source file planned.
+- `Tone.Transport.schedule` is not yet used.
+  - Initial agent-generated code was complex but did not improve sound quality.
+  - Deferred until sufficient test data is available.
+  - Future Outlook:
+    - Implement higher-level layer (`tonejs-mml-to-json`).
+    - Create test data, including JSON with noticeable timing irregularities (e.g., high-tempo arpeggios, chords, bass lines).
+    - Test the irregular JSON with `tonejs-json-sequencer` to confirm issues.
+    - Implement `Tone.Transport.schedule` and test improvements.
+    - Implement the successful method used in `postmate-midi`: Process JSON timestamps at a higher level for real-time specification and playback via NDJSON streaming (adding +50ms to future timestamps as mentioned above).
 
 # Issues Under Consideration
-- Manually writing `switch case` statements is cumbersome.
-  - Approach:  Direct function calls within `switch case` is safe and simple; this will be the primary approach.
-    - Concern:  However, large `switch case` statements might negatively impact performance, contradicting the lightweight library concept.
-      - Consideration:  A whitelist mechanism for function names is an option, but adds complexity and security risks.
-        - Postponed:  This is a non-functional requirement; it's better to evaluate after dogfooding reveals performance issues.
-  - Analysis:  Agent-generated `switch case` statements lack sufficient context.
-    - Example:  It's unclear if methods like `depth.rampTo` can be comprehensively generated.
-    - Example:  Whether `depth.rampTo` is sufficient and what method chains exist for other playing techniques and sounds needs dogfooding.
-    - Consideration:  Even if generation covers everything, testing would be laborious (due to large source code).
-  - Solution:  Maintain the current implementation approach and proceed with dogfooding.
+
+- Manually writing `switch` cases is tedious.
+  - Approach:  Directly use `switch` cases for function calls; this is the safest and simplest approach.
+    - Concern:  Large `switch` cases may impact performance, contradicting the lightweight library concept.
+      - Alternative:  Consider a whitelist for allowed function names (more complex, with increased security risk).
+        - Postponed: This is a non-functional requirement; evaluation will be after dogfooding reveals performance issues.
+  - Analysis: Agent context is insufficient for generating comprehensive `switch` cases.
+    - Uncertainty:  Whether functions like `depth.rampTo` can be fully covered by code generation.
+    - Evaluation needed: Whether `depth.rampTo` is appropriate; what other method chains exist for different techniques and instruments.
+    - Testing: Comprehensive code generation would still require extensive testing (due to the large source code).
+  - Solution: Maintain the current implementation and continue dogfooding.
+- Instrument Library Consideration
+  - *May be spun off into a separate project, similar to `tonejs-mml-to-json`.*
+  - Existing Challenges:
+    - Tone.js's potential sound capabilities are unclear.  "Mastery" here refers to using it without external waveforms (soundfonts) or AudioWorklets, focusing on low-cost implementation.
+    - Examples:  The sonic character of Saw and Square waves, high-frequency aliasing noise, and their usefulness in FM synthesis are unknown.  ChatGPT suggests (unverified) that Tone.js generates waveform tables for one loop, potentially leading to aliasing noise at high frequencies.
+    - FM synthesis: It uses frequency modulation (not phase modulation) without feedback, limiting the types of sounds achievable.  The potential sonic capabilities with different waveforms in modulator and carrier are unknown.
+    - SuperSaw: How much processing (effects) is needed to create a typical, usable SuperSaw sound is unclear.  A clearer roadmap and workflow would be beneficial.
+    - Creating a 64-sample, 8-bit waveform might require Fourier transforms to generate `partials` parameters (external waveforms or AudioWorklets would be necessary for more complex scenarios).  This is unverified.
+    - The capabilities of Reverb/Chorus/Flanger/Phaser (achieving at least SC-88Pro level quality) are unknown.
+    - The capabilities of Distortion/Overdrive effects (achieving at least SC-88Pro level quality) are unknown.
+    - The intended use is "limited to education and experimentation"; limitations in sound quality are not necessarily critical.
+    - The key focus is on understanding the potential and sweet spots of Tone.js.
+    - Tone.js's position is more towards signal processing than a full-fledged instrument; a focus is on what is possible with a low-cost approach.
+      - Low-cost in this context considers whether a rich ecosystem (like `tonejs-json-sequencer`) will enable lower-cost development in the future.
+    - Tone.js is considered superior in terms of overall capabilities.
+    - Tone.js is favored due to its status as a free, open-source, multi-platform environment for musical activities within a browser.
+  - Solution:  Easy sharing of instrument libraries will make it easier to visualize the potential capabilities achievable with low-cost methods.
+  - Vision: Share examples of achievable sounds, effects, and combinations to demonstrate practical sound design.
+  - Benefits of Instrument Library:
+    - Expected to contribute to the Tone.js ecosystem.
+    - Addresses the current lack of reusability of user outputs.
+    - Shared outputs can build a foundation for future users. (Applies to Web Audio in general, not just instruments)
+  - Instrument Library Layer:
+    - Separate project, above the `tonejs-json-sequencer` layer.
+  - Focus on Instrument Library:
+    - Under consideration.  Rich instrument libraries and editors would foster a thriving ecosystem.
+    - Prioritizing essential functionality within `tonejs-json-sequencer` is crucial (its features are prerequisites for higher-level layers).
 
 # Priorities
-- Implement features with clear effects (e.g., delay vibrato, multi-timbral).
-- Safety and security.  Prevent injection attacks.  Avoid using `eval`.
+
+- Implementation of features with clear effects (e.g., delay vibrato, multi-timbral).
+- Security:  Prevent injection vulnerabilities; avoid using `eval` or similar functions.
+
 
 # Out of Scope
-- nodeId generation → Handled by the higher layer (e.g., `tonejs-mml-to-json` or a lower-layer JSON post-processor)
-- Generating `on` and `off` for delay vibrato for all notes → Same as nodeId generation.
-- Other JSON data processing → Same as nodeId generation.
-- Complete coverage:  Completely covering all Tone.js classes, methods, and method chain combinations, and all possible function calls via JSON.
-- High performance:  Avoid using hard-to-maintain logic to minimize processing time and source file size.
 
-# Automatic Translation
-The `README.md` file is automatically generated via GitHub Actions using Gemini translation based on `README.ja.md`.
+- nodeId generation (handled by higher-level layers like `tonejs-mml-to-json` or a lower-level JSON post-processor).
+- Generating on/off events for delay vibrato for all notes (similar to nodeId generation).
+- JSON data processing (similar to nodeId generation).
+- Complete coverage:  Fully encompassing all Tone.js classes, methods, and method chains to cover all possible function calls via JSON.
+- High performance:  Optimization of processing time and source code size is not a primary concern, even if it leads to less maintainable code.
+
+# Automated Translation
+
+The `README.md` file is automatically generated via GitHub Actions using Gemini translation of `README.ja.md`.
