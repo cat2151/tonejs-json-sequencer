@@ -1,0 +1,16 @@
+# 呼び出し元ワークフロー: call-callgraph.yml
+name: Call Call Graph
+
+on:
+  schedule:
+    # 毎日午前5時(JST) = UTC 20:00前日
+    - cron: '0 20 * * *'
+  workflow_dispatch:
+
+jobs:
+  call-callgraph:
+    # uses: ./.github/workflows/callgraph.yml # ローカルでのテスト用
+    uses: cat2151/github-actions/.github/workflows/callgraph.yml@main
+    with:
+      CONFIG_NAME: .github/actions-tmp/.github_automation/callgraph/config/example.json # このファイルは共通ワークフロー側にありますので参考にしてください（この記述になっているのは、共通ワークフロー側で .github/actions-tmp/ にcheckoutしているため）
+      # CONFIG_NAME: ./my.json # projectごとに設定を変える場合用。上記と衝突しないファイル名にしてください
