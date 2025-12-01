@@ -1,70 +1,54 @@
-Last updated: 2025-11-10
+Last updated: 2025-12-02
 
 # Development Status
 
 ## 現在のIssues
-- [Issue #4](../issue-notes/4.md) は、エージェントによって生成されたGitHub Actionsワークフローにモダンでないコードやハルシネーションが混入している問題に取り組んでいます。
-- 共通ワークフロー `.github/workflows/daily-project-summary.yml` は既に実装され機能していますが、そのコード品質や依存関係の管理方法には改善の余地が残されています。
-- 目標は、現在の動作を維持しつつ、関連するスクリプトやワークフローのコードをよりモダンで保守しやすい状態に再構築することです。
+- [Issue #4](../issue-notes/4.md) は、エージェントによって生成されたコードに混入したモダンでない部分を段階的に再構築することを目指しています。
+- 現在、具体的な対象ファイルや再構築の方向性はまだ明確に定義されていません。
+- このIssueは、プロジェクトのコードベース全体をよりモダンな標準に引き上げるための初期段階にあります。
 
 ## 次の一手候補
-1. `daily-project-summary` 関連スクリプトのコードレビューと初期リファクタリング実施 [Issue #4](../issue-notes/4.md)
-   - 最初の小さな一歩: `.github/actions-tmp/.github_automation/project_summary/scripts/development/DevelopmentStatusGenerator.cjs` ファイルを選定し、ESLintやPrettierを導入した場合のフォーマット変更点や、よりモダンなJavaScript構文への変更点を特定する。
-   - Agent実行プロンプ:
-     ```
-     対象ファイル: .github/actions-tmp/.github_automation/project_summary/scripts/development/DevelopmentStatusGenerator.cjs
-
-     実行内容: 対象ファイルについて、ESLintの推奨設定（または一般的なモダンJavaScriptのスタイルガイド）を適用した場合に発生する可能性のあるフォーマットの変更点と、よりモダンなJavaScript構文（例: `var`を`const`/`let`へ、アロー関数、async/awaitの使用など）に書き換え可能な箇所を特定し、改善案をmarkdown形式で出力してください。
-
-     確認事項: 現在のファイルはCommonJS形式で記述されているため、ESMへの移行は考慮せず、CJS形式の範囲内で構文的なモダン化とコードスタイルの改善に焦点を当ててください。ファイルの実行ロジックを変更しないように注意してください。
-
-     期待する出力: markdown形式で、以下の内容を含む分析結果を出力してください。
-         - 提案されるフォーマット変更の例（例: インデント、スペースなど）
-         - モダンな構文への書き換え候補のコードスニペットと、その変更理由。
-     ```
-
-2. `daily-project-summary.yml` におけるNode.js依存関係の管理方法を改善 [Issue #4](../issue-notes/4.md)
-   - 最初の小さな一歩: `.github/actions-tmp/.github/workflows/daily-project-summary.yml` の `Install dependencies` ステップで、`npm init -y` と `npm install` を一時ディレクトリで行っている箇所を特定し、プロジェクトの `package.json` に依存関係を記述し、メインのディレクトリで `npm install` を実行するように変更するためのプランを検討する。
+1. 「モダンでないコード」の特定とリストアップ [Issue #4](../issue-notes/4.md)
+   - 最初の小さな一歩: 主要なJavaScriptファイル (`src/main.js`, `src/play.js`, `src/scheduleOrExecuteEvent.js`) をレビューし、モダン化が必要なコードパターンを特定する。
    - Agent実行プロンプト:
      ```
-     対象ファイル: .github/actions-tmp/.github/workflows/daily-project-summary.yml
+     対象ファイル: `src/main.js`, `src/play.js`, `src/scheduleOrExecuteEvent.js`
 
-     実行内容: 対象ワークフロー内の「Install dependencies」ステップを分析し、現在の依存関係インストール方法（一時ディレクトリでの `npm init` と `npm install`）を、プロジェクトの `package.json` を使用して依存関係を一元管理し、ルートディレクトリで `npm install` を実行するように改善するための具体的な変更プランを提案してください。
+     実行内容: 対象ファイルを読み込み、特に以下の観点から「モダンでない」コードパターンを洗い出し、それぞれの改善案を記述してください。
+     1. `var`キーワードの使用箇所
+     2. 古い形式の関数定義（`function`キーワードのみ、アロー関数ではない）
+     3. 同期的な処理や冗長な非同期処理（例: ネストが深いコールバック、Promiseの不適切な使用）
+     4. グローバルスコープを汚染する可能性のある変数定義
 
-     確認事項: 
-         - 提案される変更がワークフローの実行環境に影響を与えないこと。
-         - 必要な依存関係（`@google/generative-ai`、`@octokit/rest`）が引き続き正しくインストールされ、スクリプトから利用できること。
-         - 既存の `package.json` がある場合、それとの整合性を考慮すること。もし存在しない場合は、新規作成を前提とする。
+     確認事項: これらのファイルがプロジェクトの中心的なロジックを含んでいることを確認し、提案される変更が他の機能に与える影響を考慮してください。
 
-     期待する出力: markdown形式で、以下の内容を含む改善プランを出力してください。
-         - `daily-project-summary.yml` の「Install dependencies」および関連ステップの変更案のコードスニペット。
-         - `package.json` に追加または修正する依存関係の例。
-         - 変更によるメリットと考慮事項。
+     期待する出力: 各ファイルにおいて特定された「モダンでない」コードスニペットと、それぞれに対する具体的なモダン化の提案（ES6+への移行、非同期処理の改善など）をMarkdownのコードブロックと説明で出力してください。
      ```
 
-3. 重複しているワークフローファイルの整理と、共通化されたワークフローへの移行可能性を検討 [Issue #4](../issue-notes/4.md)
-   - 最初の小さな一歩: `.github/workflows/call-callgraph.yml` と `.github/actions-tmp/.github/workflows/call-callgraph.yml` など、`.github/workflows` と `.github/actions-tmp/.github/workflows` ディレクトリ間で重複している可能性のあるワークフローファイルを特定し、その内容の差異を比較する。
+2. コード品質・スタイルガイドラインの検討 [Issue #4](../issue-notes/4.md)
+   - 最初の小さな一歩: プロジェクトにESLintを導入するための`package.json`と`.eslintrc.js`の初期設定ファイルを生成する。
    - Agent実行プロンプト:
      ```
-     対象ファイル: 
-         - .github/workflows/call-callgraph.yml
-         - .github/actions-tmp/.github/workflows/call-callgraph.yml
-         - .github/workflows/call-issue-note.yml
-         - .github/actions-tmp/.github/workflows/call-issue-note.yml
-         - .github/workflows/call-translate-readme.yml
-         - .github/actions-tmp/.github/workflows/call-translate-readme.yml
+     対象ファイル: `package.json`, `.editorconfig`, `.eslintrc.js` (新規作成)
 
-     実行内容: 上記ファイル群について、それぞれのペア（例: `.github/workflows/call-callgraph.yml` と `.github/actions-tmp/.github/workflows/call-callgraph.yml`）で内容を比較し、
-         1. 両ファイルが同一の内容であるか、またはどのような差異があるか。
-         2. `.github/actions-tmp` 以下のファイルが本プロジェクトで今後も必要とされるか。
-         3. `.github/actions-tmp` 以下のファイルが冗長である場合、削除または統合の推奨を markdown 形式で分析してください。
+     実行内容: プロジェクトにESLintを導入するための設定を提案してください。具体的には、`package.json`に`eslint`と`eslint-config-airbnb-base`、`eslint-plugin-import`を`devDependencies`として追加し、`lint`スクリプトを定義します。また、`.eslintrc.js`を作成し、`airbnb-base`を継承した基本的なESLint設定（例: Node.js環境、ESMサポート）を記述してください。
 
-     確認事項:
-         - ファイル比較は内容ベースで行い、単なるパスの違いだけでなく実質的な差異を洗い出すこと。
-         - プロジェクトの実行に影響を与えないように、慎重に分析すること。
-         - `.github/actions-tmp` ディレクトリの役割（一時的な生成物、テスト環境、旧バージョンなど）を考慮に入れること。
+     確認事項: 既存の`.editorconfig`ファイルの内容を確認し、ESLintの設定と衝突しないように配慮してください。プロジェクトがNode.js環境で動作するため、`env.node`を`true`に設定することも考慮してください。
 
-     期待する出力: markdown形式で、各ワークフローペアごとの比較結果、差異、および`.github/actions-tmp` 以下のファイルの今後の取り扱いに関する具体的な推奨事項（例: 削除、移動、統合）を記述してください。
+     期待する出力: `package.json`に追加する`devDependencies`と`scripts`のJSONスニペット、および`.eslintrc.js`の完全な内容をMarkdownのコードブロックで出力してください。
+     ```
+
+3. CI/CDでのコード品質チェック導入の検討 [Issue #4](../issue-notes/4.md)
+   - 最初の小さな一歩: プルリクエスト作成時にESLintによるコード品質チェックを実行するGitHub Actionsワークフローのドラフトを作成する。
+   - Agent実行プロンプト:
+     ```
+     対象ファイル: `.github/workflows/lint.yml` (新規作成)
+
+     実行内容: プルリクエストがオープンされた際、またはプッシュされた際に、ESLintを実行してコード品質をチェックするGitHub Actionsワークフローを提案してください。このワークフローは、まずリポジトリをチェックアウトし、Node.js環境をセットアップし、`npm install`を実行した後、`npm run lint`コマンドを実行することを想定します。
+
+     確認事項: `package.json`に`lint`スクリプトが既に定義されていることを前提とします。また、`actions/checkout`と`actions/setup-node`アクションのバージョンが適切であるか確認してください。
+
+     期待する出力: `.github/workflows/lint.yml`として保存可能な、完全なYAML形式のGitHub Actionsワークフロー定義をMarkdownのコードブロックで出力してください。
 
 ---
-Generated at: 2025-11-10 07:08:02 JST
+Generated at: 2025-12-02 07:08:06 JST

@@ -1,4 +1,4 @@
-Last updated: 2025-11-10
+Last updated: 2025-12-02
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -162,6 +162,7 @@ Last updated: 2025-11-10
 - .github/actions-tmp/generated-docs/project-overview-generated-prompt.md
 - .github/actions-tmp/generated-docs/project-overview.md
 - .github/actions-tmp/generated-docs/style.css
+- .github/actions-tmp/googled947dc864c270e07.html
 - .github/actions-tmp/issue-notes/10.md
 - .github/actions-tmp/issue-notes/11.md
 - .github/actions-tmp/issue-notes/12.md
@@ -184,6 +185,7 @@ Last updated: 2025-11-10
 - .github/actions-tmp/issue-notes/28.md
 - .github/actions-tmp/issue-notes/29.md
 - .github/actions-tmp/issue-notes/3.md
+- .github/actions-tmp/issue-notes/30.md
 - .github/actions-tmp/issue-notes/4.md
 - .github/actions-tmp/issue-notes/7.md
 - .github/actions-tmp/issue-notes/8.md
@@ -201,7 +203,9 @@ Last updated: 2025-11-10
 - README.ja.md
 - README.md
 - _config.yml
+- generated-docs/callgraph.html
 - generated-docs/project-overview-generated-prompt.md
+- googled947dc864c270e07.html
 - index.html
 - issue-notes/1.md
 - issue-notes/2.md
@@ -387,8 +391,9 @@ jobs:
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-ccb89ad github-actionsリポジトリの共通ワークフローを導入
-b770da3 jekyll settings
+8a41e3d Update callgraph.html [auto]
+a64c85b Google検索にindexさせる用
+16f56d0 Google検索にindexさせる用
 
 ### 変更されたファイル:
 .github/workflows/call-callgraph.yml
@@ -397,13 +402,14 @@ b770da3 jekyll settings
 .github/workflows/call-translate-readme.yml
 .github/workflows/issue-note.yml
 .github/workflows/translate-readme.yml
-README.ja.md
-README.md
 _config.yml
-src/index.html
-src/main.js
-src/play.js
+generated-docs/callgraph.html
+generated-docs/development-status-generated-prompt.md
+generated-docs/development-status.md
+generated-docs/project-overview-generated-prompt.md
+generated-docs/project-overview.md
+googled947dc864c270e07.html
 
 
 ---
-Generated at: 2025-11-10 07:07:40 JST
+Generated at: 2025-12-02 07:07:44 JST
