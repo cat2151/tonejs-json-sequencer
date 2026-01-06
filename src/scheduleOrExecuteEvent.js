@@ -13,29 +13,29 @@ function scheduleOrExecuteEvent(element) {
           nodes[element.nodeId] = new Tone.DuoSynth(element.args);
           break;
         case "FMSynth":
-            nodes[element.nodeId] = new Tone.FMSynth(element.args);
-            break;
+          nodes[element.nodeId] = new Tone.FMSynth(element.args);
+          break;
         case "MembraneSynth":
-            nodes[element.nodeId] = new Tone.MembraneSynth(element.args);
-            break;
+          nodes[element.nodeId] = new Tone.MembraneSynth(element.args);
+          break;
         case "MetalSynth":
-            nodes[element.nodeId] = new Tone.MetalSynth(element.args);
-            break;
+          nodes[element.nodeId] = new Tone.MetalSynth(element.args);
+          break;
         case "MonoSynth":
-            nodes[element.nodeId] = new Tone.MonoSynth(element.args);
-            break;
+          nodes[element.nodeId] = new Tone.MonoSynth(element.args);
+          break;
         case "NoiseSynth":
-            nodes[element.nodeId] = new Tone.NoiseSynth(element.args);
-            break;
+          nodes[element.nodeId] = new Tone.NoiseSynth(element.args);
+          break;
         case "PluckSynth":
-            nodes[element.nodeId] = new Tone.PluckSynth(element.args);
-            break;
+          nodes[element.nodeId] = new Tone.PluckSynth(element.args);
+          break;
         case "PolySynth":
-            nodes[element.nodeId] = new Tone.PolySynth(element.args);
-            break;
+          nodes[element.nodeId] = new Tone.PolySynth(element.args);
+          break;
         case "Sampler":
-            nodes[element.nodeId] = new Tone.Sampler(element.args);
-            break;
+          nodes[element.nodeId] = new Tone.Sampler(element.args);
+          break;
         case "Synth":
           nodes[element.nodeId] = new Tone.Synth(element.args);
           break;

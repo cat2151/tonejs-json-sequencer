@@ -1,8 +1,8 @@
 // Tone.js JSON Sequencer Main Script
-var outputArea, textarea1, sequenceSelector, nodes = [];
+let textarea1, sequenceSelector;
+const nodes = [];
 
 const sequenceDataCollection = {};
-const sequenceData = sequenceDefinitions[0].data;
 
 window.addEventListener("load", () => {
   initializeSequenceDataCollection();
