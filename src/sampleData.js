@@ -230,17 +230,17 @@ const sequenceDefinitions = [
       {
         "eventType": "triggerAttackRelease",
         "nodeId": 0,
-        "args": ["E4", "4n", "+96i"]
+        "args": ["D#4", "4n", "+96i"]
       },
       {
         "eventType": "triggerAttackRelease",
         "nodeId": 0,
-        "args": ["G4", "4n", "+192i"]
+        "args": ["F#4", "4n", "+192i"]
       },
       {
         "eventType": "triggerAttackRelease",
         "nodeId": 0,
-        "args": ["C5", "4n", "+288i"]
+        "args": ["A4", "4n", "+288i"]
       }
     ]
   },
