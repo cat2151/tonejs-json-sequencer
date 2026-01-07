@@ -38,6 +38,9 @@ function scheduleOrExecuteEvent(element) {
             ...element.args,
             onload: () => {
               console.log("Sampler loaded successfully");
+            },
+            onerror: (error) => {
+              console.log("Sampler loading error:", error);
             }
           });
           break;
