@@ -13,7 +13,7 @@ async function playWithAudioContext() {
       console.log("AudioContext started successfully");
     }
 
-    play();
+    await play();
   } catch (error) {
     console.log("playWithAudioContext error:", error.name, error.message);
 
@@ -24,14 +24,14 @@ async function playWithAudioContext() {
     }
 
     try {
-      play();
+      await play();
     } catch (playError) {
       console.log("play error:", playError.name, playError.message);
     }
   }
 }
 
-function play() {
+async function play() {
   try {
     const json = textarea1.value;
     const j = JSON.parse(json);
@@ -43,10 +43,28 @@ function play() {
         console.log("dispose error:", disposeError.name, disposeError.message);
       }
     });
-    // play
+    
+    // First pass: create nodes and connections
     j.forEach(element => {
       try {
-        scheduleOrExecuteEvent(element);
+        if (element.eventType === "createNode" || element.eventType === "connect") {
+          scheduleOrExecuteEvent(element);
+        }
+      } catch (scheduleError) {
+        console.log("schedule error:", scheduleError.name, scheduleError.message);
+      }
+    });
+    
+    // Wait for all audio buffers to load (important for Sampler)
+    await Tone.loaded();
+    console.log("All audio buffers loaded");
+    
+    // Second pass: schedule playback events
+    j.forEach(element => {
+      try {
+        if (element.eventType !== "createNode" && element.eventType !== "connect") {
+          scheduleOrExecuteEvent(element);
+        }
       } catch (scheduleError) {
         console.log("schedule error:", scheduleError.name, scheduleError.message);
       }
