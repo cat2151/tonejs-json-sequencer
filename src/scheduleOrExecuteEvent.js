@@ -34,7 +34,15 @@ function scheduleOrExecuteEvent(element) {
           nodes[element.nodeId] = new Tone.PolySynth(element.args);
           break;
         case "Sampler":
-          nodes[element.nodeId] = new Tone.Sampler(element.args);
+          nodes[element.nodeId] = new Tone.Sampler({
+            ...element.args,
+            onload: () => {
+              console.log("Sampler loaded successfully");
+            },
+            onerror: (error) => {
+              console.error("Sampler loading error:", error);
+            }
+          });
           break;
         case "Synth":
           nodes[element.nodeId] = new Tone.Synth(element.args);
