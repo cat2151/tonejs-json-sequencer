@@ -210,9 +210,9 @@ const sequenceDefinitions = [
         "args": {
           "urls": {
             "C4": "https://tonejs.github.io/audio/salamander/C4.mp3",
-            "D#4": "https://tonejs.github.io/audio/salamander/Ds4.mp3",
-            "F#4": "https://tonejs.github.io/audio/salamander/Fs4.mp3",
-            "A4": "https://tonejs.github.io/audio/salamander/A4.mp3",
+            "E4": "https://tonejs.github.io/audio/salamander/E4.mp3",
+            "G4": "https://tonejs.github.io/audio/salamander/G4.mp3",
+            "B4": "https://tonejs.github.io/audio/salamander/B4.mp3",
           },
           "release": 1,
         }
