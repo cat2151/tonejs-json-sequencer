@@ -40,7 +40,7 @@ function scheduleOrExecuteEvent(element) {
               console.log("Sampler loaded successfully");
             },
             onerror: (error) => {
-              console.log("Sampler loading error:", error);
+              console.error("Sampler loading error:", error);
             }
           });
           break;
