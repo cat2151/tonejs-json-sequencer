@@ -1,0 +1,52 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build distribution files
+        run: npm run build
+      
+      - name: Get version from package.json
+        id: package_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.package_version.outputs.version }}
+          name: Release v${{ steps.package_version.outputs.version }}
+          body: |
+            Release version ${{ steps.package_version.outputs.version }}
+            
+            ## CDN Usage
+            You can use this library via CDN:
+            ```html
+            <script src="https://cdn.jsdelivr.net/gh/cat2151/tonejs-json-sequencer@v${{ steps.package_version.outputs.version }}/dist/index.js"></script>
+            ```
+          files: |
+            dist/**/*
+          draft: false
+          prerelease: false
