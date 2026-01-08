@@ -1,4 +1,4 @@
-Last updated: 2025-12-02
+Last updated: 2026-01-09
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -60,7 +60,7 @@ Last updated: 2025-12-02
 以下のプロジェクト情報を参考にして要約を生成してください：
 
 ## プロジェクト情報
-名前: 
+名前: tonejs-json-sequencer
 説明: # tonejs-json-sequencer
 
 [日本語 README](README.ja.md) / [English README](README.md)
@@ -271,23 +271,55 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
 
 
 依存関係:
-{}
+{
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "tone": "^15.0.4",
+    "typescript": "^5.3.0"
+  }
+}
 
 ## ファイル階層ツリー
 📄 .editorconfig
+📄 .gitignore
+📖 CONVERSION_SUMMARY.md
 📄 LICENSE
+📖 NPM_README.md
 📖 README.ja.md
 📖 README.md
 📄 _config.yml
+📁 dist/
+  📁 cjs/
+    📘 index.d.ts
+    📜 index.js
+  📁 esm/
+    📘 index.d.ts
+    📄 index.mjs
+  📘 index.d.ts
+  📜 index.js
+  📄 index.mjs
+📁 examples/
+  🌐 cdn-example.html
+  📄 npm-example.mjs
 📁 generated-docs/
   🌐 callgraph.html
 🌐 googled947dc864c270e07.html
 🌐 index.html
 📁 issue-notes/
   📖 1.md
+  📖 11.md
   📖 2.md
   📖 3.md
   📖 4.md
+  📖 5.md
+  📖 7.md
+  📖 9.md
+📊 package-lock.json
+📊 package.json
+📁 scripts/
+  📜 copy-to-dist.js
+  📜 rename-to-mjs.js
 📁 src/
   🌐 index.html
   📜 main.js
@@ -296,9 +328,36 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📜 sampleData.js
   📜 scheduleOrExecuteEvent.js
   🎨 styles.css
+📁 src-ts/
+  📘 index.ts
+📊 tsconfig.json
 
 ## ファイル詳細分析
-**generated-docs/callgraph.html** (280行, 8444バイト)
+**dist/cjs/index.d.ts** (47行, 1394バイト)
+  - 関数: scheduleOrExecuteEvent, playSequence
+  - インポート: tone
+
+**dist/cjs/index.js** (236行, 8135バイト)
+  - 関数: scheduleOrExecuteEvent, createNode, connectNode, playSequence, constructor, get, set, disposeAll, forEach, catch, switch, if
+  - インポート: なし
+
+**dist/esm/index.d.ts** (47行, 1394バイト)
+  - 関数: scheduleOrExecuteEvent, playSequence
+  - インポート: tone
+
+**dist/index.d.ts** (47行, 1394バイト)
+  - 関数: scheduleOrExecuteEvent, playSequence
+  - インポート: tone
+
+**dist/index.js** (236行, 8135バイト)
+  - 関数: scheduleOrExecuteEvent, createNode, connectNode, playSequence, constructor, get, set, disposeAll, forEach, catch, switch, if
+  - インポート: なし
+
+**examples/cdn-example.html** (105行, 2646バイト)
+  - 関数: なし
+  - インポート: なし
+
+**generated-docs/callgraph.html** (280行, 8443バイト)
   - 関数: なし
   - インポート: なし
 
@@ -310,27 +369,35 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
+**scripts/copy-to-dist.js** (31行, 936バイト)
+  - 関数: catch
+  - インポート: fs, path
+
+**scripts/rename-to-mjs.js** (48行, 1267バイト)
+  - 関数: renameFiles, catch
+  - インポート: fs, path
+
 **src/index.html** (26行, 737バイト)
   - 関数: なし
   - インポート: なし
 
-**src/main.js** (59行, 1779バイト)
+**src/main.js** (59行, 1723バイト)
   - 関数: initializeSequenceDataCollection, populateSequenceSelector, updateTextareaWithSelectedSequence
   - インポート: なし
 
-**src/play.js** (58行, 1445バイト)
-  - 関数: playWithAudioContext, play, if, catch
+**src/play.js** (76行, 2100バイト)
+  - 関数: playWithAudioContext, play, if, catch, forEach
   - インポート: なし
 
 **src/redirect.css** (70行, 1518バイト)
   - 関数: なし
   - インポート: なし
 
-**src/sampleData.js** (204行, 4346バイト)
+**src/sampleData.js** (248行, 5460バイト)
   - 関数: なし
   - インポート: なし
 
-**src/scheduleOrExecuteEvent.js** (115行, 4039バイト)
+**src/scheduleOrExecuteEvent.js** (123行, 4248バイト)
   - 関数: scheduleOrExecuteEvent, switch, if
   - インポート: なし
 
@@ -338,32 +405,61 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
+**src-ts/index.ts** (279行, 7949バイト)
+  - 関数: scheduleOrExecuteEvent, createNode, connectNode, playSequence, forEach, catch, switch, if
+  - インポート: tone
+
 ## 関数呼び出し階層
+- catch (scripts/copy-to-dist.js)
+  - forEach ()
+    - scheduleOrExecuteEvent (dist/cjs/index.d.ts)
+      - playSequence ()
+      - get ()
+      - set ()
+      - disposeAll ()
+      - createNode ()
+      - connectNode ()
+      - constructor (undefined)
+    - playWithAudioContext ()
+      - play ()
+  - renameFiles (scripts/rename-to-mjs.js)
 - if (src/play.js)
-  - playWithAudioContext ()
-    - play ()
-      - scheduleOrExecuteEvent ()
-- catch (src/play.js)
 - switch (src/scheduleOrExecuteEvent.js)
 
 
 ## プロジェクト構造（ファイル一覧）
+CONVERSION_SUMMARY.md
+NPM_README.md
 README.ja.md
 README.md
+dist/cjs/index.d.ts
+dist/cjs/index.js
+dist/esm/index.d.ts
+dist/index.d.ts
+dist/index.js
+examples/cdn-example.html
 generated-docs/callgraph.html
 googled947dc864c270e07.html
 index.html
 issue-notes/1.md
+issue-notes/11.md
 issue-notes/2.md
 issue-notes/3.md
 issue-notes/4.md
+issue-notes/5.md
+issue-notes/7.md
+issue-notes/9.md
+package-lock.json
+package.json
+scripts/copy-to-dist.js
+scripts/rename-to-mjs.js
 src/index.html
 src/main.js
 src/play.js
 src/redirect.css
 src/sampleData.js
-src/scheduleOrExecuteEvent.js
-src/styles.css
+src-ts/index.ts
+tsconfig.json
 
 上記の情報を基に、プロンプトで指定された形式でプロジェクト概要を生成してください。
 特に以下の点を重視してください：
@@ -375,4 +471,4 @@ src/styles.css
 
 
 ---
-Generated at: 2025-12-02 07:07:44 JST
+Generated at: 2026-01-09 07:08:58 JST

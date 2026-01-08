@@ -1,54 +1,50 @@
-Last updated: 2025-12-02
+Last updated: 2026-01-09
 
 # Development Status
 
 ## 現在のIssues
-- [Issue #4](../issue-notes/4.md) は、エージェントによって生成されたコードに混入したモダンでない部分を段階的に再構築することを目指しています。
-- 現在、具体的な対象ファイルや再構築の方向性はまだ明確に定義されていません。
-- このIssueは、プロジェクトのコードベース全体をよりモダンな標準に引き上げるための初期段階にあります。
+- Issue [Issue #11](../issue-notes/11.md) は、JavaScriptからTypeScriptへのプロジェクト移行後、Tone.jsを利用したデモが正しく動作し音を鳴らすかを手動でテストし確認することを目的としています。
+- 特に、新しい`examples/cdn-example.html`と`examples/npm-example.mjs`を通してシーケンサー機能が期待通りに動作するか、エンドユーザー視点での検証が求められています。
+- この手動テストにより、TS移行による潜在的な回帰バグや意図しない動作変更がないことを保証し、機能の健全性を確認します。
 
 ## 次の一手候補
-1. 「モダンでないコード」の特定とリストアップ [Issue #4](../issue-notes/4.md)
-   - 最初の小さな一歩: 主要なJavaScriptファイル (`src/main.js`, `src/play.js`, `src/scheduleOrExecuteEvent.js`) をレビューし、モダン化が必要なコードパターンを特定する。
+1. [Issue #11](../issue-notes/11.md): TS移行後のデモ動作手動テストの実施
+   - 最初の小さな一歩: プロジェクトをビルドし、`examples/cdn-example.html`および`examples/npm-example.mjs`をブラウザで開き、シーケンサーが期待通りに音を鳴らすか手動で確認する。
    - Agent実行プロンプト:
      ```
-     対象ファイル: `src/main.js`, `src/play.js`, `src/scheduleOrExecuteEvent.js`
+     対象ファイル: `examples/cdn-example.html`, `examples/npm-example.mjs`, `src-ts/index.ts`
 
-     実行内容: 対象ファイルを読み込み、特に以下の観点から「モダンでない」コードパターンを洗い出し、それぞれの改善案を記述してください。
-     1. `var`キーワードの使用箇所
-     2. 古い形式の関数定義（`function`キーワードのみ、アロー関数ではない）
-     3. 同期的な処理や冗長な非同期処理（例: ネストが深いコールバック、Promiseの不適切な使用）
-     4. グローバルスコープを汚染する可能性のある変数定義
+     実行内容: `examples/cdn-example.html`と`examples/npm-example.mjs`をそれぞれ起動し、Tone.jsシーケンサー機能がTypeScript化後も正常に動作し、期待される音が出力されるかを確認してください。特に、ブラウザのコンソールエラーの有無、および音源の再生がスムーズかどうかに焦点を当てて検証してください。
 
-     確認事項: これらのファイルがプロジェクトの中心的なロジックを含んでいることを確認し、提案される変更が他の機能に与える影響を考慮してください。
+     確認事項: テスト実行前に、`npm install`と`npm run build`が完了し、`dist`ディレクトリに必要なファイルが生成されていることを確認してください。また、ブラウザのデベロッパーツールでエラーや警告が出ていないかを確認してください。
 
-     期待する出力: 各ファイルにおいて特定された「モダンでない」コードスニペットと、それぞれに対する具体的なモダン化の提案（ES6+への移行、非同期処理の改善など）をMarkdownのコードブロックと説明で出力してください。
+     期待する出力: 手動テストの結果をMarkdown形式で報告してください。具体的には、各デモ（CDN版、NPM版）が正常に動作したかどうか、発見された問題点（エラーメッセージ、予期せぬ動作など）、およびその詳細を記述してください。問題が発見された場合は、追加の調査が必要な点や、必要に応じて新しいIssueを起票するための提案も記述してください。
      ```
 
-2. コード品質・スタイルガイドラインの検討 [Issue #4](../issue-notes/4.md)
-   - 最初の小さな一歩: プロジェクトにESLintを導入するための`package.json`と`.eslintrc.js`の初期設定ファイルを生成する。
+2. [Issue #11](../issue-notes/11.md): デモのテスト手順をREADME.mdに明確化
+   - 最初の小さな一歩: 現在のデモ（`examples`ディレクトリ内）を手動でテストするための具体的な手順（ビルド、ブラウザでの開き方、確認すべき点）をまとめ、`README.md`に追記するためのテキストをMarkdown形式で作成する。
    - Agent実行プロンプト:
      ```
-     対象ファイル: `package.json`, `.editorconfig`, `.eslintrc.js` (新規作成)
+     対象ファイル: `README.md`, `examples/cdn-example.html`, `examples/npm-example.mjs`
 
-     実行内容: プロジェクトにESLintを導入するための設定を提案してください。具体的には、`package.json`に`eslint`と`eslint-config-airbnb-base`、`eslint-plugin-import`を`devDependencies`として追加し、`lint`スクリプトを定義します。また、`.eslintrc.js`を作成し、`airbnb-base`を継承した基本的なESLint設定（例: Node.js環境、ESMサポート）を記述してください。
+     実行内容: 現在のプロジェクトで提供されているデモ（`examples/cdn-example.html`および`examples/npm-example.mjs`）を手動でテストするための具体的な手順を洗い出し、開発者や利用者が容易に再現できるよう、`README.md`に追記するためのセクションをMarkdown形式で生成してください。手順には、環境設定（例: `npm install`、`npm run build`）、デモの起動方法、期待される動作、そして確認すべき主要なポイント（例: コンソールエラーの有無、音の再生）を含めてください。
 
-     確認事項: 既存の`.editorconfig`ファイルの内容を確認し、ESLintの設定と衝突しないように配慮してください。プロジェクトがNode.js環境で動作するため、`env.node`を`true`に設定することも考慮してください。
+     確認事項: 生成する手順が、現在のプロジェクトのファイル構造、ビルドプロセス、および依存関係と整合していることを確認してください。また、手順が明確で、あいまいな表現がないことを確認してください。
 
-     期待する出力: `package.json`に追加する`devDependencies`と`scripts`のJSONスニペット、および`.eslintrc.js`の完全な内容をMarkdownのコードブロックで出力してください。
+     期待する出力: `README.md`の既存のセクションに追記する形で、デモのテスト手順を説明するMarkdownテキスト。
      ```
 
-3. CI/CDでのコード品質チェック導入の検討 [Issue #4](../issue-notes/4.md)
-   - 最初の小さな一歩: プルリクエスト作成時にESLintによるコード品質チェックを実行するGitHub Actionsワークフローのドラフトを作成する。
+3. [Issue #11](../issue-notes/11.md): TS移行後の主要ロジックのコード健全性チェック
+   - 最初の小さな一歩: `src-ts/index.ts` の主要なロジックが、元のJavaScript版 (`src/play.js`など) から正しくTypeScriptに移行されているか、型安全性や意図しない変更がないかをレビューする。
    - Agent実行プロンプト:
      ```
-     対象ファイル: `.github/workflows/lint.yml` (新規作成)
+     対象ファイル: `src-ts/index.ts`, `src/play.js`, `src/sampleData.js`, `src/scheduleOrExecuteEvent.js`
 
-     実行内容: プルリクエストがオープンされた際、またはプッシュされた際に、ESLintを実行してコード品質をチェックするGitHub Actionsワークフローを提案してください。このワークフローは、まずリポジトリをチェックアウトし、Node.js環境をセットアップし、`npm install`を実行した後、`npm run lint`コマンドを実行することを想定します。
+     実行内容: `src-ts/index.ts`の主要なビジネスロジック、特にTone.js APIの利用箇所について、元のJavaScriptファイル（`src/play.js`、`src/sampleData.js`、`src/scheduleOrExecuteEvent.js`など）と比較し、TypeScriptへの移行が機能的な回帰を招いていないか、または型安全性に関する潜在的な問題がないか分析してください。コードの可読性、保守性、およびベストプラクティスへの準拠も評価してください。
 
-     確認事項: `package.json`に`lint`スクリプトが既に定義されていることを前提とします。また、`actions/checkout`と`actions/setup-node`アクションのバージョンが適切であるか確認してください。
+     確認事項: TypeScriptの型定義が適切に適用され、潜在的なランタイムエラーを防ぐように設計されているかを確認してください。また、元のJavaScriptの意図がTypeScriptコードに正確に反映されていることを確認してください。
 
-     期待する出力: `.github/workflows/lint.yml`として保存可能な、完全なYAML形式のGitHub Actionsワークフロー定義をMarkdownのコードブロックで出力してください。
+     期待する出力: コードレビューの結果をMarkdown形式で詳細に記述してください。発見された問題点、改善提案、およびそれらがIssue #11の「デモが音を鳴らすことの確認」にどう関連するかを明確にしてください。特に、手動テストで問題が見つかった場合に、コードレベルでどこを調査すべきかの指針となる情報を含めてください。
 
 ---
-Generated at: 2025-12-02 07:08:06 JST
+Generated at: 2026-01-09 07:09:17 JST

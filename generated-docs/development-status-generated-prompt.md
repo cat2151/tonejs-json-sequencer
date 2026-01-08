@@ -1,4 +1,4 @@
-Last updated: 2025-12-02
+Last updated: 2026-01-09
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -107,11 +107,13 @@ Last updated: 2025-12-02
 - .github/actions-tmp/.github/workflows/call-callgraph.yml
 - .github/actions-tmp/.github/workflows/call-daily-project-summary.yml
 - .github/actions-tmp/.github/workflows/call-issue-note.yml
+- .github/actions-tmp/.github/workflows/call-rust-windows-check.yml
 - .github/actions-tmp/.github/workflows/call-translate-readme.yml
 - .github/actions-tmp/.github/workflows/callgraph.yml
 - .github/actions-tmp/.github/workflows/check-recent-human-commit.yml
 - .github/actions-tmp/.github/workflows/daily-project-summary.yml
 - .github/actions-tmp/.github/workflows/issue-note.yml
+- .github/actions-tmp/.github/workflows/rust-windows-check.yml
 - .github/actions-tmp/.github/workflows/translate-readme.yml
 - .github/actions-tmp/.github_automation/callgraph/codeql-queries/callgraph.ql
 - .github/actions-tmp/.github_automation/callgraph/codeql-queries/codeql-pack.lock.yml
@@ -199,18 +201,38 @@ Last updated: 2025-12-02
 - .github/workflows/call-daily-project-summary.yml
 - .github/workflows/call-issue-note.yml
 - .github/workflows/call-translate-readme.yml
+- .gitignore
+- CONVERSION_SUMMARY.md
 - LICENSE
+- NPM_README.md
 - README.ja.md
 - README.md
 - _config.yml
+- dist/cjs/index.d.ts
+- dist/cjs/index.js
+- dist/esm/index.d.ts
+- dist/esm/index.mjs
+- dist/index.d.ts
+- dist/index.js
+- dist/index.mjs
+- examples/cdn-example.html
+- examples/npm-example.mjs
 - generated-docs/callgraph.html
 - generated-docs/project-overview-generated-prompt.md
 - googled947dc864c270e07.html
 - index.html
 - issue-notes/1.md
+- issue-notes/11.md
 - issue-notes/2.md
 - issue-notes/3.md
 - issue-notes/4.md
+- issue-notes/5.md
+- issue-notes/7.md
+- issue-notes/9.md
+- package-lock.json
+- package.json
+- scripts/copy-to-dist.js
+- scripts/rename-to-mjs.js
 - src/index.html
 - src/main.js
 - src/play.js
@@ -218,198 +240,122 @@ Last updated: 2025-12-02
 - src/sampleData.js
 - src/scheduleOrExecuteEvent.js
 - src/styles.css
+- src-ts/index.ts
+- tsconfig.json
 
 ## 現在のオープンIssues
-## [Issue #4](../issue-notes/4.md): agentに雑に生成させた結果、モダンでないcodeが混入しているので、一歩ずつモダンなcodeに再構築を進める
-[issue-notes/4.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/4.md)
+## [Issue #11](../issue-notes/11.md): jsからtsに変更したのでdemoを人力testし、鳴ることを確認する
+[issue-notes/11.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/11.md)
 
 ...
 ラベル: 
---- issue-notes/4.md の内容 ---
+--- issue-notes/11.md の内容 ---
 
 ```markdown
-# issue agentに雑に生成させた結果、モダンでないcodeが混入しているので、一歩ずつモダンなcodeに再構築を進める #4
-[issues #4](https://github.com/cat2151/tonejs-json-sequencer/issues/4)
+# issue jsからtsに変更したのでdemoを人力testし、鳴ることを確認する #11
+[issues #11](https://github.com/cat2151/tonejs-json-sequencer/issues/11)
 
 
 
 ```
 
 ## ドキュメントで言及されているファイルの内容
-### .github/actions-tmp/issue-notes/4.md
+### .github/actions-tmp/issue-notes/11.md
 ```md
-# issue GitHub Actions「project概要生成」を共通ワークフロー化する #4
-[issues #4](https://github.com/cat2151/github-actions/issues/4)
+{% raw %}
+# issue translate を他projectから使いやすくする #11
+[issues #11](https://github.com/cat2151/github-actions/issues/11)
 
-# prompt
-```
-あなたはGitHub Actionsと共通ワークフローのスペシャリストです。
-このymlファイルを、以下の2つのファイルに分割してください。
-1. 共通ワークフロー       cat2151/github-actions/.github/workflows/daily-project-summary.yml
-2. 呼び出し元ワークフロー cat2151/github-actions/.github/workflows/call-daily-project-summary.yml
-まずplanしてください
-```
+# ブレインストーミング
+- 課題、個別dirへの移動が必要。
+    - scripts
+- 課題、promptをハードコーディングでなく、promptsに切り出す。
+    - さらに、呼び出し元ymlから任意のpromptsを指定できるようにする。
+- 済、課題、README以外のtranslateも可能にするか検討する
+    - 対策、シンプル優先でREADME決め打ちにする
+        - 理由、README以外の用途となると、複数ファイルをどうGemini APIにわたすか？等、仕様が爆発的にふくらんでいくリスクがある
+        - README以外の用途が明確でないうちは、README決め打ちにするほうがよい
+- docs
+    - call導入手順を書く
 
-# 結果、あちこちハルシネーションのあるymlが生成された
-- agentの挙動があからさまにハルシネーション
-    - インデントが修正できない、「失敗した」という
-    - 構文誤りを認識できない
-- 人力で修正した
+# 状況
+- 上記のうち、別dirへの切り分け等は実施済みのはず
+- どうする？
+    - それをここに可視化する。
 
-# このagentによるセルフレビューが信頼できないため、別のLLMによるセカンドオピニオンを試す
-```
-あなたはGitHub Actionsと共通ワークフローのスペシャリストです。
-以下の2つのファイルをレビューしてください。最優先で、エラーが発生するかどうかだけレビューてください。エラー以外の改善事項のチェックをするかわりに、エラー発生有無チェックに最大限注力してください。
-
---- 呼び出し元
-
-name: Call Daily Project Summary
-
-on:
-  schedule:
-    # 日本時間 07:00 (UTC 22:00 前日)
-    - cron: '0 22 * * *'
-  workflow_dispatch:
-
-jobs:
-  call-daily-project-summary:
-    uses: cat2151/github-actions/.github/workflows/daily-project-summary.yml
-    secrets:
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-
---- 共通ワークフロー
-name: Daily Project Summary
-on:
-  workflow_call:
-
-jobs:
-  generate-summary:
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-      issues: read
-      pull-requests: read
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0  # 履歴を取得するため
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: |
-          # 一時的なディレクトリで依存関係をインストール
-          mkdir -p /tmp/summary-deps
-          cd /tmp/summary-deps
-          npm init -y
-          npm install @google/generative-ai @octokit/rest
-          # generated-docsディレクトリを作成
-          mkdir -p $GITHUB_WORKSPACE/generated-docs
-
-      - name: Generate project summary
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          NODE_PATH: /tmp/summary-deps/node_modules
-        run: |
-          node .github/scripts/generate-project-summary.cjs
-
-      - name: Check for generated summaries
-        id: check_summaries
-        run: |
-          if [ -f "generated-docs/project-overview.md" ] && [ -f "generated-docs/development-status.md" ]; then
-            echo "summaries_generated=true" >> $GITHUB_OUTPUT
-          else
-            echo "summaries_generated=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Commit and push summaries
-        if: steps.check_summaries.outputs.summaries_generated == 'true'
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          # package.jsonの変更のみリセット（generated-docsは保持）
-          git restore package.json 2>/dev/null || true
-          # サマリーファイルのみを追加
-          git add generated-docs/project-overview.md
-          git add generated-docs/development-status.md
-          git commit -m "Update project summaries (overview & development status)"
-          git push
-
-      - name: Summary generation result
-        run: |
-          if [ "${{ steps.check_summaries.outputs.summaries_generated }}" == "true" ]; then
-            echo "✅ Project summaries updated successfully"
-            echo "📊 Generated: project-overview.md & development-status.md"
-          else
-            echo "ℹ️ No summaries generated (likely no user commits in the last 24 hours)"
-          fi
+{% endraw %}
 ```
 
-# 上記promptで、2つのLLMにレビューさせ、合格した
-
-# 細部を、先行する2つのymlを参照に手直しした
-
-# ローカルtestをしてからcommitできるとよい。方法を検討する
-- ローカルtestのメリット
-    - 素早く修正のサイクルをまわせる
-    - ムダにgit historyを汚さない
-        - これまでの事例：「実装したつもり」「エラー。修正したつもり」「エラー。修正したつもり」...（以降エラー多数）
-- 方法
-    - ※検討、WSL + act を環境構築済みである。test可能であると判断する
-    - 呼び出し元のURLをコメントアウトし、相対パス記述にする
-    - ※備考、テスト成功すると結果がcommit pushされる。それでよしとする
-- 結果
-    - OK
-    - secretsを簡略化できるか試した、できなかった、現状のsecrets記述が今わかっている範囲でベストと判断する
-    - OK
-
-# test green
-
-# commit用に、yml 呼び出し元 uses をlocal用から本番用に書き換える
-
-# closeとする
-
-```
-
-### issue-notes/4.md
+### issue-notes/11.md
 ```md
-# issue agentに雑に生成させた結果、モダンでないcodeが混入しているので、一歩ずつモダンなcodeに再構築を進める #4
-[issues #4](https://github.com/cat2151/tonejs-json-sequencer/issues/4)
+{% raw %}
+# issue jsからtsに変更したのでdemoを人力testし、鳴ることを確認する #11
+[issues #11](https://github.com/cat2151/tonejs-json-sequencer/issues/11)
 
 
 
+{% endraw %}
+```
+
+### issue-notes/1.md
+```md
+{% raw %}
+# issue 現在のdemoはprototypeなのでゼロから作り直す。README.ja.mdに入出力定義などをBluesky投稿を元にまとめる #1
+[issues #1](https://github.com/cat2151/tonejs-json-sequencer/issues/1)
+
+# close条件
+- 済 : 入出力定義をREADME.ja.mdにざっくりまとめること
+  - 結果 : 実際には、入出力定義にはなっていないが、実装とREADMEを読めばわかる、のを確認した
+- 済 : ゼロから作り直すこと
+  - 方法 : READMEを整理して意図を可視化のち、Agentic Codingで一歩ずつ指示
+  - 結果 : スムーズにできた。なおゼロからでなく、index.htmlにすべて入った最初のprototype状態から、agentに一歩ずつ指示をするだけで、スムーズに構造を変更できた
+- 済 : Bluesky投稿を参照し、意図のヌケモレチェック結果をここに書くこと
+  - 結果 : ヌケモレなしと判断する。投稿時よりも進んだことがREADMEに整理できている
+
+# closeする
+
+{% endraw %}
 ```
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-8a41e3d Update callgraph.html [auto]
-a64c85b Google検索にindexさせる用
-16f56d0 Google検索にindexさせる用
+5e623e5 Update callgraph.html [auto]
+1885730 Add issue note for #11 [auto]
+9b7d47b Merge pull request #10 from cat2151/copilot/typescript-npm-package-cdn
+05b8d60 Address PR review feedback: update types, add error handling, fix documentation
+4bb0db4 Add comprehensive conversion summary documentation
+45b4ebb Add null checks for safety and update Tone.js peer dependency
+8344bc9 Add example files demonstrating npm and CDN usage
+3611277 Add NPM README and include dist directory for CDN usage
+dd61f76 Add TypeScript conversion and npm package configuration with dist outputs
+403e269 Initial plan
 
 ### 変更されたファイル:
-.github/workflows/call-callgraph.yml
-.github/workflows/call-daily-project-summary.yml
-.github/workflows/call-issue-note.yml
-.github/workflows/call-translate-readme.yml
-.github/workflows/issue-note.yml
-.github/workflows/translate-readme.yml
-_config.yml
+.gitignore
+CONVERSION_SUMMARY.md
+NPM_README.md
+dist/cjs/index.d.ts
+dist/cjs/index.js
+dist/esm/index.d.ts
+dist/esm/index.mjs
+dist/index.d.ts
+dist/index.js
+dist/index.mjs
+examples/cdn-example.html
+examples/npm-example.mjs
 generated-docs/callgraph.html
-generated-docs/development-status-generated-prompt.md
-generated-docs/development-status.md
-generated-docs/project-overview-generated-prompt.md
-generated-docs/project-overview.md
-googled947dc864c270e07.html
+issue-notes/11.md
+issue-notes/9.md
+package-lock.json
+package.json
+scripts/copy-to-dist.js
+scripts/rename-to-mjs.js
+src-ts/index.ts
+src/play.js
+src/sampleData.js
+src/scheduleOrExecuteEvent.js
+tsconfig.json
 
 
 ---
-Generated at: 2025-12-02 07:07:44 JST
+Generated at: 2026-01-09 07:08:58 JST
