@@ -42,12 +42,26 @@ export function scheduleOrExecuteEvent(Tone, nodes, element) {
         case 'connect':
             connectNode(nodes, element);
             break;
-        case 'triggerAttackRelease':
-            nodes.get(element.nodeId).triggerAttackRelease(...element.args);
+        case 'triggerAttackRelease': {
+            const node = nodes.get(element.nodeId);
+            if (node && typeof node.triggerAttackRelease === 'function') {
+                node.triggerAttackRelease(...element.args);
+            }
+            else {
+                console.warn(`Node ${element.nodeId} not found or doesn't support triggerAttackRelease`);
+            }
             break;
-        case 'depth.rampTo':
-            nodes.get(element.nodeId).depth.rampTo(...element.args);
+        }
+        case 'depth.rampTo': {
+            const node = nodes.get(element.nodeId);
+            if (node && node.depth && typeof node.depth.rampTo === 'function') {
+                node.depth.rampTo(...element.args);
+            }
+            else {
+                console.warn(`Node ${element.nodeId} not found or doesn't support depth.rampTo`);
+            }
             break;
+        }
     }
 }
 /**

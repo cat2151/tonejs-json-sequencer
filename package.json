@@ -27,7 +27,7 @@
   "author": "cat2151",
   "license": "MIT",
   "peerDependencies": {
-    "tone": "^14.0.0 || ^15.0.0"
+    "tone": "^15.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
