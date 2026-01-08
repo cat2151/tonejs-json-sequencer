@@ -13,12 +13,12 @@ export interface ConnectEvent {
 export interface TriggerAttackReleaseEvent {
     eventType: 'triggerAttackRelease';
     nodeId: number;
-    args: [string, string, string];
+    args: string[];
 }
 export interface DepthRampToEvent {
     eventType: 'depth.rampTo';
     nodeId: number;
-    args: [string, string, string];
+    args: string[];
 }
 export type SequenceEvent = CreateNodeEvent | ConnectEvent | TriggerAttackReleaseEvent | DepthRampToEvent;
 /**

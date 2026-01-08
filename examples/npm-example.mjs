@@ -1,7 +1,6 @@
 // Example of using tonejs-json-sequencer as an npm package
 // Run: node examples/npm-example.mjs
 
-import * as Tone from 'tone';
 import { SequencerNodes, playSequence } from '../dist/index.mjs';
 
 // Define a simple sequence

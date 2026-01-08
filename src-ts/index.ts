@@ -9,7 +9,7 @@ export interface CreateNodeEvent {
   eventType: 'createNode';
   nodeId: number;
   nodeType: string;
-  args?: any;
+  args?: any; // Can be object (for instruments) or array (for effects)
 }
 
 export interface ConnectEvent {
@@ -21,13 +21,13 @@ export interface ConnectEvent {
 export interface TriggerAttackReleaseEvent {
   eventType: 'triggerAttackRelease';
   nodeId: number;
-  args: [string, string, string]; // [note, duration, time]
+  args: string[]; // [note, duration, time]
 }
 
 export interface DepthRampToEvent {
   eventType: 'depth.rampTo';
   nodeId: number;
-  args: [string, string, string]; // [value, rampTime, time]
+  args: string[]; // [value, rampTime, time]
 }
 
 export type SequenceEvent =

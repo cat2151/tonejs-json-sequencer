@@ -20,8 +20,13 @@ function renameFiles(dir) {
       renameFiles(filePath);
     } else if (file.endsWith('.js')) {
       const newPath = filePath.replace(/\.js$/, '.mjs');
-      fs.renameSync(filePath, newPath);
-      console.log(`Renamed: ${filePath} -> ${newPath}`);
+      try {
+        fs.renameSync(filePath, newPath);
+        console.log(`Renamed: ${filePath} -> ${newPath}`);
+      } catch (err) {
+        console.error(`Failed to rename ${filePath} to ${newPath}:`, err);
+        process.exit(1);
+      }
     }
   });
 }
@@ -32,6 +37,11 @@ renameFiles(esmDir);
 const indexMjs = path.join(esmDir, 'index.mjs');
 const distIndexMjs = path.join(__dirname, '../dist/index.mjs');
 if (fs.existsSync(indexMjs)) {
-  fs.copyFileSync(indexMjs, distIndexMjs);
-  console.log(`Copied: ${indexMjs} -> ${distIndexMjs}`);
+  try {
+    fs.copyFileSync(indexMjs, distIndexMjs);
+    console.log(`Copied: ${indexMjs} -> ${distIndexMjs}`);
+  } catch (err) {
+    console.error(`Failed to copy ${indexMjs} to ${distIndexMjs}:`, err);
+    process.exit(1);
+  }
 }

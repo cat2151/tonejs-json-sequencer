@@ -77,7 +77,6 @@ const nodes = new SequencerNodes();
 async function play() {
   await Tone.start();
   await playSequence(Tone, nodes, sequence);
-  Tone.Transport.start();
 }
 
 // Attach to button click
@@ -154,7 +153,7 @@ Union type of all event types:
 
 Supported node types include:
 - **Instruments**: `Synth`, `FMSynth`, `AMSynth`, `MonoSynth`, `PolySynth`, `DuoSynth`, `PluckSynth`, `NoiseSynth`, `MetalSynth`, `MembraneSynth`, `Sampler`
-- **Effects**: `Reverb`, `Chorus`, `Delay`, `FeedbackDelay`, `PingPongDelay`, `Distortion`, `BitCrusher`, `Chebyshev`, `Phaser`, `Tremolo`, `Vibrato`, `AutoFilter`, `AutoPanner`, `AutoWah`, `Freeverb`, `JCReverb`, `StereoWidener`, `FrequencyShifter`, `PitchShift`
+- **Effects**: `Reverb`, `Chorus`, `FeedbackDelay`, `PingPongDelay`, `Distortion`, `BitCrusher`, `Chebyshev`, `Phaser`, `Tremolo`, `Vibrato`, `AutoFilter`, `AutoPanner`, `AutoWah`, `Freeverb`, `JCReverb`, `StereoWidener`, `FrequencyShifter`, `PitchShift`
 
 #### `ConnectEvent`
 
