@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tonejs JSON Sequencer - CDN Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    pre {
+      background-color: #f4f4f4;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tonejs JSON Sequencer - CDN Example</h1>
+  <p>Click the button to play a simple melody using JSON sequence data.</p>
+  <button id="playButton">Play Melody</button>
+
+  <h2>Sequence Data:</h2>
+  <pre id="sequenceDisplay"></pre>
+
+  <script src="https://cdn.jsdelivr.net/npm/tone@15.0.4/build/Tone.js"></script>
+  <script type="module">
+    // Import from local dist for testing (in production, use CDN)
+    import { SequencerNodes, playSequence } from '../dist/index.mjs';
+
+    // Define sequence
+    const sequence = [
+      {
+        eventType: 'createNode',
+        nodeId: 0,
+        nodeType: 'Synth',
+        args: {
+          oscillator: { type: 'sine' },
+          envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 }
+        }
+      },
+      {
+        eventType: 'connect',
+        nodeId: 0,
+        connectTo: 'toDestination'
+      },
+      {
+        eventType: 'triggerAttackRelease',
+        nodeId: 0,
+        args: ['C4', '8n', '0']
+      },
+      {
+        eventType: 'triggerAttackRelease',
+        nodeId: 0,
+        args: ['E4', '8n', '0:0:2']
+      },
+      {
+        eventType: 'triggerAttackRelease',
+        nodeId: 0,
+        args: ['G4', '8n', '0:1:0']
+      },
+      {
+        eventType: 'triggerAttackRelease',
+        nodeId: 0,
+        args: ['C5', '4n', '0:1:2']
+      }
+    ];
+
+    // Display sequence
+    document.getElementById('sequenceDisplay').textContent = JSON.stringify(sequence, null, 2);
+
+    // Create node manager
+    const nodes = new SequencerNodes();
+
+    // Play button handler
+    document.getElementById('playButton').addEventListener('click', async () => {
+      try {
+        await Tone.start();
+        console.log('Audio context started');
+        await playSequence(Tone, nodes, sequence);
+        console.log('Sequence playing');
+      } catch (error) {
+        console.error('Error playing sequence:', error);
+      }
+    });
+  </script>
+</body>
+</html>
