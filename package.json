@@ -6,8 +6,10 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "NPM_README.md"
   ],
+  "readme": "NPM_README.md",
   "scripts": {
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc --module esnext --outDir dist/esm && node scripts/rename-to-mjs.js",
