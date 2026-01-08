@@ -1,6 +1,6 @@
 {
   "name": "tonejs-json-sequencer",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A lightweight library that allows you to define Tone.js instruments, effects, and performances using JSON",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
