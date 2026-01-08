@@ -42,9 +42,8 @@ jobs:
             Release version ${{ steps.package_version.outputs.version }}
             
             ## CDN Usage
-            You can use this library via CDN:
+            You can use this library via jsDelivr CDN:
             
-            ### jsDelivr (GitHub)
             ```html
             <!-- CommonJS -->
             <script src="https://cdn.jsdelivr.net/gh/cat2151/tonejs-json-sequencer@v${{ steps.package_version.outputs.version }}/dist/index.js"></script>
@@ -53,11 +52,6 @@ jobs:
             <script type="module">
               import * as ToneJSONSequencer from 'https://cdn.jsdelivr.net/gh/cat2151/tonejs-json-sequencer@v${{ steps.package_version.outputs.version }}/dist/index.mjs';
             </script>
-            ```
-            
-            ### unpkg
-            ```html
-            <script src="https://unpkg.com/tonejs-json-sequencer@${{ steps.package_version.outputs.version }}/dist/index.js"></script>
             ```
           files: |
             dist/**/*
