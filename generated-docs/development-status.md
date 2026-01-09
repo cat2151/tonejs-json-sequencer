@@ -1,50 +1,51 @@
-Last updated: 2026-01-09
+Last updated: 2026-01-10
 
 # Development Status
 
 ## 現在のIssues
-- Issue [Issue #11](../issue-notes/11.md) は、JavaScriptからTypeScriptへのプロジェクト移行後、Tone.jsを利用したデモが正しく動作し音を鳴らすかを手動でテストし確認することを目的としています。
-- 特に、新しい`examples/cdn-example.html`と`examples/npm-example.mjs`を通してシーケンサー機能が期待通りに動作するか、エンドユーザー視点での検証が求められています。
-- この手動テストにより、TS移行による潜在的な回帰バグや意図しない動作変更がないことを保証し、機能の健全性を確認します。
+- [Issue #14](../issue-notes/14.md) は、最新のリリースにおいてCDNへのライブラリ登録状況の確認が主要なタスクです。
+- 特に、`tonejs-json-sequencer`の`mjs`ファイルがブラウザから404エラーなく利用可能かを確認する必要があります。
+- これは、公開されたライブラリがユーザーに正しく配信され、期待通りに動作することを保証するために不可欠な検証作業です。
 
 ## 次の一手候補
-1. [Issue #11](../issue-notes/11.md): TS移行後のデモ動作手動テストの実施
-   - 最初の小さな一歩: プロジェクトをビルドし、`examples/cdn-example.html`および`examples/npm-example.mjs`をブラウザで開き、シーケンサーが期待通りに音を鳴らすか手動で確認する。
-   - Agent実行プロンプト:
-     ```
-     対象ファイル: `examples/cdn-example.html`, `examples/npm-example.mjs`, `src-ts/index.ts`
+1.  [Issue #14](../issue-notes/14.md) CDN配信の動作確認とmjsファイルの検証
+    -   最初の小さな一歩: CDNから直接 `mjs` ファイルへのアクセスを試み、ブラウザの開発者ツールでネットワークリクエストとレスポンスを確認する。
+    -   Agent実行プロンプト:
+        ```
+        対象ファイル: `examples/cdn-example.html`, `package.json`, `.github/workflows/release.yml`
 
-     実行内容: `examples/cdn-example.html`と`examples/npm-example.mjs`をそれぞれ起動し、Tone.jsシーケンサー機能がTypeScript化後も正常に動作し、期待される音が出力されるかを確認してください。特に、ブラウザのコンソールエラーの有無、および音源の再生がスムーズかどうかに焦点を当てて検証してください。
+        実行内容: `package.json` に記載されている最新バージョン情報と `.github/workflows/release.yml` のCDN関連設定（unpkg, jsdelivrなど）に基づき、CDNから公開されている`tonejs-json-sequencer`の`mjs`ファイルを特定してください。その後、`examples/cdn-example.html`がその`mjs`ファイルを正常に読み込めるか、あるいは直接ブラウザでURLを開いて404エラーが発生しないかを確認するための具体的な手順とURLをmarkdown形式で出力してください。
 
-     確認事項: テスト実行前に、`npm install`と`npm run build`が完了し、`dist`ディレクトリに必要なファイルが生成されていることを確認してください。また、ブラウザのデベロッパーツールでエラーや警告が出ていないかを確認してください。
+        確認事項: `package.json`の`version`フィールドが最新であること。`.github/workflows/release.yml`で定義されているCDNへのデプロイが成功していること。
 
-     期待する出力: 手動テストの結果をMarkdown形式で報告してください。具体的には、各デモ（CDN版、NPM版）が正常に動作したかどうか、発見された問題点（エラーメッセージ、予期せぬ動作など）、およびその詳細を記述してください。問題が発見された場合は、追加の調査が必要な点や、必要に応じて新しいIssueを起票するための提案も記述してください。
-     ```
+        期待する出力: CDN上の`mjs`ファイルへの直接リンク、およびそのファイルがブラウザで正常に表示される（またはダウンロードされる）ことを確認するためのステップを含むmarkdownドキュメント。
+        ```
 
-2. [Issue #11](../issue-notes/11.md): デモのテスト手順をREADME.mdに明確化
-   - 最初の小さな一歩: 現在のデモ（`examples`ディレクトリ内）を手動でテストするための具体的な手順（ビルド、ブラウザでの開き方、確認すべき点）をまとめ、`README.md`に追記するためのテキストをMarkdown形式で作成する。
-   - Agent実行プロンプト:
-     ```
-     対象ファイル: `README.md`, `examples/cdn-example.html`, `examples/npm-example.mjs`
+2.  [Issue #14](../issue-notes/14.md) `package.json`と`release.yml`におけるCDN関連情報の整合性確認
+    -   最初の小さな一歩: `package.json`内の`unpkg`および`jsdelivr`フィールドの記述が、実際のCDNパスと一致しているかを目視で確認する。
+    -   Agent実行プロンプト:
+        ```
+        対象ファイル: `package.json`, `.github/workflows/release.yml`
 
-     実行内容: 現在のプロジェクトで提供されているデモ（`examples/cdn-example.html`および`examples/npm-example.mjs`）を手動でテストするための具体的な手順を洗い出し、開発者や利用者が容易に再現できるよう、`README.md`に追記するためのセクションをMarkdown形式で生成してください。手順には、環境設定（例: `npm install`、`npm run build`）、デモの起動方法、期待される動作、そして確認すべき主要なポイント（例: コンソールエラーの有無、音の再生）を含めてください。
+        実行内容: `package.json`内の`unpkg`および`jsdelivr`フィールドに記述されているパスと、`.github/workflows/release.yml`がCDNへデプロイするファイルのパスとの間に不整合がないかを確認してください。特に、リリースされたバージョンのディレクトリ構造とファイル名がCDNの期待する形式に合致しているかを分析し、もし不整合があれば修正案を提案してください。
 
-     確認事項: 生成する手順が、現在のプロジェクトのファイル構造、ビルドプロセス、および依存関係と整合していることを確認してください。また、手順が明確で、あいまいな表現がないことを確認してください。
+        確認事項: `package.json`の`main`, `module`, `unpkg`, `jsdelivr`フィールドの存在と書式。`.github/workflows/release.yml`におけるビルド成果物のパスとデプロイ先のパス。
 
-     期待する出力: `README.md`の既存のセクションに追記する形で、デモのテスト手順を説明するMarkdownテキスト。
-     ```
+        期待する出力: 分析結果と、もし不整合があればその修正提案をmarkdown形式で出力してください。
+        ```
 
-3. [Issue #11](../issue-notes/11.md): TS移行後の主要ロジックのコード健全性チェック
-   - 最初の小さな一歩: `src-ts/index.ts` の主要なロジックが、元のJavaScript版 (`src/play.js`など) から正しくTypeScriptに移行されているか、型安全性や意図しない変更がないかをレビューする。
-   - Agent実行プロンプト:
-     ```
-     対象ファイル: `src-ts/index.ts`, `src/play.js`, `src/sampleData.js`, `src/scheduleOrExecuteEvent.js`
+3.  [Issue #14](../issue-notes/14.md) `examples/cdn-example.html`の動作確認と更新
+    -   最初の小さな一歩: `examples/cdn-example.html`をローカルで開き、ブラウザのコンソールにエラーが出ていないか、機能が動作しているかを確認する。
+    -   Agent実行プロンプト:
+        ```
+        対象ファイル: `examples/cdn-example.html`, `src/sampleData.js`
 
-     実行内容: `src-ts/index.ts`の主要なビジネスロジック、特にTone.js APIの利用箇所について、元のJavaScriptファイル（`src/play.js`、`src/sampleData.js`、`src/scheduleOrExecuteEvent.js`など）と比較し、TypeScriptへの移行が機能的な回帰を招いていないか、または型安全性に関する潜在的な問題がないか分析してください。コードの可読性、保守性、およびベストプラクティスへの準拠も評価してください。
+        実行内容: `examples/cdn-example.html`がCDNから`tonejs-json-sequencer`を正しく読み込み、`src/sampleData.js`で定義されているサンプルのデータを適切に利用して機能することを確認してください。必要であれば、最新のCDNパスを反映させるために`cdn-example.html`を更新し、動作検証のための簡単な指示を追加してください。
 
-     確認事項: TypeScriptの型定義が適切に適用され、潜在的なランタイムエラーを防ぐように設計されているかを確認してください。また、元のJavaScriptの意図がTypeScriptコードに正確に反映されていることを確認してください。
+        確認事項: `examples/cdn-example.html`内のスクリプトタグで参照されているCDN URLが最新のバージョンを指しているか。依存関係がすべて解決されているか。
 
-     期待する出力: コードレビューの結果をMarkdown形式で詳細に記述してください。発見された問題点、改善提案、およびそれらがIssue #11の「デモが音を鳴らすことの確認」にどう関連するかを明確にしてください。特に、手動テストで問題が見つかった場合に、コードレベルでどこを調査すべきかの指針となる情報を含めてください。
+        期待する出力: `examples/cdn-example.html`が正しく動作することを確認した旨の報告、および必要であれば更新された`examples/cdn-example.html`の内容（コードブロック形式）。
+        ```
 
 ---
-Generated at: 2026-01-09 07:09:17 JST
+Generated at: 2026-01-10 07:09:21 JST

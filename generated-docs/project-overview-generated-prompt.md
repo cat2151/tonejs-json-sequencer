@@ -1,4 +1,4 @@
-Last updated: 2026-01-09
+Last updated: 2026-01-10
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -309,6 +309,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
 📁 issue-notes/
   📖 1.md
   📖 11.md
+  📖 12.md
+  📖 14.md
   📖 2.md
   📖 3.md
   📖 4.md
@@ -393,7 +395,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**src/sampleData.js** (248行, 5460バイト)
+**src/sampleData.js** (248行, 5462バイト)
   - 関数: なし
   - インポート: なし
 
@@ -443,6 +445,8 @@ googled947dc864c270e07.html
 index.html
 issue-notes/1.md
 issue-notes/11.md
+issue-notes/12.md
+issue-notes/14.md
 issue-notes/2.md
 issue-notes/3.md
 issue-notes/4.md
@@ -456,8 +460,6 @@ scripts/rename-to-mjs.js
 src/index.html
 src/main.js
 src/play.js
-src/redirect.css
-src/sampleData.js
 src-ts/index.ts
 tsconfig.json
 
@@ -471,4 +473,4 @@ tsconfig.json
 
 
 ---
-Generated at: 2026-01-09 07:08:58 JST
+Generated at: 2026-01-10 07:08:56 JST
