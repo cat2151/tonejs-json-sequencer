@@ -1,4 +1,4 @@
-Last updated: 2026-01-10
+Last updated: 2026-01-11
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -288,6 +288,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
 📖 NPM_README.md
 📖 README.ja.md
 📖 README.md
+📖 RELEASE.ja.md
+📖 RELEASE.md
 📄 _config.yml
 📁 dist/
   📁 cjs/
@@ -311,6 +313,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 11.md
   📖 12.md
   📖 14.md
+  📖 15.md
   📖 2.md
   📖 3.md
   📖 4.md
@@ -359,7 +362,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**generated-docs/callgraph.html** (280行, 8443バイト)
+**generated-docs/callgraph.html** (280行, 8444バイト)
   - 関数: なし
   - インポート: なし
 
@@ -434,6 +437,8 @@ CONVERSION_SUMMARY.md
 NPM_README.md
 README.ja.md
 README.md
+RELEASE.ja.md
+RELEASE.md
 dist/cjs/index.d.ts
 dist/cjs/index.js
 dist/esm/index.d.ts
@@ -447,6 +452,7 @@ issue-notes/1.md
 issue-notes/11.md
 issue-notes/12.md
 issue-notes/14.md
+issue-notes/15.md
 issue-notes/2.md
 issue-notes/3.md
 issue-notes/4.md
@@ -458,8 +464,6 @@ package.json
 scripts/copy-to-dist.js
 scripts/rename-to-mjs.js
 src/index.html
-src/main.js
-src/play.js
 src-ts/index.ts
 tsconfig.json
 
@@ -473,4 +477,4 @@ tsconfig.json
 
 
 ---
-Generated at: 2026-01-10 07:08:56 JST
+Generated at: 2026-01-11 07:08:07 JST
