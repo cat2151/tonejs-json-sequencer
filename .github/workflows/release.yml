@@ -37,10 +37,12 @@ jobs:
             VERSION=${{ github.ref_name }}
             VERSION=${VERSION#v}
             echo "Using version from tag: $VERSION"
+            echo "is_tag=true" >> $GITHUB_OUTPUT
           else
             # Fallback to package.json version for manual triggers
             VERSION=$(node -p "require('./package.json').version")
             echo "Using version from package.json: $VERSION"
+            echo "is_tag=false" >> $GITHUB_OUTPUT
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Version: $VERSION"
@@ -48,7 +50,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.package_version.outputs.version }}
+          tag_name: ${{ steps.package_version.outputs.is_tag == 'true' && github.ref_name || format('v{0}', steps.package_version.outputs.version) }}
           name: Release v${{ steps.package_version.outputs.version }}
           body: |
             Release version ${{ steps.package_version.outputs.version }}
