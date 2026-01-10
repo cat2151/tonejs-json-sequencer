@@ -2,8 +2,8 @@ name: Create Release
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -32,26 +32,10 @@ jobs:
       - name: Get version
         id: package_version
         run: |
-          if [ "${{ github.ref_type }}" = "tag" ]; then
-            # Extract version from tag (remove 'v' prefix)
-            VERSION="${{ github.ref_name }}"
-            VERSION="${VERSION#v}"
-            TAG_NAME="${{ github.ref_name }}"
-            echo "Using version from tag: $VERSION"
-            
-            # Validate tag version matches package.json
-            PACKAGE_VERSION=$(node -p "require('./package.json').version")
-            if [ "$VERSION" != "$PACKAGE_VERSION" ]; then
-              echo "ERROR: Tag version ($VERSION) does not match package.json version ($PACKAGE_VERSION)"
-              exit 1
-            fi
-            echo "Validated: Tag version matches package.json"
-          else
-            # Fallback to package.json version for manual triggers
-            VERSION=$(node -p "require('./package.json').version")
-            TAG_NAME="v${VERSION}"
-            echo "Using version from package.json: $VERSION"
-          fi
+          # Use version from package.json
+          VERSION=$(node -p "require('./package.json').version")
+          TAG_NAME="v${VERSION}"
+          echo "Using version from package.json: $VERSION"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
           echo "Version: $VERSION"
