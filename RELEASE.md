@@ -29,9 +29,12 @@ The project uses GitHub Actions to automatically create releases when a version 
    git push origin main
    git push origin v0.0.2
    ```
+   
+   **Important:** The tag version must match the version in package.json. The workflow will validate this and fail if they don't match.
 
 4. **GitHub Actions will automatically:**
    - Install dependencies
+   - Validate that the tag version matches package.json version
    - Build the distribution files
    - Create a GitHub release with the tag
    - Upload the built files (dist/index.js, dist/index.mjs, etc.) as release assets
@@ -63,6 +66,7 @@ If needed, you can also trigger a release manually:
 The release workflow is defined in `.github/workflows/release.yml` and:
 - Triggers automatically on tags matching `v*.*.*` pattern
 - Can also be triggered manually via workflow_dispatch
+- Validates that tag version matches package.json version (for tag triggers)
 - Builds the project using `npm run build`
 - Creates a GitHub release with CDN usage instructions
 - Uploads all files from the `dist/` directory as release assets
@@ -70,5 +74,5 @@ The release workflow is defined in `.github/workflows/release.yml` and:
 ## Notes
 
 - Always ensure the code is tested before creating a release
-- The tag version should match the version in package.json
+- The tag version **must** match the version in package.json (workflow will fail otherwise)
 - CDN updates may take a few minutes to propagate after release creation
