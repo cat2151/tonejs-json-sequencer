@@ -49,6 +49,9 @@ jobs:
           body: |
             Release version ${{ steps.package_version.outputs.version }}
             
+            **Updated:** ${{ github.event.head_commit.timestamp }}
+            **Commit:** ${{ github.sha }}
+            
             ## CDN Usage
             You can use this library via jsDelivr CDN:
             
@@ -61,7 +64,13 @@ jobs:
               import * as ToneJSONSequencer from 'https://cdn.jsdelivr.net/gh/cat2151/tonejs-json-sequencer@v${{ steps.package_version.outputs.version }}/dist/index.mjs';
             </script>
             ```
+            
+            Or use without version to always get the latest:
+            ```html
+            <script src="https://cdn.jsdelivr.net/gh/cat2151/tonejs-json-sequencer/dist/index.js"></script>
+            ```
           files: |
             dist/**/*
           draft: false
           prerelease: false
+          make_latest: true
