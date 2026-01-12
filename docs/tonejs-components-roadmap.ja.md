@@ -62,7 +62,7 @@
 
 | クラス名 | 状態 | 説明 |
 |---------|------|------|
-| Compressor | ⏳ | 標準コンプレッサー |
+| Compressor | 🚧 | 標準コンプレッサー |
 | MultibandCompressor | ⏳ | マルチバンドコンプレッサー |
 | MidSideCompressor | ⏳ | Mid/Side コンプレッサー |
 | Limiter | ⏳ | リミッター |

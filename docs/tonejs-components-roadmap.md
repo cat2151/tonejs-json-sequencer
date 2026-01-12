@@ -62,7 +62,7 @@ Standard audio effects and processors that modify or combine audio signals.
 
 | Class Name | Status | Description |
 |-----------|--------|-------------|
-| Compressor | ⏳ | Standard compressor |
+| Compressor | 🚧 | Standard compressor |
 | MultibandCompressor | ⏳ | Multiband compressor |
 | MidSideCompressor | ⏳ | Mid/Side compressor |
 | Limiter | ⏳ | Limiter |
