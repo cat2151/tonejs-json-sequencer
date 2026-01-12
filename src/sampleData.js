@@ -1,4 +1,3 @@
-// Tone.js JSON Sequencer Data
 // シーケンスの定義
 export const sequenceDefinitions = [
     {
