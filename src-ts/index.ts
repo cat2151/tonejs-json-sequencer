@@ -103,6 +103,19 @@ export function scheduleOrExecuteEvent(
   }
 }
 
+// Whitelist of allowed voice types for PolySynth security
+const POLYSYNTH_ALLOWED_VOICES = new Set<string>([
+  'AMSynth',
+  'DuoSynth',
+  'FMSynth',
+  'MembraneSynth',
+  'MetalSynth',
+  'MonoSynth',
+  'NoiseSynth',
+  'PluckSynth',
+  'Synth',
+]);
+
 /**
  * Create a Tone.js node based on the event
  */
@@ -142,39 +155,26 @@ function createNode(
       // Format 1 (with voice): { voice: 'FMSynth', options: {...} }
       // Format 2 (default Synth): { options: {...} } or just {...}
       
-      // Whitelist of allowed voice types for security
-      const allowedVoices = new Set<string>([
-        'AMSynth',
-        'DuoSynth',
-        'FMSynth',
-        'MembraneSynth',
-        'MetalSynth',
-        'MonoSynth',
-        'NoiseSynth',
-        'PluckSynth',
-        'Synth',
-      ]);
-      
       if (element.args && element.args.voice) {
         // Get the voice constructor from Tone, only if the voice type is allowed
         const voiceType = element.args.voice;
         
-        if (typeof voiceType === 'string' && allowedVoices.has(voiceType)) {
+        if (typeof voiceType === 'string' && POLYSYNTH_ALLOWED_VOICES.has(voiceType)) {
           const voiceConstructor = (Tone as any)[voiceType];
           
           if (voiceConstructor) {
             nodes.set(element.nodeId, new Tone.PolySynth(voiceConstructor, element.args.options));
           } else {
             console.warn(`Unknown voice type for PolySynth: ${voiceType}`);
-            nodes.set(element.nodeId, new Tone.PolySynth(element.args.options || element.args));
+            nodes.set(element.nodeId, new Tone.PolySynth(element.args.options || element.args || {}));
           }
         } else {
           console.warn(`Disallowed or invalid voice type for PolySynth: ${String(voiceType)}`);
-          nodes.set(element.nodeId, new Tone.PolySynth(element.args.options || element.args));
+          nodes.set(element.nodeId, new Tone.PolySynth(element.args.options || element.args || {}));
         }
       } else {
         // Backward compatibility: use default Synth voice
-        nodes.set(element.nodeId, new Tone.PolySynth(element.args.options || element.args));
+        nodes.set(element.nodeId, new Tone.PolySynth(element.args?.options || element.args || {}));
       }
       break;
     }
