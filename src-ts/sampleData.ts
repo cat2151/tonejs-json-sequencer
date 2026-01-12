@@ -1,32 +1,5 @@
 // Tone.js JSON Sequencer Data
-
-// Type definitions copied from library to avoid import issues
-interface CreateNodeEvent {
-  eventType: 'createNode';
-  nodeId: number;
-  nodeType: string;
-  args?: any;
-}
-
-interface ConnectEvent {
-  eventType: 'connect';
-  nodeId: number;
-  connectTo: number | 'toDestination';
-}
-
-interface TriggerAttackReleaseEvent {
-  eventType: 'triggerAttackRelease';
-  nodeId: number;
-  args: string[];
-}
-
-interface DepthRampToEvent {
-  eventType: 'depth.rampTo';
-  nodeId: number;
-  args: string[];
-}
-
-type SequenceEvent = CreateNodeEvent | ConnectEvent | TriggerAttackReleaseEvent | DepthRampToEvent;
+import type { SequenceEvent } from './demo-types.js';
 
 export interface SequenceDefinition {
   name: string;

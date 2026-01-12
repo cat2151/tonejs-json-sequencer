@@ -5,4 +5,5 @@ node_modules/
 # Generated demo files from TypeScript
 src/main.js
 src/sampleData.js
+src/demo-types.js
 src/index.js

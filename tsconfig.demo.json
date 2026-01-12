@@ -13,5 +13,5 @@
     "declaration": false,
     "noResolve": true
   },
-  "files": ["src-ts/main.ts", "src-ts/sampleData.ts", "src-ts/tone-global.d.ts"]
+  "files": ["src-ts/main.ts", "src-ts/sampleData.ts", "src-ts/demo-types.ts", "src-ts/tone-global.d.ts"]
 }
