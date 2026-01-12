@@ -14,7 +14,8 @@
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc --module esnext --outDir dist/esm && node scripts/rename-to-mjs.js",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs && node scripts/copy-to-dist.js",
-    "build:demo": "tsc --project demo/tsconfig.json"
+    "build:demo": "tsc --project tsconfig.demo-new.json",
+    "build:all": "npm run build && npm run build:demo"
   },
   "keywords": [
     "tonejs",
