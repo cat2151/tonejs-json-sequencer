@@ -2,7 +2,7 @@
 
 [Japanese README](README.ja.md) / [English README](README.md)
 
-[Demo](https://cat2151.github.io/tonejs-json-sequencer/src/index.html)
+[Demo](https://cat2151.github.io/tonejs-json-sequencer/demo/index.html)
 
 # Current Status
 - Frequent breaking changes are expected.
