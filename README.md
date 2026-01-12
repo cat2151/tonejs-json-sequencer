@@ -53,6 +53,42 @@ The core `scheduleOrExecuteEvent` function is a simple source file accepting sin
 This enables flexible development by separating the low-level Tone.js integration from higher-level sequence and streaming management.
 
 
+# Tone.js Component JSON Support
+
+tonejs-json-sequencer enables JSON description of Tone.js's major components.
+
+## Support Status Overview
+
+### Currently Supported (✅)
+
+- **Instrument**: Synth, MonoSynth, FMSynth, AMSynth, DuoSynth, MetalSynth, MembraneSynth, PluckSynth, NoiseSynth, PolySynth, Sampler
+- **Effect**: Reverb, Freeverb, JCReverb, Chorus, Phaser, Tremolo, Vibrato, AutoFilter, AutoPanner, AutoWah, FeedbackDelay, PingPongDelay, Distortion, BitCrusher, Chebyshev, PitchShift, FrequencyShifter, StereoWidener
+
+### Planned (🚧)
+
+- **Source**: FatOscillator, PulseOscillator
+- **Effect**: EQ3 (Equalizer), Compressor
+- **Playing Technique Methods**: Panpot changes, Expression changes, LPF changes, Portamento
+
+### To Be Determined (⏳)
+
+- **Source**: Oscillator, OmniOscillator, Noise, Player, GrainPlayer, and more
+- **Effect**: Filter types, Dynamics (Limiter, Gate), Spatial (Convolver), and more
+- **Component**: Envelopes, LFO, Signal types, Analysis (Meter, Analyser, FFT), and more
+
+## Detailed Documentation
+
+For detailed support status, implementation priorities, and implementation approach for all components, please refer to:
+
+📄 [Tone.js Components JSON Support Roadmap (Detailed)](docs/tonejs-components-roadmap.md)
+
+This document includes:
+- Classification and implementation status of all components (Instrument / Source / Effect / Component)
+- Implementation priorities and plans
+- Implementation approach and process
+- Links to reference materials
+
+
 # Roadmap
 
 - *Items are not in order.*
