@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tone.js JSON Sequencer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="controls">
+    <button autofocus>play</button>
+    <select id="sequenceSelector">
+      <!-- オプションは JavaScript で動的に生成されます -->
+    </select>
+  </div>
+  <!-- <div id="output"></div> -->
+  <textarea id="textarea3" rows="45" cols="70">
+  </textarea><br>
+  <script src="https://unpkg.com/tone@15.2.7/build/Tone.js"></script>
+  <script type="module" src="dist/main.js"></script>
+</body>
+</html>
