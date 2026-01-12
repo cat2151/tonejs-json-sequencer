@@ -48,9 +48,16 @@ function updateImports(dir) {
     } else if (file.endsWith('.mjs')) {
       try {
         let content = fs.readFileSync(filePath, 'utf8');
-        // Replace .js extensions in import/export statements with .mjs
-        const updated = content.replace(/(from\s+['"])([^'"]+)\.js(['"])/g, '$1$2.mjs$3')
-                              .replace(/(export\s+\{[^}]+\}\s+from\s+['"])([^'"]+)\.js(['"])/g, '$1$2.mjs$3');
+        // Replace .js extensions in various import/export statement patterns with .mjs
+        let updated = content;
+        // Handle: from './file.js'
+        updated = updated.replace(/(from\s+['"])([^'"]+)\.js(['"])/g, '$1$2.mjs$3');
+        // Handle: export { ... } from './file.js'
+        updated = updated.replace(/(export\s+\{[^}]+\}\s+from\s+['"])([^'"]+)\.js(['"])/g, '$1$2.mjs$3');
+        // Handle: import './file.js' (side-effect imports)
+        updated = updated.replace(/(import\s+['"])([^'"]+)\.js(['"])/g, '$1$2.mjs$3');
+        // Handle: import('./file.js') (dynamic imports)
+        updated = updated.replace(/(import\s*\(\s*['"])([^'"]+)\.js(['"])/g, '$1$2.mjs$3');
         
         if (content !== updated) {
           fs.writeFileSync(filePath, updated, 'utf8');
