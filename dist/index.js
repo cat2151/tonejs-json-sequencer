@@ -100,9 +100,28 @@ function createNode(Tone, nodes, element) {
         case 'PluckSynth':
             nodes.set(element.nodeId, new Tone.PluckSynth(element.args));
             break;
-        case 'PolySynth':
-            nodes.set(element.nodeId, new Tone.PolySynth(element.args));
+        case 'PolySynth': {
+            // PolySynth can be created with a voice parameter
+            // Format 1 (with voice): { voice: 'FMSynth', options: {...} }
+            // Format 2 (default Synth): { options: {...} } or just {...}
+            if (element.args && element.args.voice) {
+                // Get the voice constructor from Tone
+                const voiceType = element.args.voice;
+                const voiceConstructor = Tone[voiceType];
+                if (voiceConstructor) {
+                    nodes.set(element.nodeId, new Tone.PolySynth(voiceConstructor, element.args.options));
+                }
+                else {
+                    console.warn(`Unknown voice type for PolySynth: ${voiceType}`);
+                    nodes.set(element.nodeId, new Tone.PolySynth(element.args.options || element.args));
+                }
+            }
+            else {
+                // Backward compatibility: use default Synth voice
+                nodes.set(element.nodeId, new Tone.PolySynth(element.args));
+            }
             break;
+        }
         case 'Sampler':
             nodes.set(element.nodeId, new Tone.Sampler({
                 ...element.args,
