@@ -224,7 +224,7 @@ function scheduleOrExecuteEvent(element) {
             }
             break;
         case "connect":
-            if (element.connectTo == "toDestination") {
+            if (element.connectTo === "toDestination") {
                 nodes[element.nodeId].toDestination();
             }
             else {
