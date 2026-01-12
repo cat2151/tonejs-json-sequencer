@@ -1,7 +1,7 @@
 // Tone.js JSON Sequencer - Event Scheduler
 // Based on tonejs-json-sequencer by cat2151
 // https://github.com/cat2151/tonejs-json-sequencer
-import { createNode, connectNode } from './node-factory.js';
+import { createNode, connectNode } from './node-factory.mjs';
 /**
  * Schedule or execute a sequence event
  * @param Tone - Tone.js library instance

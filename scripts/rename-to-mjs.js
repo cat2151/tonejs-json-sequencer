@@ -31,7 +31,41 @@ function renameFiles(dir) {
   });
 }
 
+function updateImports(dir) {
+  if (!fs.existsSync(dir)) {
+    console.log(`Directory ${dir} does not exist`);
+    return;
+  }
+
+  const files = fs.readdirSync(dir);
+  
+  files.forEach(file => {
+    const filePath = path.join(dir, file);
+    const stat = fs.statSync(filePath);
+    
+    if (stat.isDirectory()) {
+      updateImports(filePath);
+    } else if (file.endsWith('.mjs')) {
+      try {
+        let content = fs.readFileSync(filePath, 'utf8');
+        // Replace .js extensions in import/export statements with .mjs
+        const updated = content.replace(/(from\s+['"])([^'"]+)\.js(['"])/g, '$1$2.mjs$3')
+                              .replace(/(export\s+\{[^}]+\}\s+from\s+['"])([^'"]+)\.js(['"])/g, '$1$2.mjs$3');
+        
+        if (content !== updated) {
+          fs.writeFileSync(filePath, updated, 'utf8');
+          console.log(`Updated imports in: ${filePath}`);
+        }
+      } catch (err) {
+        console.error(`Failed to update imports in ${filePath}:`, err);
+        process.exit(1);
+      }
+    }
+  });
+}
+
 renameFiles(esmDir);
+updateImports(esmDir);
 
 // Copy index.mjs to dist/
 const indexMjs = path.join(esmDir, 'index.mjs');
