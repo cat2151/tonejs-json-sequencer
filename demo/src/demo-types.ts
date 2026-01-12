@@ -1,5 +1,6 @@
 // Type definitions for demo files
-// Copied from library to avoid import issues during compilation
+// These types mirror the library's exported types to maintain independence
+// If library types change, these should be updated accordingly
 
 export interface CreateNodeEvent {
   eventType: 'createNode';

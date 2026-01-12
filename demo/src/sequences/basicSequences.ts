@@ -1,10 +1,6 @@
 // Basic demo sequences
 import type { SequenceEvent } from '../demo-types.js';
-
-export interface SequenceDefinition {
-  name: string;
-  data: SequenceEvent[];
-}
+import type { SequenceDefinition } from '../sequenceLoader.js';
 
 export const sequenceDefinitions: SequenceDefinition[] = [
   {
@@ -118,7 +114,7 @@ export const sequenceDefinitions: SequenceDefinition[] = [
         "nodeId": 1,
         "nodeType": "PolySynth",
         "args": {
-          options: {
+          "options": {
             "oscillator": {
               "type": "sawtooth"
             },
@@ -160,7 +156,7 @@ export const sequenceDefinitions: SequenceDefinition[] = [
         "nodeId": 0,
         "nodeType": "PolySynth",
         "args": {
-          options: {
+          "options": {
             "oscillator": {
               "type": "fatsawtooth"
             },

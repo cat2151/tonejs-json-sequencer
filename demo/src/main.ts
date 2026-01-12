@@ -36,6 +36,11 @@ class DemoApp {
   }
 
   private updateTextareaWithSelectedSequence(selectedSequenceName?: string): void {
+    // If no sequences are loaded, there is nothing to display or play.
+    if (this.sequences.length === 0) {
+      return;
+    }
+    
     const sequenceName = selectedSequenceName || 
                          this.uiManager.getSelectedSequenceName() || 
                          this.sequences[0].name;
@@ -64,7 +69,16 @@ class DemoApp {
 
   private async play(): Promise<void> {
     const json = this.uiManager.getTextareaValue();
-    const sequence = JSON.parse(json) as SequenceEvent[];
+    
+    let sequence: SequenceEvent[];
+    try {
+      sequence = JSON.parse(json) as SequenceEvent[];
+    } catch (error: any) {
+      console.error('Invalid JSON in sequence editor:', error);
+      alert('Invalid JSON in sequence editor. Please fix the JSON syntax and try again.');
+      return;
+    }
+    
     await this.audioManager.playSequence(sequence);
   }
 }

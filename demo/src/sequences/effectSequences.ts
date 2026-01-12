@@ -1,6 +1,6 @@
 // Effect demo sequences
 import type { SequenceEvent } from '../demo-types.js';
-import type { SequenceDefinition } from './basicSequences.js';
+import type { SequenceDefinition } from '../sequenceLoader.js';
 
 export const sequenceDefinitions: SequenceDefinition[] = [
   // === Effect Demos ===

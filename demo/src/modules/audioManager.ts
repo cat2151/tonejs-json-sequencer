@@ -1,6 +1,8 @@
 // Audio playback management for Tone.js JSON Sequencer
 import type { SequenceEvent } from '../demo-types.js';
-// @ts-ignore - Using built library
+// Import from built library - path is relative to compiled output location (demo/dist/modules/)
+// Points to the library's built ES module at dist/index.mjs
+// @ts-ignore - Type definitions exist at dist/index.d.ts but TS has issues resolving .mjs imports
 import { SequencerNodes, scheduleOrExecuteEvent } from '../../../dist/index.mjs';
 
 export class AudioManager {

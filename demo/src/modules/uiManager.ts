@@ -18,7 +18,6 @@ export class UIManager {
   }
 
   private setupEventListeners(): void {
-    this.textarea.addEventListener('input', () => this.onPlay());
     this.sequenceSelector.addEventListener('change', () => {
       const selectedName = this.sequenceSelector.value;
       this.onSequenceChange(selectedName);
