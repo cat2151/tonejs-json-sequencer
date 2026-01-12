@@ -4,15 +4,14 @@
     "module": "ES2015",
     "lib": ["ES2020", "DOM"],
     "outDir": "./src",
-    "rootDir": "./src-ts",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "declaration": false
+    "declaration": false,
+    "noResolve": true
   },
-  "include": ["src-ts/main.ts", "src-ts/sampleData.ts", "src-ts/tone-global.d.ts"],
-  "exclude": ["node_modules", "dist", "src-ts/index.ts"]
+  "files": ["src-ts/main.ts", "src-ts/sampleData.ts", "src-ts/tone-global.d.ts"]
 }
