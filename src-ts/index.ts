@@ -154,14 +154,11 @@ function createNode(
       // PolySynth can be created with a voice parameter
       // Format 1 (with voice): { voice: 'FMSynth', options: {...} }
       // Format 2 (default Synth): { options: {...} } or just {...}
-      
       if (element.args && element.args.voice) {
         // Get the voice constructor from Tone, only if the voice type is allowed
         const voiceType = element.args.voice;
-        
         if (typeof voiceType === 'string' && POLYSYNTH_ALLOWED_VOICES.has(voiceType)) {
           const voiceConstructor = (Tone as any)[voiceType];
-          
           if (voiceConstructor) {
             nodes.set(element.nodeId, new Tone.PolySynth(voiceConstructor, element.args.options));
           } else {
