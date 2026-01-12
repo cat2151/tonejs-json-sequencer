@@ -48,6 +48,41 @@ tonejs-json-sequencer では、Tone.js の構成要素（シンセ、エフェ�
 
 これにより、Tone.jsとつながる低レイヤーと、シーケンスやストリーミングなどの高レイヤーを、切り分けて柔軟に開発できます。
 
+# Tone.js コンポーネントのJSON対応
+
+tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記述できるようにします。
+
+## 対応状況の概要
+
+### 現在対応済み（✅）
+
+- **Instrument**: Synth, MonoSynth, FMSynth, AMSynth, DuoSynth, MetalSynth, MembraneSynth, PluckSynth, NoiseSynth, PolySynth, Sampler
+- **Effect**: Reverb, Freeverb, JCReverb, Chorus, Phaser, Tremolo, Vibrato, AutoFilter, AutoPanner, AutoWah, FeedbackDelay, PingPongDelay, Distortion, BitCrusher, Chebyshev, PitchShift, FrequencyShifter, StereoWidener
+
+### 計画中（🚧）
+
+- **Source**: FatOscillator, PulseOscillator
+- **Effect**: EQ3（イコライザー）, Compressor（コンプレッサー）
+- **奏法メソッド**: Panpot変更, Expression変更, LPF変更, Portamento
+
+### 今後検討予定（⏳）
+
+- **Source**: Oscillator, OmniOscillator, Noise, Player, GrainPlayer 他
+- **Effect**: Filter系, Dynamics系（Limiter, Gate）, Spatial系（Convolver）他
+- **Component**: Envelope系, LFO, Signal系, Analysis系（Meter, Analyser, FFT）他
+
+## 詳細ドキュメント
+
+全コンポーネントの詳細な対応状況、実装優先順位、実装方針については、以下のドキュメントを参照してください：
+
+📄 [Tone.js コンポーネント JSON対応ロードマップ（詳細版）](docs/tonejs-components-roadmap.ja.md)
+
+このドキュメントには以下の情報が含まれています：
+- 全コンポーネントの分類と実装状況（Instrument / Source / Effect / Component）
+- 実装の優先順位と計画
+- 実装方針と進め方
+- 参考資料へのリンク
+
 # ロードマップ
 - ※順不同
 - ※のち2種類に切り分けて、利用しやすさ優先で1つのtopicに絞ったシンプルなサンプルと、強みがわかりやすいよう複数topicを実用的にまとめたサンプル、がよさげ
