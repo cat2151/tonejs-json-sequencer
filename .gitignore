@@ -11,5 +11,5 @@ src/index.js
 # Generated demo files (old location - deprecated)
 demo/dist/
 
-# All generated/compiled output now in dist/
-dist/
+# Note: dist/ is NOT gitignored because it's needed for GitHub Pages
+# The dist directory contains built files required for the demo to work
