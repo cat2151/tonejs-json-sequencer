@@ -8,7 +8,7 @@ The demo application has been successfully refactored to address the concerns ab
 ### 1. New Directory Structure
 ```
 demo/
-├── dist/              # Compiled JavaScript (gitignored)
+├── dist/              # Compiled JavaScript (committed for GitHub Pages)
 │   ├── main.js
 │   ├── sequenceLoader.js
 │   ├── modules/
@@ -80,8 +80,9 @@ npm run build
 ### 6. Updated References
 
 - `README.ja.md` and `README.md` now point to `demo/index.html`
-- `.gitignore` excludes `demo/dist/`
+- `.gitignore` updated to allow `dist/` (needed for GitHub Pages)
 - `CONVERSION_SUMMARY.md` updated to reflect new structure
+- **Note**: The `dist/` directory must be committed for GitHub Pages demo to work
 
 ## Verification
 

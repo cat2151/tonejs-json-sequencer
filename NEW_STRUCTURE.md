@@ -109,6 +109,7 @@ This would require extracting each of the 31 demos from the combined files, whic
 
 ## Notes
 
-- The `dist/` directory is gitignored and generated during build
+- The `dist/` directory is committed to the repository to support GitHub Pages demo
+- To rebuild after source changes: `npm run build:all` (builds both library and demo)
 - Old directories (`src-ts/`, `demo/`) are retained temporarily for compatibility
 - Demo HTML updated to reference `dist/demo/main.js`
