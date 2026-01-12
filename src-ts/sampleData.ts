@@ -1,5 +1,5 @@
 // Tone.js JSON Sequencer Data
-import type { SequenceEvent } from './index.js';
+import type { SequenceEvent } from './demo-types.js';
 
 export interface SequenceDefinition {
   name: string;

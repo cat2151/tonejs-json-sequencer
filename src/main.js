@@ -1,6 +1,7 @@
 // Tone.js JSON Sequencer Main Script
 import { sequenceDefinitions } from './sampleData.js';
-import { SequencerNodes, scheduleOrExecuteEvent } from './index.js';
+// @ts-ignore - Using built library
+import { SequencerNodes, scheduleOrExecuteEvent } from '../dist/index.mjs';
 let textarea1;
 let sequenceSelector;
 const nodes = new SequencerNodes();

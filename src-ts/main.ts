@@ -1,7 +1,8 @@
 // Tone.js JSON Sequencer Main Script
 import { sequenceDefinitions } from './sampleData.js';
-import type { SequenceEvent } from './index.js';
-import { SequencerNodes, scheduleOrExecuteEvent } from './index.js';
+import type { SequenceEvent } from './demo-types.js';
+// @ts-ignore - Using built library
+import { SequencerNodes, scheduleOrExecuteEvent } from '../dist/index.mjs';
 
 interface SequenceDataCollection {
   [key: string]: SequenceEvent[];
