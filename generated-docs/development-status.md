@@ -1,51 +1,81 @@
-Last updated: 2026-01-11
+Last updated: 2026-01-14
 
 # Development Status
 
 ## 現在のIssues
-- 現在オープン中のIssueはありません。
-- プロジェクトは最近、自動リリースワークフロー（[Issue #15](../issue-notes/15.md) 関連）の実装を完了しました。
-- 今後の開発は、既存の自動化されたレポートとワークフローの精度と信頼性の向上に焦点を当てます。
+- [Issue #31](../issue-notes/31.md): 大規模なリファクタリングが完了したため、デモが正常に動作するかどうか、徹底的な動作確認が求められています。
+- 最近のコミットでは、`scripts/rename-to-mjs.js`が拡張され、`dist`ディレクトリのファイルがGitHub Pagesで正しくロードされるように変更されました。
+- この変更が正しく機能しているか、エンドツーエンドでデモの主要機能（シーケンス再生、シンセサイザー、エフェクト）を検証する必要があります。
 
 ## 次の一手候補
-1. 自動リリースワークフローの健全性チェックと機能改善 [Issue #15](../issue-notes/15.md)
-   - 最初の小さな一歩: 最新のコミット後に実際にGitHub Releasesにリリースが作成されたか、その内容（バージョン、リリースノート、タグ）が意図通りかを確認する。
+1. [Issue #31](../issue-notes/31.md): 大規模リファクタリング後のデモの技術的な動作検証
+   - 最初の小さな一歩: `index.html`をブラウザで開き、開発者コンソールでエラーが出ていないか確認し、基本的なシーケンス再生、シンセ・エフェクトが機能するかを手動で確認する。特に、`.mjs`へのimportパス変換が正しく機能しているか、ネットワークタブでリソースのロード状況を確認する。
    - Agent実行プロンプト:
      ```
-     対象ファイル: .github/workflows/release.yml, RELEASE.md, RELEASE.ja.md, package.json
+     対象ファイル: `index.html`, `dist/demo/main.js`, `dist/esm/index.mjs`, `scripts/rename-to-mjs.js`, `package.json`
 
-     実行内容: `release.yml` ワークフローが最近のコミット (例: `683f941`, `a327e87`) によって正常に実行され、GitHub Releases に新しいリリースが作成されたかを確認してください。作成されたリリースの内容（バージョン、リリースノートの記載内容、`RELEASE.md` と `RELEASE.ja.md` からの情報取得）が意図通りかを評価し、改善点を提案してください。
+     実行内容: 大規模リファクタリング後にデモが正しく動作するための技術的側面を分析してください。具体的には、
+     1. `index.html`が正しく`dist/demo/main.js`（または`dist/esm/index.mjs`）をロードしているか。
+     2. `dist`内の`.js`ファイルから`.mjs`へのimportパス変換が、`scripts/rename-to-mjs.js`のロジックに従って正しく行われているか。
+     3. `package.json`の`type`フィールド設定と、ESMモジュールのロードメカニズムが、ブラウザ環境で競合していないか。
+     4. デモに必要なTone.jsなどの外部ライブラリが正しくロードされているか。
+     これらを考慮し、デモがブラウザで正常に動作しない場合に考えられる主要な原因を特定してください。
 
-     確認事項: GitHubリポジトリのReleasesセクションを確認し、最新のリリースの詳細、特に生成されたリリースノートが変更された `RELEASE.md` および `RELEASE.ja.md` の内容と合致しているか確認してください。
+     確認事項:
+     - ブラウザのJavaScriptモジュールロードメカニズム（特にESMとCommonJSの混在）を考慮すること。
+     - `scripts/rename-to-mjs.js`の最近の変更が意図した通りに機能しているか（特に side-effect imports や dynamic imports のサポート）。
+     - `dist`ディレクトリにビルドされたファイルの構成と、`index.html`からの参照パスの整合性。
 
-     期待する出力: 最新のリリースの評価結果と、ワークフローの改善点（例: リリースノートの自動生成精度の向上、国際化対応の確認）をMarkdown形式で出力してください。
+     期待する出力:
+     デモの技術的な動作確認レポートをmarkdown形式で生成してください。
+     - デモが動作しない場合の主要な原因候補とその診断方法。
+     - `index.html`と`dist`ディレクトリ内の主要なスクリプトファイル間の依存関係がどのように解決されるべきか。
+     - 必要に応じて、現在のビルド設定やスクリプトに追加すべき修正案を提示してください。
      ```
 
-2. 開発状況レポートとプロジェクト概要レポートの自動生成スクリプトの精度検証と改善 [Issue #14](../issue-notes/14.md)
-   - 最初の小さな一歩: `generated-docs/development-status.md` と `generated-docs/project-overview.md` の最新の内容が、現在のプロジェクトの状態を正確に反映しているかを確認する。
+2. [Issue #31](../issue-notes/31.md): デモのテスト自動化の検討
+   - 最初の小さな一歩: デモの主要なシナリオ（例: メインのシーケンス再生、特定のシンセ音色の出力、エフェクトのオンオフ）をリストアップし、これらの動作を自動で確認するための技術的アプローチ（例: Playwright, Cypressなど）を調査する。
    - Agent実行プロンプト:
      ```
-     対象ファイル: .github/actions-tmp/.github_automation/project_summary/scripts/development/DevelopmentStatusGenerator.cjs, .github/actions-tmp/.github_automation/project_summary/scripts/overview/ProjectOverviewGenerator.cjs, generated-docs/development-status.md, generated-docs/project-overview.md
+     対象ファイル: `dist/demo/main.js`, `src/demo/sequences/basicSequences.ts`, `package.json`
 
-     実行内容: `DevelopmentStatusGenerator.cjs` と `ProjectOverviewGenerator.cjs` が生成する `development-status.md` および `project-overview.md` の内容を、現在のプロジェクトの状態（ファイルリスト、コミット履歴、Issue情報など）と照らし合わせて評価してください。特に、情報の網羅性、正確性、読みやすさの観点から分析し、改善が必要な点を特定してください。
+     実行内容: 大規模リファクタリング後のデモの安定性を確保するため、主要なデモ機能の動作を自動化されたテストで検証する手法を検討してください。
+     1. PlaywrightやCypressなどのE2Eテストフレームワークの導入可能性を調査する。
+     2. デモの主要なユースケース（例: UIのボタンクリック、シーケンスの再生開始、特定の音源が鳴ることの確認）をテストケースとしてどのように記述できるかを検討する。
+     3. 特に、Web Audio APIを伴う音声出力のテストを、これらのフレームワークでどのように実現できるか（例: 仮想オーディオデバイスの使用、オーディオコンテキストのモック）について調査し、提案してください。
 
-     確認事項: 現在の `generated-docs/development-status.md` と `generated-docs/project-overview.md` を読み、提供されているプロジェクトのファイル一覧やコミット履歴と比較し、レポートがハルシネーションを起こしていないか、古い情報を含んでいないかを確認してください。
+     確認事項:
+     - E2Eテスト導入によるビルドプロセスやCI/CDへの影響。
+     - 音声出力のテストが可能な現実的な方法と、その限界。
+     - 最小限の変更でデモの主要機能の健全性を検証できるアプローチ。
 
-     期待する出力: 各レポートの現状評価と、生成スクリプトに対する具体的な改善提案をMarkdown形式で出力してください。
+     期待する出力:
+     デモのE2Eテスト導入計画をmarkdown形式で生成してください。
+     - 推奨するテストフレームワークとその理由。
+     - 3つ以上の具体的なテストシナリオと、それらをテストコードとして記述するための擬似コードまたは主要なステップ。
+     - 音声出力テストに関する実現可能性と、もし困難な場合の代替案（例: UI操作のみのテスト）。
      ```
 
-3. 過去のIssueノートのアーカイブポリシー検討と実装 [Issue #29](../issue-notes/29.md)
-   - 最初の小さな一歩: `issue-notes/` ディレクトリ内の既存のIssueノートを一覧し、これらをどのように管理（アーカイブ、削除、ステータス更新）すべきかの方針を検討するためのドラフトを作成する。
+3. [Issue #1](../issue-notes/1.md)の再確認とコードクリーンアップ、ドキュメント更新
+   - 最初の小さな一歩: `REFACTORING_SUMMARY.md`と`NEW_STRUCTURE.md`の内容を再確認し、それらに基づいてプロジェクト全体で不要になったファイルやコードの残骸がないか、ファイル一覧と照らし合わせてリストアップする。また、`README.ja.md`の入出力定義が現在のプロジェクト構造に合致しているか確認する。
    - Agent実行プロンプト:
      ```
-     対象ファイル: issue-notes/ ディレクトリ内の全Markdownファイル (例: issue-notes/1.md, issue-notes/2.md, ...), .github/actions-tmp/.github/workflows/issue-note.yml, .github/actions-tmp/.github_automation/project_summary/scripts/development/IssueTracker.cjs
+     対象ファイル: `REFACTORING_SUMMARY.md`, `NEW_STRUCTURE.md`, `README.ja.md`, プロジェクト全体のファイル一覧
 
-     実行内容: 多数存在する `issue-notes/*.md` ファイルが「オープン中のIssueはありません」という現状とどのように整合しているのかを分析し、これらのIssueノートのライフサイクル管理（例: クローズされたIssueのノートのアーカイブ、古いノートの自動削除）に関するポリシーの必要性を検討してください。具体的なアーカイブ戦略や、既存の `issue-note.yml` ワークフローや `IssueTracker.cjs` を活用できる可能性について提案してください。
+     実行内容:
+     1. `REFACTORING_SUMMARY.md`と`NEW_STRUCTURE.md`に記述されているリファクタリングの経緯と新しい構造に基づき、プロジェクトのファイル一覧から現在では不要と思われるファイルやディレクトリ（例: 旧構造の残骸、一時ファイル、古いデモ関連ファイルなど）を特定してください。
+     2. `README.ja.md`の「入出力定義」セクション（またはそれに相当する箇所）が、現在の`src`および`dist`ディレクトリの構造と機能に合致しているかを確認してください。特に、[Issue #1](../issue-notes/1.md)で言及された内容との整合性を考慮してください。
+     3. 不要ファイルの削除と`README.ja.md`の更新について、具体的な提案を生成してください。
 
-     確認事項: 各Issueノートの内容を確認し、それらが本当に「クローズ済み」または「対応不要」であるかを判断する基準を検討してください。また、`issue-note.yml` が現在どのように機能しているか、そのトリガーとアクションを把握してください。
+     確認事項:
+     - 削除対象ファイルの特定は慎重に行い、現在のビルドプロセスやGitHub Pagesでの動作に影響がないことを確認する。
+     - `README.ja.md`の更新は、プロジェクトの現在の機能と将来の方向性を正確に反映すること。
 
-     期待する出力: Issueノートのアーカイブポリシーのドラフトと、それを自動化するための実装検討（例: 新しいワークフローの提案、既存スクリプトの拡張）をMarkdown形式で出力してください。
-     ```
+     期待する出力:
+     プロジェクトのクリーンアップとドキュメント更新提案をmarkdown形式で生成してください。
+     - 削除を推奨するファイルまたはディレクトリのリストと、その理由。
+     - `README.ja.md`の「入出力定義」に関する具体的な修正案（差分形式または推奨される新しい記述）。
+     - クリーンアップ後に残るべき重要なドキュメントファイル（例: `NEW_STRUCTURE.md`）の確認。
 
 ---
-Generated at: 2026-01-11 07:08:32 JST
+Generated at: 2026-01-14 07:09:16 JST

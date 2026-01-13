@@ -1,4 +1,4 @@
-Last updated: 2026-01-11
+Last updated: 2026-01-14
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -204,20 +204,82 @@ Last updated: 2026-01-11
 - .github/workflows/release.yml
 - .gitignore
 - CONVERSION_SUMMARY.md
+- EXTRACTION_PROCESS.md
 - LICENSE
+- NEW_STRUCTURE.md
 - NPM_README.md
 - README.ja.md
 - README.md
+- REFACTORING_SUMMARY.md
 - RELEASE.ja.md
 - RELEASE.md
 - _config.yml
+- demo/index.html
+- demo/styles.css
+- dist/cjs/event-scheduler.d.ts
+- dist/cjs/event-scheduler.js
 - dist/cjs/index.d.ts
 - dist/cjs/index.js
+- dist/cjs/node-factory.d.ts
+- dist/cjs/node-factory.js
+- dist/cjs/sequencer-nodes.d.ts
+- dist/cjs/sequencer-nodes.js
+- dist/cjs/types.d.ts
+- dist/cjs/types.js
+- dist/demo/demo-types.js
+- dist/demo/effect/autofilter.js
+- dist/demo/effect/autopanner.js
+- dist/demo/effect/autowah.js
+- dist/demo/effect/bitcrusher.js
+- dist/demo/effect/chebyshev.js
+- dist/demo/effect/chorus.js
+- dist/demo/effect/distortion.js
+- dist/demo/effect/feedbackdelay.js
+- dist/demo/effect/freeverb.js
+- dist/demo/effect/frequencyshifter.js
+- dist/demo/effect/jcreverb.js
+- dist/demo/effect/phaser.js
+- dist/demo/effect/pingpongdelay.js
+- dist/demo/effect/pitchshift.js
+- dist/demo/effect/reverb.js
+- dist/demo/effect/stereowidener.js
+- dist/demo/effect/tremolo.js
+- dist/demo/effect/vibrato.js
+- dist/demo/instrument/amsynth.js
+- dist/demo/instrument/delay-vibrato.js
+- dist/demo/instrument/duosynth.js
+- dist/demo/instrument/membranesynth.js
+- dist/demo/instrument/metalsynth.js
+- dist/demo/instrument/minimal.js
+- dist/demo/instrument/monosynth.js
+- dist/demo/instrument/multitimbral.js
+- dist/demo/instrument/noisesynth.js
+- dist/demo/instrument/plucksynth.js
+- dist/demo/instrument/polysynth-fm.js
+- dist/demo/instrument/sampler-piano.js
+- dist/demo/instrument/supersaw.js
+- dist/demo/main.js
+- dist/demo/modules/audioManager.js
+- dist/demo/modules/uiManager.js
+- dist/demo/sequenceLoader.js
+- dist/demo/sequences/basicSequences.js
+- dist/demo/sequences/effectSequences.js
+- dist/demo/sequences/synthSequences.js
+- dist/esm/event-scheduler.d.ts
+- dist/esm/event-scheduler.mjs
 - dist/esm/index.d.ts
 - dist/esm/index.mjs
+- dist/esm/node-factory.d.ts
+- dist/esm/node-factory.mjs
+- dist/esm/sequencer-nodes.d.ts
+- dist/esm/sequencer-nodes.mjs
+- dist/esm/types.d.ts
+- dist/esm/types.mjs
 - dist/index.d.ts
 - dist/index.js
 - dist/index.mjs
+- docs/tonejs-components-roadmap.ja.md
+- docs/tonejs-components-roadmap.md
 - examples/cdn-example.html
 - examples/npm-example.mjs
 - generated-docs/callgraph.html
@@ -229,8 +291,18 @@ Last updated: 2026-01-11
 - issue-notes/12.md
 - issue-notes/14.md
 - issue-notes/15.md
+- issue-notes/17.md
+- issue-notes/19.md
 - issue-notes/2.md
+- issue-notes/21.md
+- issue-notes/23.md
+- issue-notes/25.md
+- issue-notes/27.md
+- issue-notes/29.md
 - issue-notes/3.md
+- issue-notes/31.md
+- issue-notes/32.md
+- issue-notes/34.md
 - issue-notes/4.md
 - issue-notes/5.md
 - issue-notes/7.md
@@ -239,48 +311,203 @@ Last updated: 2026-01-11
 - package.json
 - scripts/copy-to-dist.js
 - scripts/rename-to-mjs.js
-- src/index.html
-- src/main.js
-- src/play.js
-- src/redirect.css
-- src/sampleData.js
-- src/scheduleOrExecuteEvent.js
-- src/styles.css
-- src-ts/index.ts
+- src/demo/demo-types.ts
+- src/demo/effect/autofilter.ts
+- src/demo/effect/autopanner.ts
+- src/demo/effect/autowah.ts
+- src/demo/effect/bitcrusher.ts
+- src/demo/effect/chebyshev.ts
+- src/demo/effect/chorus.ts
+- src/demo/effect/distortion.ts
+- src/demo/effect/feedbackdelay.ts
+- src/demo/effect/freeverb.ts
+- src/demo/effect/frequencyshifter.ts
+- src/demo/effect/jcreverb.ts
+- src/demo/effect/phaser.ts
+- src/demo/effect/pingpongdelay.ts
+- src/demo/effect/pitchshift.ts
+- src/demo/effect/reverb.ts
+- src/demo/effect/stereowidener.ts
+- src/demo/effect/tremolo.ts
+- src/demo/effect/vibrato.ts
+- src/demo/instrument/amsynth.ts
+- src/demo/instrument/delay-vibrato.ts
+- src/demo/instrument/duosynth.ts
+- src/demo/instrument/membranesynth.ts
+- src/demo/instrument/metalsynth.ts
+- src/demo/instrument/minimal.ts
+- src/demo/instrument/monosynth.ts
+- src/demo/instrument/multitimbral.ts
+- src/demo/instrument/noisesynth.ts
+- src/demo/instrument/plucksynth.ts
+- src/demo/instrument/polysynth-fm.ts
+- src/demo/instrument/sampler-piano.ts
+- src/demo/instrument/supersaw.ts
+- src/demo/main.ts
+- src/demo/modules/audioManager.ts
+- src/demo/modules/uiManager.ts
+- src/demo/sequenceLoader.ts
+- src/demo/sequences/basicSequences.ts
+- src/demo/sequences/effectSequences.ts
+- src/demo/sequences/synthSequences.ts
+- src/demo/tone-global.d.ts
+- src/event-scheduler.ts
+- src/index.ts
+- src/node-factory.ts
+- src/sequencer-nodes.ts
+- src/types.ts
+- tsconfig.all.json
+- tsconfig.demo-new.json
 - tsconfig.json
 
 ## 現在のオープンIssues
-オープン中のIssueはありません
+## [Issue #31](../issue-notes/31.md): 大規模なリファクタリングを行ったのでdemoを動作確認する
+[issue-notes/31.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/31.md)
+
+...
+ラベル: 
+--- issue-notes/31.md の内容 ---
+
+```markdown
+# issue 大規模なリファクタリングを行ったのでdemoを動作確認する #31
+[issues #31](https://github.com/cat2151/tonejs-json-sequencer/issues/31)
+
+
+
+```
 
 ## ドキュメントで言及されているファイルの内容
+### issue-notes/1.md
+```md
+{% raw %}
+# issue 現在のdemoはprototypeなのでゼロから作り直す。README.ja.mdに入出力定義などをBluesky投稿を元にまとめる #1
+[issues #1](https://github.com/cat2151/tonejs-json-sequencer/issues/1)
 
+# close条件
+- 済 : 入出力定義をREADME.ja.mdにざっくりまとめること
+  - 結果 : 実際には、入出力定義にはなっていないが、実装とREADMEを読めばわかる、のを確認した
+- 済 : ゼロから作り直すこと
+  - 方法 : READMEを整理して意図を可視化のち、Agentic Codingで一歩ずつ指示
+  - 結果 : スムーズにできた。なおゼロからでなく、index.htmlにすべて入った最初のprototype状態から、agentに一歩ずつ指示をするだけで、スムーズに構造を変更できた
+- 済 : Bluesky投稿を参照し、意図のヌケモレチェック結果をここに書くこと
+  - 結果 : ヌケモレなしと判断する。投稿時よりも進んだことがREADMEに整理できている
+
+# closeする
+
+{% endraw %}
+```
+
+### issue-notes/31.md
+```md
+{% raw %}
+# issue 大規模なリファクタリングを行ったのでdemoを動作確認する #31
+[issues #31](https://github.com/cat2151/tonejs-json-sequencer/issues/31)
+
+
+
+{% endraw %}
+```
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-670fe29 Update callgraph.html [auto]
-683f941 Merge pull request #16 from cat2151/copilot/implement-auto-release-github-actions
-a327e87 Add timestamp fallback and document make_latest parameter
-9329df6 Add timestamp and commit info to release body
-da7df39 Change release trigger from tag push to main branch push
-92699cb Address PR review comments
-f3ac425 Improve workflow readability and security
-d369dfc Improve tag handling in release workflow
-21aeeee Fix workflow issues based on code review
-10be95f Implement automatic release workflow with GitHub Actions
+df47614 Merge pull request #35 from cat2151/copilot/fix-demo-error
+96ccfa1 Remove redundant regex pattern for export statements
+ff8e3fc Enhance: Add support for side-effect and dynamic imports in rename script
+9a28d29 Fix: Update rename-to-mjs.js to rewrite .js imports to .mjs
+8c4df2b Initial plan
+13264fd Add issue note for #34 [auto]
+e5b1bdb Merge pull request #33 from cat2151/copilot/fix-demo-functionality
+cfd09bf Update documentation to reflect dist directory is now committed
+b668053 Fix demo: Update .gitignore and add built dist files for GitHub Pages
+28c07ad Add issue note for #32 [auto]
 
 ### 変更されたファイル:
-.github/workflows/release.yml
-RELEASE.ja.md
-RELEASE.md
-generated-docs/callgraph.html
-generated-docs/development-status-generated-prompt.md
-generated-docs/development-status.md
-generated-docs/project-overview-generated-prompt.md
-generated-docs/project-overview.md
-issue-notes/14.md
-issue-notes/15.md
-package.json
+.gitignore
+NEW_STRUCTURE.md
+REFACTORING_SUMMARY.md
+dist/cjs/event-scheduler.d.ts
+dist/cjs/event-scheduler.js
+dist/cjs/index.d.ts
+dist/cjs/index.js
+dist/cjs/node-factory.d.ts
+dist/cjs/node-factory.js
+dist/cjs/sequencer-nodes.d.ts
+dist/cjs/sequencer-nodes.js
+dist/cjs/types.d.ts
+dist/cjs/types.js
+dist/demo/demo-types.js
+dist/demo/effect/autofilter.js
+dist/demo/effect/autopanner.js
+dist/demo/effect/autowah.js
+dist/demo/effect/bitcrusher.js
+dist/demo/effect/chebyshev.js
+dist/demo/effect/chorus.js
+dist/demo/effect/distortion.js
+dist/demo/effect/feedbackdelay.js
+dist/demo/effect/freeverb.js
+dist/demo/effect/frequencyshifter.js
+dist/demo/effect/jcreverb.js
+dist/demo/effect/phaser.js
+dist/demo/effect/pingpongdelay.js
+dist/demo/effect/pitchshift.js
+dist/demo/effect/reverb.js
+dist/demo/effect/stereowidener.js
+dist/demo/effect/tremolo.js
+dist/demo/effect/vibrato.js
+dist/demo/instrument/amsynth.js
+dist/demo/instrument/delay-vibrato.js
+dist/demo/instrument/duosynth.js
+dist/demo/instrument/membranesynth.js
+dist/demo/instrument/metalsynth.js
+dist/demo/instrument/minimal.js
+dist/demo/instrument/monosynth.js
+dist/demo/instrument/multitimbral.js
+dist/demo/instrument/noisesynth.js
+dist/demo/instrument/plucksynth.js
+dist/demo/instrument/polysynth-fm.js
+dist/demo/instrument/sampler-piano.js
+dist/demo/instrument/supersaw.js
+dist/demo/main.js
+dist/demo/modules/audioManager.js
+dist/demo/modules/uiManager.js
+dist/demo/sequenceLoader.js
+dist/demo/sequences/basicSequences.js
+dist/demo/sequences/effectSequences.js
+dist/demo/sequences/synthSequences.js
+dist/esm/event-scheduler.d.ts
+dist/esm/event-scheduler.mjs
+dist/esm/index.d.ts
+dist/esm/index.mjs
+dist/esm/node-factory.d.ts
+dist/esm/node-factory.mjs
+dist/esm/sequencer-nodes.d.ts
+dist/esm/sequencer-nodes.mjs
+dist/esm/types.d.ts
+dist/esm/types.mjs
+dist/index.d.ts
+dist/index.js
+dist/index.mjs
+issue-notes/29.md
+issue-notes/31.md
+issue-notes/32.md
+issue-notes/34.md
+scripts/extract-sequences.js
+scripts/rename-to-mjs.js
+src-ts/demo-types.ts
+src-ts/main.ts
+src-ts/sampleData.ts
+src-ts/tone-global.d.ts
+src/event-scheduler.ts
+src/index.html
+src/index.ts
+src/main.js
+src/node-factory.ts
+src/redirect.css
+src/sequencer-nodes.ts
+src/styles.css
+src/types.ts
+tsconfig.demo.json
 
 
 ---
-Generated at: 2026-01-11 07:08:07 JST
+Generated at: 2026-01-14 07:08:53 JST

@@ -1,4 +1,4 @@
-Last updated: 2026-01-11
+Last updated: 2026-01-14
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -65,7 +65,11 @@ Last updated: 2026-01-11
 
 [日本語 README](README.ja.md) / [English README](README.md)
 
-[Demo](https://cat2151.github.io/tonejs-json-sequencer/src/index.html)
+[Demo](https://cat2151.github.io/tonejs-json-sequencer/demo/index.html)
+
+# 状況
+- 頻繁に破壊的変更をする予定です
+- このドキュメントと関連ドキュメントには、AI生成が含まれており、計画などは間違っている（cat2151の構想とは異なる）可能性があります
 
 # 3行で説明
 - Tone.jsの音色・エフェクト・演奏をJSONで記述できる軽量ライブラリ
@@ -110,6 +114,41 @@ tonejs-json-sequencer では、Tone.js の構成要素（シンセ、エフェ�
 コアとなる scheduleOrExecuteEvent は単一elementを受け取るだけのシンプルなソースファイルとし、上位レイヤーでシーケンスやNDJSON ストリーミングを扱う
 
 これにより、Tone.jsとつながる低レイヤーと、シーケンスやストリーミングなどの高レイヤーを、切り分けて柔軟に開発できます。
+
+# Tone.js コンポーネントのJSON対応
+
+tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記述できるようにします。
+
+## 対応状況の概要
+
+### 現在対応済み（✅）
+
+- **Instrument**: Synth, MonoSynth, FMSynth, AMSynth, DuoSynth, MetalSynth, MembraneSynth, PluckSynth, NoiseSynth, PolySynth, Sampler
+- **Effect**: Reverb, Freeverb, JCReverb, Chorus, Phaser, Tremolo, Vibrato, AutoFilter, AutoPanner, AutoWah, FeedbackDelay, PingPongDelay, Distortion, BitCrusher, Chebyshev, PitchShift, FrequencyShifter, StereoWidener
+
+### 計画中（🚧）
+
+- **Source**: FatOscillator, PulseOscillator
+- **Effect**: EQ3（イコライザー）, Compressor（コンプレッサー）
+- **奏法メソッド**: Panpot変更, Expression変更, LPF変更, Portamento
+
+### 今後検討予定（⏳）
+
+- **Source**: Oscillator, OmniOscillator, Noise, Player, GrainPlayer 他
+- **Effect**: Filter系, Dynamics系（Limiter, Gate）, Spatial系（Convolver）他
+- **Component**: Envelope系, LFO, Signal系, Analysis系（Meter, Analyser, FFT）他
+
+## 詳細ドキュメント
+
+全コンポーネントの詳細な対応状況、実装優先順位、実装方針については、以下のドキュメントを参照してください：
+
+📄 [Tone.js コンポーネント JSON対応ロードマップ（詳細版）](docs/tonejs-components-roadmap.ja.md)
+
+このドキュメントには以下の情報が含まれています：
+- 全コンポーネントの分類と実装状況（Instrument / Source / Effect / Component）
+- 実装の優先順位と計画
+- 実装方針と進め方
+- 参考資料へのリンク
 
 # ロードマップ
 - ※順不同
@@ -284,23 +323,92 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
 📄 .editorconfig
 📄 .gitignore
 📖 CONVERSION_SUMMARY.md
+📖 EXTRACTION_PROCESS.md
 📄 LICENSE
+📖 NEW_STRUCTURE.md
 📖 NPM_README.md
 📖 README.ja.md
 📖 README.md
+📖 REFACTORING_SUMMARY.md
 📖 RELEASE.ja.md
 📖 RELEASE.md
 📄 _config.yml
+📁 demo/
+  🌐 index.html
+  🎨 styles.css
 📁 dist/
   📁 cjs/
+    📘 event-scheduler.d.ts
+    📜 event-scheduler.js
     📘 index.d.ts
     📜 index.js
+    📘 node-factory.d.ts
+    📜 node-factory.js
+    📘 sequencer-nodes.d.ts
+    📜 sequencer-nodes.js
+    📘 types.d.ts
+    📜 types.js
+  📁 demo/
+    📜 demo-types.js
+    📁 effect/
+      📜 autofilter.js
+      📜 autopanner.js
+      📜 autowah.js
+      📜 bitcrusher.js
+      📜 chebyshev.js
+      📜 chorus.js
+      📜 distortion.js
+      📜 feedbackdelay.js
+      📜 freeverb.js
+      📜 frequencyshifter.js
+      📜 jcreverb.js
+      📜 phaser.js
+      📜 pingpongdelay.js
+      📜 pitchshift.js
+      📜 reverb.js
+      📜 stereowidener.js
+      📜 tremolo.js
+      📜 vibrato.js
+    📁 instrument/
+      📜 amsynth.js
+      📜 delay-vibrato.js
+      📜 duosynth.js
+      📜 membranesynth.js
+      📜 metalsynth.js
+      📜 minimal.js
+      📜 monosynth.js
+      📜 multitimbral.js
+      📜 noisesynth.js
+      📜 plucksynth.js
+      📜 polysynth-fm.js
+      📜 sampler-piano.js
+      📜 supersaw.js
+    📜 main.js
+    📁 modules/
+      📜 audioManager.js
+      📜 uiManager.js
+    📜 sequenceLoader.js
+    📁 sequences/
+      📜 basicSequences.js
+      📜 effectSequences.js
+      📜 synthSequences.js
   📁 esm/
+    📘 event-scheduler.d.ts
+    📄 event-scheduler.mjs
     📘 index.d.ts
     📄 index.mjs
+    📘 node-factory.d.ts
+    📄 node-factory.mjs
+    📘 sequencer-nodes.d.ts
+    📄 sequencer-nodes.mjs
+    📘 types.d.ts
+    📄 types.mjs
   📘 index.d.ts
   📜 index.js
   📄 index.mjs
+📁 docs/
+  📖 tonejs-components-roadmap.ja.md
+  📖 tonejs-components-roadmap.md
 📁 examples/
   🌐 cdn-example.html
   📄 npm-example.mjs
@@ -314,8 +422,18 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 12.md
   📖 14.md
   📖 15.md
+  📖 17.md
+  📖 19.md
   📖 2.md
+  📖 21.md
+  📖 23.md
+  📖 25.md
+  📖 27.md
+  📖 29.md
   📖 3.md
+  📖 31.md
+  📖 32.md
+  📖 34.md
   📖 4.md
   📖 5.md
   📖 7.md
@@ -326,37 +444,292 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📜 copy-to-dist.js
   📜 rename-to-mjs.js
 📁 src/
-  🌐 index.html
-  📜 main.js
-  📜 play.js
-  🎨 redirect.css
-  📜 sampleData.js
-  📜 scheduleOrExecuteEvent.js
-  🎨 styles.css
-📁 src-ts/
+  📁 demo/
+    📘 demo-types.ts
+    📁 effect/
+      📘 autofilter.ts
+      📘 autopanner.ts
+      📘 autowah.ts
+      📘 bitcrusher.ts
+      📘 chebyshev.ts
+      📘 chorus.ts
+      📘 distortion.ts
+      📘 feedbackdelay.ts
+      📘 freeverb.ts
+      📘 frequencyshifter.ts
+      📘 jcreverb.ts
+      📘 phaser.ts
+      📘 pingpongdelay.ts
+      📘 pitchshift.ts
+      📘 reverb.ts
+      📘 stereowidener.ts
+      📘 tremolo.ts
+      📘 vibrato.ts
+    📁 instrument/
+      📘 amsynth.ts
+      📘 delay-vibrato.ts
+      📘 duosynth.ts
+      📘 membranesynth.ts
+      📘 metalsynth.ts
+      📘 minimal.ts
+      📘 monosynth.ts
+      📘 multitimbral.ts
+      📘 noisesynth.ts
+      📘 plucksynth.ts
+      📘 polysynth-fm.ts
+      📘 sampler-piano.ts
+      📘 supersaw.ts
+    📘 main.ts
+    📁 modules/
+      📘 audioManager.ts
+      📘 uiManager.ts
+    📘 sequenceLoader.ts
+    📁 sequences/
+      📘 basicSequences.ts
+      📘 effectSequences.ts
+      📘 synthSequences.ts
+    📘 tone-global.d.ts
+  📘 event-scheduler.ts
   📘 index.ts
+  📘 node-factory.ts
+  📘 sequencer-nodes.ts
+  📘 types.ts
+📊 tsconfig.all.json
+📊 tsconfig.demo-new.json
 📊 tsconfig.json
 
 ## ファイル詳細分析
-**dist/cjs/index.d.ts** (47行, 1394バイト)
-  - 関数: scheduleOrExecuteEvent, playSequence
-  - インポート: tone
-
-**dist/cjs/index.js** (236行, 8135バイト)
-  - 関数: scheduleOrExecuteEvent, createNode, connectNode, playSequence, constructor, get, set, disposeAll, forEach, catch, switch, if
+**demo/index.html** (23行, 638バイト)
+  - 関数: なし
   - インポート: なし
 
-**dist/esm/index.d.ts** (47行, 1394バイト)
-  - 関数: scheduleOrExecuteEvent, playSequence
-  - インポート: tone
-
-**dist/index.d.ts** (47行, 1394バイト)
-  - 関数: scheduleOrExecuteEvent, playSequence
-  - インポート: tone
-
-**dist/index.js** (236行, 8135バイト)
-  - 関数: scheduleOrExecuteEvent, createNode, connectNode, playSequence, constructor, get, set, disposeAll, forEach, catch, switch, if
+**demo/styles.css** (176行, 3642バイト)
+  - 関数: なし
   - インポート: なし
+
+**dist/cjs/event-scheduler.d.ts** (18行, 710バイト)
+  - 関数: scheduleOrExecuteEvent, playSequence
+  - インポート: tone, ./types.js, ./sequencer-nodes.js
+
+**dist/cjs/event-scheduler.js** (80行, 2795バイト)
+  - 関数: scheduleOrExecuteEvent, playSequence, switch, if, forEach, catch
+  - インポート: ./node-factory.js
+
+**dist/cjs/index.d.ts** (4行, 257バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/cjs/index.js** (14行, 902バイト)
+  - 関数: defineProperty
+  - インポート: ./sequencer-nodes.js, ./event-scheduler.js
+
+**dist/cjs/node-factory.d.ts** (12行, 478バイト)
+  - 関数: createNode, connectNode
+  - インポート: tone, ./types.js, ./sequencer-nodes.js
+
+**dist/cjs/node-factory.js** (173行, 6722バイト)
+  - 関数: createNode, connectNode, switch, if
+  - インポート: なし
+
+**dist/cjs/sequencer-nodes.d.ts** (10行, 206バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/cjs/sequencer-nodes.js** (35行, 909バイト)
+  - 関数: constructor, get, set, disposeAll, forEach, catch
+  - インポート: なし
+
+**dist/cjs/types.d.ts** (23行, 587バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/cjs/types.js** (6行, 219バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/demo-types.js** (5行, 186バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/autofilter.js** (40行, 823バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/autopanner.js** (40行, 823バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/autowah.js** (45行, 942バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/bitcrusher.js** (45行, 939バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/chebyshev.js** (45行, 939バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/chorus.js** (45行, 942バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/distortion.js** (45行, 942バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/feedbackdelay.js** (45行, 954バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/freeverb.js** (45行, 943バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/frequencyshifter.js** (40行, 836バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/jcreverb.js** (45行, 937バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/phaser.js** (45行, 942バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/pingpongdelay.js** (45行, 954バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/pitchshift.js** (45行, 940バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/reverb.js** (45行, 931バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/stereowidener.js** (45行, 948バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/tremolo.js** (40行, 823バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/vibrato.js** (40行, 822バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/instrument/amsynth.js** (55行, 1275バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/instrument/delay-vibrato.js** (67行, 1510バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/instrument/duosynth.js** (60行, 1453バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/instrument/membranesynth.js** (47行, 1068バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/instrument/metalsynth.js** (46行, 1051バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/instrument/minimal.js** (19行, 373バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/instrument/monosynth.js** (45行, 1000バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/instrument/multitimbral.js** (56行, 1235バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/instrument/noisesynth.js** (44行, 939バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/instrument/plucksynth.js** (39行, 851バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/instrument/polysynth-fm.js** (59行, 1472バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/instrument/sampler-piano.js** (43行, 1126バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/instrument/supersaw.js** (52行, 1212バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/main.js** (71行, 2649バイト)
+  - 関数: constructor, initialize, initializeSequenceDataCollection, updateTextareaWithSelectedSequence, if, playWithAudioContext, catch, play
+  - インポート: ./sequenceLoader.js, ./modules/uiManager.js, ./modules/audioManager.js
+
+**dist/demo/modules/audioManager.js** (64行, 2484バイト)
+  - 関数: constructor, playSequence, if, catch, ensureAudioContextStarted
+  - インポート: ../../../dist/index.mjs
+
+**dist/demo/modules/uiManager.js** (43行, 1530バイト)
+  - 関数: constructor, setupEventListeners, populateSequenceSelector, getTextareaValue, setTextareaValue, getSelectedSequenceName
+  - インポート: なし
+
+**dist/demo/sequenceLoader.js** (76行, 2501バイト)
+  - 関数: loadAllSequences
+  - インポート: ./instrument/minimal.js, ./instrument/delay-vibrato.js, ./instrument/multitimbral.js
+
+**dist/demo/sequences/basicSequences.js** (245行, 7252バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/sequences/effectSequences.js** (807行, 22224バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/sequences/synthSequences.js** (407行, 12117バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/esm/event-scheduler.d.ts** (18行, 710バイト)
+  - 関数: scheduleOrExecuteEvent, playSequence
+  - インポート: tone, ./types.js, ./sequencer-nodes.js
+
+**dist/esm/index.d.ts** (4行, 257バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/esm/node-factory.d.ts** (12行, 478バイト)
+  - 関数: createNode, connectNode
+  - インポート: tone, ./types.js, ./sequencer-nodes.js
+
+**dist/esm/sequencer-nodes.d.ts** (10行, 206バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/esm/types.d.ts** (23行, 587バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/index.d.ts** (4行, 257バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/index.js** (14行, 902バイト)
+  - 関数: defineProperty
+  - インポート: ./sequencer-nodes.js, ./event-scheduler.js
 
 **examples/cdn-example.html** (105行, 2646バイト)
   - 関数: なし
@@ -370,7 +743,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**index.html** (12行, 266バイト)
+**index.html** (11行, 214バイト)
   - 関数: なし
   - インポート: なし
 
@@ -378,94 +751,248 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: catch
   - インポート: fs, path
 
-**scripts/rename-to-mjs.js** (48行, 1267バイト)
-  - 関数: renameFiles, catch
+**scripts/rename-to-mjs.js** (87行, 2587バイト)
+  - 関数: renameFiles, updateImports, catch, if
   - インポート: fs, path
 
-**src/index.html** (26行, 737バイト)
+**src/demo/demo-types.ts** (31行, 741バイト)
   - 関数: なし
   - インポート: なし
 
-**src/main.js** (59行, 1723バイト)
-  - 関数: initializeSequenceDataCollection, populateSequenceSelector, updateTextareaWithSelectedSequence
-  - インポート: なし
-
-**src/play.js** (76行, 2100バイト)
-  - 関数: playWithAudioContext, play, if, catch, forEach
-  - インポート: なし
-
-**src/redirect.css** (70行, 1518バイト)
+**src/demo/effect/autofilter.ts** (44行, 947バイト)
   - 関数: なし
-  - インポート: なし
+  - インポート: ../demo-types.js
 
-**src/sampleData.js** (248行, 5462バイト)
+**src/demo/effect/autopanner.ts** (44行, 947バイト)
   - 関数: なし
-  - インポート: なし
+  - インポート: ../demo-types.js
 
-**src/scheduleOrExecuteEvent.js** (123行, 4248バイト)
-  - 関数: scheduleOrExecuteEvent, switch, if
-  - インポート: なし
-
-**src/styles.css** (176行, 3642バイト)
+**src/demo/effect/autowah.ts** (49行, 1067バイト)
   - 関数: なし
-  - インポート: なし
+  - インポート: ../demo-types.js
 
-**src-ts/index.ts** (279行, 7949バイト)
-  - 関数: scheduleOrExecuteEvent, createNode, connectNode, playSequence, forEach, catch, switch, if
+**src/demo/effect/bitcrusher.ts** (49行, 1067バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/chebyshev.ts** (49行, 1066バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/chorus.ts** (49行, 1066バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/distortion.ts** (49行, 1070バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/feedbackdelay.ts** (49行, 1085バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/freeverb.ts** (49行, 1069バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/frequencyshifter.ts** (44行, 966バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/jcreverb.ts** (49行, 1063バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/phaser.ts** (49行, 1066バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/pingpongdelay.ts** (49行, 1085バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/pitchshift.ts** (49行, 1068バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/reverb.ts** (49行, 1055バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/stereowidener.ts** (49行, 1079バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/tremolo.ts** (44行, 944バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/vibrato.ts** (44行, 943バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/instrument/amsynth.ts** (59行, 1334バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/instrument/delay-vibrato.ts** (71行, 1595バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/instrument/duosynth.ts** (64行, 1467バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/instrument/membranesynth.ts** (51行, 1159バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/instrument/metalsynth.ts** (50行, 1145バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/instrument/minimal.ts** (23行, 475バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/instrument/monosynth.ts** (49行, 1091バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/instrument/multitimbral.ts** (60行, 1340バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/instrument/noisesynth.ts** (48行, 1035バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/instrument/plucksynth.ts** (43行, 965バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/instrument/polysynth-fm.ts** (63行, 1496バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/instrument/sampler-piano.ts** (47行, 1229バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/instrument/supersaw.ts** (56行, 1284バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/main.ts** (91行, 2895バイト)
+  - 関数: constructor, if, catch, initialize, playWithAudioContext, play
+  - インポート: ./demo-types.js, ./sequenceLoader.js, ./modules/uiManager.js
+
+**src/demo/modules/audioManager.ts** (68行, 2299バイト)
+  - 関数: if, catch, playSequence, ensureAudioContextStarted
+  - インポート: ../demo-types.js, ../../../dist/index.mjs
+
+**src/demo/modules/uiManager.ts** (59行, 1778バイト)
+  - 関数: なし
+  - インポート: ../sequenceLoader.js
+
+**src/demo/sequenceLoader.ts** (87行, 2636バイト)
+  - 関数: loadAllSequences
+  - インポート: ./demo-types.js, ./instrument/minimal.js, ./instrument/delay-vibrato.js
+
+**src/demo/sequences/basicSequences.ts** (250行, 5596バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js, ../sequenceLoader.js
+
+**src/demo/sequences/effectSequences.ts** (812行, 16954バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js, ../sequenceLoader.js
+
+**src/demo/sequences/synthSequences.ts** (412行, 9064バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js, ../sequenceLoader.js
+
+**src/demo/tone-global.d.ts** (9行, 166バイト)
+  - 関数: なし
   - インポート: tone
 
+**src/event-scheduler.ts** (89行, 2607バイト)
+  - 関数: scheduleOrExecuteEvent, playSequence, switch, if, forEach, catch
+  - インポート: tone, ./types.js, ./sequencer-nodes.js
+
+**src/index.ts** (19行, 487バイト)
+  - 関数: なし
+  - インポート: なし
+
+**src/node-factory.ts** (176行, 6028バイト)
+  - 関数: createNode, connectNode, switch, if
+  - インポート: tone, ./types.js, ./sequencer-nodes.js
+
+**src/sequencer-nodes.ts** (32行, 681バイト)
+  - 関数: forEach, catch
+  - インポート: なし
+
+**src/types.ts** (36行, 858バイト)
+  - 関数: なし
+  - インポート: なし
+
 ## 関数呼び出し階層
-- catch (scripts/copy-to-dist.js)
-  - forEach ()
-    - scheduleOrExecuteEvent (dist/cjs/index.d.ts)
-      - playSequence ()
+- switch (dist/cjs/event-scheduler.js)
+  - scheduleOrExecuteEvent (dist/cjs/event-scheduler.d.ts)
+    - playSequence ()
+      - forEach ()
+      - defineProperty ()
       - get ()
-      - set ()
       - disposeAll ()
-      - createNode ()
+      - ensureAudioContextStarted ()
+      - createNode (dist/cjs/node-factory.d.ts)
       - connectNode ()
-      - constructor (undefined)
-    - playWithAudioContext ()
-      - play ()
+  - set ()
+- if (dist/cjs/event-scheduler.js)
   - renameFiles (scripts/rename-to-mjs.js)
-- if (src/play.js)
-- switch (src/scheduleOrExecuteEvent.js)
+    - updateImports ()
+- catch (dist/cjs/event-scheduler.js)
+- loadAllSequences (dist/demo/sequenceLoader.js)
 
 
 ## プロジェクト構造（ファイル一覧）
 CONVERSION_SUMMARY.md
+EXTRACTION_PROCESS.md
+NEW_STRUCTURE.md
 NPM_README.md
 README.ja.md
 README.md
+REFACTORING_SUMMARY.md
 RELEASE.ja.md
 RELEASE.md
+demo/index.html
+demo/styles.css
+dist/cjs/event-scheduler.d.ts
+dist/cjs/event-scheduler.js
 dist/cjs/index.d.ts
 dist/cjs/index.js
-dist/esm/index.d.ts
+dist/cjs/node-factory.d.ts
+dist/cjs/node-factory.js
+dist/cjs/sequencer-nodes.d.ts
+dist/cjs/sequencer-nodes.js
+dist/cjs/types.d.ts
+dist/cjs/types.js
+dist/demo/demo-types.js
+dist/demo/effect/autofilter.js
+dist/demo/effect/autopanner.js
+dist/demo/effect/autowah.js
+dist/demo/effect/bitcrusher.js
+dist/demo/effect/chebyshev.js
+dist/demo/effect/chorus.js
+dist/demo/effect/distortion.js
+dist/demo/effect/feedbackdelay.js
+dist/demo/instrument/amsynth.js
+dist/demo/main.js
+dist/esm/event-scheduler.d.ts
 dist/index.d.ts
-dist/index.js
+docs/tonejs-components-roadmap.ja.md
 examples/cdn-example.html
 generated-docs/callgraph.html
 googled947dc864c270e07.html
-index.html
-issue-notes/1.md
-issue-notes/11.md
-issue-notes/12.md
-issue-notes/14.md
-issue-notes/15.md
-issue-notes/2.md
-issue-notes/3.md
-issue-notes/4.md
-issue-notes/5.md
-issue-notes/7.md
-issue-notes/9.md
-package-lock.json
-package.json
-scripts/copy-to-dist.js
-scripts/rename-to-mjs.js
-src/index.html
-src-ts/index.ts
-tsconfig.json
 
 上記の情報を基に、プロンプトで指定された形式でプロジェクト概要を生成してください。
 特に以下の点を重視してください：
@@ -477,4 +1004,4 @@ tsconfig.json
 
 
 ---
-Generated at: 2026-01-11 07:08:07 JST
+Generated at: 2026-01-14 07:08:53 JST
