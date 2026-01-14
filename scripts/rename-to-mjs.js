@@ -72,15 +72,25 @@ function updateImports(dir) {
 renameFiles(esmDir);
 updateImports(esmDir);
 
-// Copy index.mjs to dist/
+// Copy index.mjs to dist/ and update its imports to point to esm/
 const indexMjs = path.join(esmDir, 'index.mjs');
 const distIndexMjs = path.join(__dirname, '../dist/index.mjs');
 if (fs.existsSync(indexMjs)) {
   try {
-    fs.copyFileSync(indexMjs, distIndexMjs);
-    console.log(`Copied: ${indexMjs} -> ${distIndexMjs}`);
+    // Read the content of index.mjs
+    let content = fs.readFileSync(indexMjs, 'utf8');
+    
+    // Update relative imports to point to esm/ subdirectory
+    // Change './file.mjs' to './esm/file.mjs'
+    content = content.replace(/(from\s+['"])\.\//g, '$1./esm/');
+    content = content.replace(/(import\s+['"])\.\//g, '$1./esm/');
+    content = content.replace(/(import\s*\(\s*['"])\.\//g, '$1./esm/');
+    
+    // Write the modified content to dist/index.mjs
+    fs.writeFileSync(distIndexMjs, content, 'utf8');
+    console.log(`Copied and updated imports: ${indexMjs} -> ${distIndexMjs}`);
   } catch (err) {
-    console.error(`Failed to copy ${indexMjs} to ${distIndexMjs}:`, err);
+    console.error(`Failed to copy and update ${indexMjs} to ${distIndexMjs}:`, err);
     process.exit(1);
   }
 }
