@@ -1,4 +1,4 @@
-Last updated: 2026-01-14
+Last updated: 2026-01-16
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -303,7 +303,11 @@ Last updated: 2026-01-14
 - issue-notes/31.md
 - issue-notes/32.md
 - issue-notes/34.md
+- issue-notes/36.md
+- issue-notes/38.md
 - issue-notes/4.md
+- issue-notes/40.md
+- issue-notes/41.md
 - issue-notes/5.md
 - issue-notes/7.md
 - issue-notes/9.md
@@ -410,104 +414,26 @@ Last updated: 2026-01-14
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-df47614 Merge pull request #35 from cat2151/copilot/fix-demo-error
-96ccfa1 Remove redundant regex pattern for export statements
-ff8e3fc Enhance: Add support for side-effect and dynamic imports in rename script
-9a28d29 Fix: Update rename-to-mjs.js to rewrite .js imports to .mjs
-8c4df2b Initial plan
-13264fd Add issue note for #34 [auto]
-e5b1bdb Merge pull request #33 from cat2151/copilot/fix-demo-functionality
-cfd09bf Update documentation to reflect dist directory is now committed
-b668053 Fix demo: Update .gitignore and add built dist files for GitHub Pages
-28c07ad Add issue note for #32 [auto]
+187e817 Auto-translate README.ja.md to README.md [auto]
+5e5f7c2 Merge pull request #43 from cat2151/copilot/update-readme-library-usage
+9f49635 Fix CommonJS import path to use dist/cjs/index.js
+a656540 Add library usage documentation to README.ja.md with dist/ reference methods
+998a986 Auto-translate README.ja.md to README.md [auto]
+9dadd45 Initial plan
+d5fb48a Merge pull request #42 from cat2151/copilot/add-badges-to-readme
+82fd948 Replace incorrect badges with language badges (JA/EN) matching user's style
+4e48931 Add badges to README.md for consistency with README.ja.md
+cf1b76c Add badges to README.ja.md (npm, TypeScript, License, Demo)
 
 ### 変更されたファイル:
-.gitignore
-NEW_STRUCTURE.md
-REFACTORING_SUMMARY.md
-dist/cjs/event-scheduler.d.ts
-dist/cjs/event-scheduler.js
-dist/cjs/index.d.ts
-dist/cjs/index.js
-dist/cjs/node-factory.d.ts
+README.ja.md
+README.md
 dist/cjs/node-factory.js
-dist/cjs/sequencer-nodes.d.ts
-dist/cjs/sequencer-nodes.js
-dist/cjs/types.d.ts
-dist/cjs/types.js
-dist/demo/demo-types.js
-dist/demo/effect/autofilter.js
-dist/demo/effect/autopanner.js
-dist/demo/effect/autowah.js
-dist/demo/effect/bitcrusher.js
-dist/demo/effect/chebyshev.js
-dist/demo/effect/chorus.js
-dist/demo/effect/distortion.js
-dist/demo/effect/feedbackdelay.js
-dist/demo/effect/freeverb.js
-dist/demo/effect/frequencyshifter.js
-dist/demo/effect/jcreverb.js
-dist/demo/effect/phaser.js
-dist/demo/effect/pingpongdelay.js
-dist/demo/effect/pitchshift.js
-dist/demo/effect/reverb.js
-dist/demo/effect/stereowidener.js
-dist/demo/effect/tremolo.js
-dist/demo/effect/vibrato.js
-dist/demo/instrument/amsynth.js
-dist/demo/instrument/delay-vibrato.js
-dist/demo/instrument/duosynth.js
-dist/demo/instrument/membranesynth.js
-dist/demo/instrument/metalsynth.js
-dist/demo/instrument/minimal.js
-dist/demo/instrument/monosynth.js
-dist/demo/instrument/multitimbral.js
-dist/demo/instrument/noisesynth.js
-dist/demo/instrument/plucksynth.js
-dist/demo/instrument/polysynth-fm.js
-dist/demo/instrument/sampler-piano.js
-dist/demo/instrument/supersaw.js
-dist/demo/main.js
-dist/demo/modules/audioManager.js
-dist/demo/modules/uiManager.js
-dist/demo/sequenceLoader.js
-dist/demo/sequences/basicSequences.js
-dist/demo/sequences/effectSequences.js
-dist/demo/sequences/synthSequences.js
-dist/esm/event-scheduler.d.ts
-dist/esm/event-scheduler.mjs
-dist/esm/index.d.ts
-dist/esm/index.mjs
-dist/esm/node-factory.d.ts
 dist/esm/node-factory.mjs
-dist/esm/sequencer-nodes.d.ts
-dist/esm/sequencer-nodes.mjs
-dist/esm/types.d.ts
-dist/esm/types.mjs
-dist/index.d.ts
-dist/index.js
-dist/index.mjs
-issue-notes/29.md
-issue-notes/31.md
-issue-notes/32.md
-issue-notes/34.md
-scripts/extract-sequences.js
-scripts/rename-to-mjs.js
-src-ts/demo-types.ts
-src-ts/main.ts
-src-ts/sampleData.ts
-src-ts/tone-global.d.ts
-src/event-scheduler.ts
-src/index.html
-src/index.ts
-src/main.js
+issue-notes/40.md
+issue-notes/41.md
 src/node-factory.ts
-src/redirect.css
-src/sequencer-nodes.ts
-src/styles.css
-src/types.ts
-tsconfig.demo.json
 
 
 ---
-Generated at: 2026-01-14 07:08:53 JST
+Generated at: 2026-01-16 07:09:11 JST

@@ -1,4 +1,4 @@
-Last updated: 2026-01-14
+Last updated: 2026-01-16
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -63,7 +63,10 @@ Last updated: 2026-01-14
 名前: tonejs-json-sequencer
 説明: # tonejs-json-sequencer
 
-[日本語 README](README.ja.md) / [English README](README.md)
+<p align="left">
+  <a href="README.ja.md"><img src="https://img.shields.io/badge/🇯🇵-Japanese-red.svg" alt="Japanese"></a>
+  <a href="README.md"><img src="https://img.shields.io/badge/🇺🇸-English-blue.svg" alt="English"></a>
+</p>
 
 [Demo](https://cat2151.github.io/tonejs-json-sequencer/demo/index.html)
 
@@ -114,6 +117,173 @@ tonejs-json-sequencer では、Tone.js の構成要素（シンセ、エフェ�
 コアとなる scheduleOrExecuteEvent は単一elementを受け取るだけのシンプルなソースファイルとし、上位レイヤーでシーケンスやNDJSON ストリーミングを扱う
 
 これにより、Tone.jsとつながる低レイヤーと、シーケンスやストリーミングなどの高レイヤーを、切り分けて柔軟に開発できます。
+
+# ライブラリとして利用する
+
+tonejs-json-sequencerは、他のプロジェクトからライブラリとして利用できます。
+
+## インストール
+
+### npm を使用する場合
+
+```bash
+npm install tonejs-json-sequencer tone
+```
+
+### dist/ ディレクトリを直接参照する場合
+
+このリポジトリをクローンまたはダウンロードして、`dist/` ディレクトリ内のファイルを直接参照できます。
+
+#### ES Modules（推奨）
+
+```javascript
+import { SequencerNodes, playSequence } from './path/to/tonejs-json-sequencer/dist/index.mjs';
+```
+
+#### CommonJS
+
+```javascript
+const { SequencerNodes, playSequence } = require('./path/to/tonejs-json-sequencer/dist/cjs/index.js');
+```
+
+#### TypeScript
+
+TypeScript を使用する場合、型定義ファイルも `dist/` ディレクトリに含まれています：
+
+```typescript
+import { SequencerNodes, playSequence, SequenceEvent } from './path/to/tonejs-json-sequencer/dist/index.mjs';
+```
+
+型定義ファイル: `dist/index.d.ts`
+
+### CDN を使用する場合
+
+```html
+<script type="module">
+  import { SequencerNodes, playSequence } from 'https://cdn.jsdelivr.net/npm/tonejs-json-sequencer@1.0.0/dist/index.mjs';
+</script>
+```
+
+または unpkg を使用：
+
+```html
+<script type="module">
+  import { SequencerNodes, playSequence } from 'https://unpkg.com/tonejs-json-sequencer@1.0.0/dist/index.mjs';
+</script>
+```
+
+## 基本的な使用例
+
+```typescript
+import * as Tone from 'tone';
+import { SequencerNodes, playSequence } from 'tonejs-json-sequencer';
+
+// JSONでシーケンスを定義
+const sequence = [
+  {
+    eventType: 'createNode',
+    nodeId: 0,
+    nodeType: 'Synth',
+    args: { oscillator: { type: 'sine' } }
+  },
+  {
+    eventType: 'connect',
+    nodeId: 0,
+    connectTo: 'toDestination'
+  },
+  {
+    eventType: 'triggerAttackRelease',
+    nodeId: 0,
+    args: ['C4', '8n', '0']
+  },
+  {
+    eventType: 'triggerAttackRelease',
+    nodeId: 0,
+    args: ['E4', '8n', '0:0:2']
+  },
+  {
+    eventType: 'triggerAttackRelease',
+    nodeId: 0,
+    args: ['G4', '8n', '0:1:0']
+  }
+];
+
+// ノードマネージャを作成
+const nodes = new SequencerNodes();
+
+// シーケンスを再生
+async function play() {
+  await Tone.start();
+  await playSequence(Tone, nodes, sequence);
+}
+
+// ボタンクリックに紐付け
+document.getElementById('playButton').addEventListener('click', play);
+```
+
+## ブラウザでの使用例（CDN使用）
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tonejs JSON Sequencer Example</title>
+  <script src="https://cdn.jsdelivr.net/npm/tone@15.0.4/build/Tone.js"></script>
+</head>
+<body>
+  <button id="playButton">Play</button>
+  
+  <script type="module">
+    import { SequencerNodes, playSequence } from 'https://cdn.jsdelivr.net/npm/tonejs-json-sequencer@1.0.0/dist/index.mjs';
+
+    const sequence = [
+      {
+        eventType: 'createNode',
+        nodeId: 0,
+        nodeType: 'Synth',
+        args: { oscillator: { type: 'sine' } }
+      },
+      {
+        eventType: 'connect',
+        nodeId: 0,
+        connectTo: 'toDestination'
+      },
+      {
+        eventType: 'triggerAttackRelease',
+        nodeId: 0,
+        args: ['C4', '4n', '0']
+      }
+    ];
+
+    const nodes = new SequencerNodes();
+
+    document.getElementById('playButton').addEventListener('click', async () => {
+      await Tone.start();
+      await playSequence(Tone, nodes, sequence);
+    });
+  </script>
+</body>
+</html>
+```
+
+## dist/ ディレクトリの構造
+
+`dist/` ディレクトリには以下のファイルが含まれています：
+
+- `index.mjs` - ES Modules形式のエントリポイント
+- `index.js` - CommonJS形式のエントリポイント
+- `index.d.ts` - TypeScript型定義ファイル
+- `esm/` - ES Modules形式のコンパイル済みファイル
+- `cjs/` - CommonJS形式のコンパイル済みファイル
+
+プロジェクトの要件に応じて、適切な形式のファイルを選択できます。
+
+## サンプル
+
+より詳細な使用例については、`examples/` ディレクトリを参照してください：
+
+- `examples/cdn-example.html` - CDNを使用したブラウザでの使用例
+- `examples/npm-example.mjs` - npmパッケージとしての使用例
 
 # Tone.js コンポーネントのJSON対応
 
@@ -434,7 +604,11 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 31.md
   📖 32.md
   📖 34.md
+  📖 36.md
+  📖 38.md
   📖 4.md
+  📖 40.md
+  📖 41.md
   📖 5.md
   📖 7.md
   📖 9.md
@@ -527,7 +701,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: createNode, connectNode
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/cjs/node-factory.js** (173行, 6722バイト)
+**dist/cjs/node-factory.js** (192行, 7640バイト)
   - 関数: createNode, connectNode, switch, if
   - インポート: なし
 
@@ -751,7 +925,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: catch
   - インポート: fs, path
 
-**scripts/rename-to-mjs.js** (87行, 2587バイト)
+**scripts/rename-to-mjs.js** (97行, 3130バイト)
   - 関数: renameFiles, updateImports, catch, if
   - インポート: fs, path
 
@@ -923,7 +1097,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**src/node-factory.ts** (176行, 6028バイト)
+**src/node-factory.ts** (192行, 6714バイト)
   - 関数: createNode, connectNode, switch, if
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
@@ -1004,4 +1178,4 @@ googled947dc864c270e07.html
 
 
 ---
-Generated at: 2026-01-14 07:08:53 JST
+Generated at: 2026-01-16 07:09:11 JST
