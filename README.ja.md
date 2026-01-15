@@ -1,6 +1,9 @@
 # tonejs-json-sequencer
 
-[日本語 README](README.ja.md) / [English README](README.md)
+<p align="left">
+  <a href="README.ja.md"><img src="https://img.shields.io/badge/🇯🇵-Japanese-red.svg" alt="Japanese"></a>
+  <a href="README.md"><img src="https://img.shields.io/badge/🇺🇸-English-blue.svg" alt="English"></a>
+</p>
 
 [Demo](https://cat2151.github.io/tonejs-json-sequencer/demo/index.html)
 
