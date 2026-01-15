@@ -66,15 +66,31 @@ export function createNode(
             nodes.set(element.nodeId, new Tone.PolySynth(voiceConstructor, element.args.options));
           } else {
             console.warn(`Unknown voice type for PolySynth: ${voiceType}`);
-            nodes.set(element.nodeId, new Tone.PolySynth(element.args.options || element.args || {}));
+            // Fallback to default Synth voice with options
+            if (element.args.options) {
+              nodes.set(element.nodeId, new Tone.PolySynth(Tone.Synth, element.args.options));
+            } else {
+              nodes.set(element.nodeId, new Tone.PolySynth(element.args || {}));
+            }
           }
         } else {
           console.warn(`Disallowed or invalid voice type for PolySynth: ${String(voiceType)}`);
-          nodes.set(element.nodeId, new Tone.PolySynth(element.args.options || element.args || {}));
+          // Fallback to default Synth voice with options
+          if (element.args.options) {
+            nodes.set(element.nodeId, new Tone.PolySynth(Tone.Synth, element.args.options));
+          } else {
+            nodes.set(element.nodeId, new Tone.PolySynth(element.args || {}));
+          }
         }
       } else {
-        // Backward compatibility: use default Synth voice
-        nodes.set(element.nodeId, new Tone.PolySynth(element.args?.options || element.args || {}));
+        // Use default Synth voice
+        // When options are provided, explicitly pass Tone.Synth as the voice parameter
+        if (element.args?.options) {
+          nodes.set(element.nodeId, new Tone.PolySynth(Tone.Synth, element.args.options));
+        } else {
+          // Backward compatibility: pass args directly (might be options or empty)
+          nodes.set(element.nodeId, new Tone.PolySynth(element.args || {}));
+        }
       }
       break;
     }
