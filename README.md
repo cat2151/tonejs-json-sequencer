@@ -1,5 +1,10 @@
 # tonejs-json-sequencer
 
+[![npm version](https://img.shields.io/npm/v/tonejs-json-sequencer.svg)](https://www.npmjs.com/package/tonejs-json-sequencer)
+[![TypeScript](https://img.shields.io/badge/TypeScript-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub Pages](https://img.shields.io/badge/demo-GitHub%20Pages-blue)](https://cat2151.github.io/tonejs-json-sequencer/demo/index.html)
+
 [Japanese README](README.ja.md) / [English README](README.md)
 
 [Demo](https://cat2151.github.io/tonejs-json-sequencer/demo/index.html)
