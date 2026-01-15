@@ -80,7 +80,7 @@ import { SequencerNodes, playSequence } from './path/to/tonejs-json-sequencer/di
 #### CommonJS
 
 ```javascript
-const { SequencerNodes, playSequence } = require('./path/to/tonejs-json-sequencer/dist/index.js');
+const { SequencerNodes, playSequence } = require('./path/to/tonejs-json-sequencer/dist/cjs/index.js');
 ```
 
 #### TypeScript
