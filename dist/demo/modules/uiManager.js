@@ -3,7 +3,6 @@ export class UIManager {
         this.onPlay = onPlay;
         this.onSequenceChange = onSequenceChange;
         this.debounceTimer = null;
-        this.isProgrammaticChange = false;
         this.textarea = document.querySelector('textarea');
         this.sequenceSelector = document.getElementById('sequenceSelector');
         this.playButton = document.querySelector('button');
@@ -18,10 +17,6 @@ export class UIManager {
             await this.onPlay();
         };
         this.textarea.addEventListener('input', async () => {
-            // Skip if this is a programmatic change
-            if (this.isProgrammaticChange) {
-                return;
-            }
             // Clear existing timer
             if (this.debounceTimer) {
                 clearTimeout(this.debounceTimer);
@@ -29,7 +24,7 @@ export class UIManager {
             // Set new timer to trigger play after user stops typing
             this.debounceTimer = setTimeout(async () => {
                 await this.onPlay();
-            }, 500);
+            }, UIManager.DEBOUNCE_DELAY_MS);
         });
     }
     populateSequenceSelector(sequences) {
@@ -50,14 +45,10 @@ export class UIManager {
         return this.textarea.value;
     }
     setTextareaValue(value) {
-        this.isProgrammaticChange = true;
         this.textarea.value = value;
-        // Reset flag after a short delay to ensure input event has been processed
-        setTimeout(() => {
-            this.isProgrammaticChange = false;
-        }, 0);
     }
     getSelectedSequenceName() {
         return this.sequenceSelector.value;
     }
 }
+UIManager.DEBOUNCE_DELAY_MS = 500;
