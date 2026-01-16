@@ -5,8 +5,6 @@ export class UIManager {
   private textarea: HTMLTextAreaElement;
   private sequenceSelector: HTMLSelectElement;
   private playButton: HTMLButtonElement;
-  private debounceTimer: ReturnType<typeof setTimeout> | null = null;
-  private static readonly DEBOUNCE_DELAY_MS = 500;
 
   constructor(
     private onPlay: () => Promise<void>,
@@ -28,15 +26,7 @@ export class UIManager {
       await this.onPlay();
     };
     this.textarea.addEventListener('input', async () => {
-      // Clear existing timer
-      if (this.debounceTimer) {
-        clearTimeout(this.debounceTimer);
-      }
-      
-      // Set new timer to trigger play after user stops typing
-      this.debounceTimer = setTimeout(async () => {
-        await this.onPlay();
-      }, UIManager.DEBOUNCE_DELAY_MS);
+      await this.onPlay();
     });
   }
 

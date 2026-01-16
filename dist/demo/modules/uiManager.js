@@ -2,7 +2,6 @@ export class UIManager {
     constructor(onPlay, onSequenceChange) {
         this.onPlay = onPlay;
         this.onSequenceChange = onSequenceChange;
-        this.debounceTimer = null;
         this.textarea = document.querySelector('textarea');
         this.sequenceSelector = document.getElementById('sequenceSelector');
         this.playButton = document.querySelector('button');
@@ -17,14 +16,7 @@ export class UIManager {
             await this.onPlay();
         };
         this.textarea.addEventListener('input', async () => {
-            // Clear existing timer
-            if (this.debounceTimer) {
-                clearTimeout(this.debounceTimer);
-            }
-            // Set new timer to trigger play after user stops typing
-            this.debounceTimer = setTimeout(async () => {
-                await this.onPlay();
-            }, UIManager.DEBOUNCE_DELAY_MS);
+            await this.onPlay();
         });
     }
     populateSequenceSelector(sequences) {
@@ -51,4 +43,3 @@ export class UIManager {
         return this.sequenceSelector.value;
     }
 }
-UIManager.DEBOUNCE_DELAY_MS = 500;
