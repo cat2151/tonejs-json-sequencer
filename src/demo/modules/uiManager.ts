@@ -5,6 +5,8 @@ export class UIManager {
   private textarea: HTMLTextAreaElement;
   private sequenceSelector: HTMLSelectElement;
   private playButton: HTMLButtonElement;
+  private debounceTimer: ReturnType<typeof setTimeout> | null = null;
+  private isProgrammaticChange = false;
 
   constructor(
     private onPlay: () => Promise<void>,
@@ -26,7 +28,20 @@ export class UIManager {
       await this.onPlay();
     };
     this.textarea.addEventListener('input', async () => {
-      await this.onPlay();
+      // Skip if this is a programmatic change
+      if (this.isProgrammaticChange) {
+        return;
+      }
+      
+      // Clear existing timer
+      if (this.debounceTimer) {
+        clearTimeout(this.debounceTimer);
+      }
+      
+      // Set new timer to trigger play after user stops typing
+      this.debounceTimer = setTimeout(async () => {
+        await this.onPlay();
+      }, 500);
     });
   }
 
@@ -52,7 +67,12 @@ export class UIManager {
   }
 
   setTextareaValue(value: string): void {
+    this.isProgrammaticChange = true;
     this.textarea.value = value;
+    // Reset flag after a short delay to ensure input event has been processed
+    setTimeout(() => {
+      this.isProgrammaticChange = false;
+    }, 0);
   }
 
   getSelectedSequenceName(): string {
