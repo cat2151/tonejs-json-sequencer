@@ -15,6 +15,9 @@ export class UIManager {
         this.playButton.onclick = async () => {
             await this.onPlay();
         };
+        this.textarea.addEventListener('input', async () => {
+            await this.onPlay();
+        });
     }
     populateSequenceSelector(sequences) {
         this.sequenceSelector.innerHTML = '';
