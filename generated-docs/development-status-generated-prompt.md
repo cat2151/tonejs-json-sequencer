@@ -1,4 +1,4 @@
-Last updated: 2026-01-16
+Last updated: 2026-01-17
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -308,6 +308,7 @@ Last updated: 2026-01-16
 - issue-notes/4.md
 - issue-notes/40.md
 - issue-notes/41.md
+- issue-notes/44.md
 - issue-notes/5.md
 - issue-notes/7.md
 - issue-notes/9.md
@@ -414,26 +415,28 @@ Last updated: 2026-01-16
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
+206cd02 Merge pull request #45 from cat2151/copilot/implement-auto-play-textarea
+1f9f088 Remove debouncing - auto-play triggers immediately on every input
+c2dc20d Refactor: Extract debounce delay constant and simplify programmatic change handling
+3392a54 Add debouncing and prevent duplicate playback from programmatic changes
+ef1bbd6 Implement auto-play on textarea change
+9f03334 Initial plan
+a5fc8d0 Add issue note for #44 [auto]
+e2d236d Update project summaries (overview & development status) [auto]
 187e817 Auto-translate README.ja.md to README.md [auto]
 5e5f7c2 Merge pull request #43 from cat2151/copilot/update-readme-library-usage
-9f49635 Fix CommonJS import path to use dist/cjs/index.js
-a656540 Add library usage documentation to README.ja.md with dist/ reference methods
-998a986 Auto-translate README.ja.md to README.md [auto]
-9dadd45 Initial plan
-d5fb48a Merge pull request #42 from cat2151/copilot/add-badges-to-readme
-82fd948 Replace incorrect badges with language badges (JA/EN) matching user's style
-4e48931 Add badges to README.md for consistency with README.ja.md
-cf1b76c Add badges to README.ja.md (npm, TypeScript, License, Demo)
 
 ### 変更されたファイル:
 README.ja.md
 README.md
-dist/cjs/node-factory.js
-dist/esm/node-factory.mjs
-issue-notes/40.md
-issue-notes/41.md
-src/node-factory.ts
+dist/demo/modules/uiManager.js
+generated-docs/development-status-generated-prompt.md
+generated-docs/development-status.md
+generated-docs/project-overview-generated-prompt.md
+generated-docs/project-overview.md
+issue-notes/44.md
+src/demo/modules/uiManager.ts
 
 
 ---
-Generated at: 2026-01-16 07:09:11 JST
+Generated at: 2026-01-17 07:09:01 JST

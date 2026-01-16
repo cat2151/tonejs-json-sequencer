@@ -1,4 +1,4 @@
-Last updated: 2026-01-16
+Last updated: 2026-01-17
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -609,6 +609,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 4.md
   📖 40.md
   📖 41.md
+  📖 44.md
   📖 5.md
   📖 7.md
   📖 9.md
@@ -857,7 +858,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, playSequence, if, catch, ensureAudioContextStarted
   - インポート: ../../../dist/index.mjs
 
-**dist/demo/modules/uiManager.js** (43行, 1530バイト)
+**dist/demo/modules/uiManager.js** (46行, 1637バイト)
   - 関数: constructor, setupEventListeners, populateSequenceSelector, getTextareaValue, setTextareaValue, getSelectedSequenceName
   - インポート: なし
 
@@ -1065,7 +1066,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: if, catch, playSequence, ensureAudioContextStarted
   - インポート: ../demo-types.js, ../../../dist/index.mjs
 
-**src/demo/modules/uiManager.ts** (59行, 1778バイト)
+**src/demo/modules/uiManager.ts** (62行, 1871バイト)
   - 関数: なし
   - インポート: ../sequenceLoader.js
 
@@ -1178,4 +1179,4 @@ googled947dc864c270e07.html
 
 
 ---
-Generated at: 2026-01-16 07:09:11 JST
+Generated at: 2026-01-17 07:09:01 JST

@@ -1,51 +1,50 @@
-Last updated: 2026-01-16
+Last updated: 2026-01-17
 
 # Development Status
 
 ## 現在のIssues
-- 大規模なリファクタリングが完了したため、主要なデモ機能の動作確認が喫緊の課題となっています ([Issue #31](../issue-notes/31.md))。
-- 特に、`src/demo`以下のファイル群が正しくビルドされ、ブラウザ上で期待通りに動作するか検証が必要です。
-- この確認は、今後の機能追加や改善の基盤となるため、プロジェクトの安定性確保に不可欠なステップとなります。
+- 大規模なリファクタリングが実施されたため、主要なデモ機能が正しく動作するかどうかの確認が [Issue #31](../issue-notes/31.md) で求められています。
+- 特に、最近追加されたテキストエリアからの自動再生機能 (`uiManager.ts` 関連の変更) など、デモのUIに関連する機能の検証が重要です。
+- これにより、リファクタリングがプロジェクト全体の安定性と既存機能に悪影響を与えていないことを保証します。
 
 ## 次の一手候補
-1. Demoページの基本的な動作確認とエラーチェックの実施 [Issue #31](../issue-notes/31.md)
-   - 最初の小さな一歩: ブラウザで `demo/index.html` を開き、開発者ツールのコンソールにJavaScriptエラーがないか、また基本的なUI要素（再生/停止ボタンなど）が機能するかを確認する。
-   - Agent実行プロンプト:
-     ```
-     対象ファイル: `demo/index.html`, `dist/demo/main.js`, `dist/demo/modules/*.js`, `dist/demo/sequences/*.js`
+1.  [Issue #31](../issue-notes/31.md) 大規模リファクタリング後の主要demo機能の動作確認とレポート作成
+    -   最初の小さな一歩: `demo/index.html`をブラウザで開き、基本的なシーケンス再生と、最近追加されたテキストエリアからの自動再生機能が意図通りに動作するか手動で確認する。
+    -   Agent実行プロンプト:
+        ```
+        対象ファイル: `demo/index.html`, `src/demo/main.ts`, `src/demo/modules/uiManager.ts`, `dist/demo/main.js`, `dist/demo/modules/uiManager.js`
 
-     実行内容: `demo/index.html`をブラウザで開き、開発者ツールのコンソールにJavaScriptエラーが発生していないか、また主要なUI要素（例えば、シーケンスの再生・停止ボタン、音量スライダーなど）がクリックや操作に対して期待通りに反応するかを観察し、潜在的な問題を特定してください。
+        実行内容: `demo/index.html`をブラウザで開いた際の主要なシーケンス再生機能、楽器選択、エフェクト適用、および特にテキストエリアからの自動再生機能が正常に動作しているかを確認するための詳細な手順と、確認すべき具体的なUI要素やJavaScriptコンソールエラーをリストアップしてください。
 
-     確認事項: `package.json`の`start`または`serve`スクリプトが存在する場合、それを利用してデモを起動してください。ブラウザのキャッシュをクリアし、最新のビルド結果が反映されていることを確認してください。
+        確認事項: `package.json`のスクリプトでdemoを起動する方法（もしあれば）、または直接`demo/index.html`を開く際の注意点を確認してください。`dist/`ディレクトリ内のdemo関連ファイルが最新のソースコードからビルドされていることを前提とします。
 
-     期待する出力: 動作確認の結果をMarkdown形式で報告してください。具体的には、発生したエラーメッセージ、機能しなかったUI要素、発見されたバグ、または正常動作した主要機能のリストを含めてください。
-     ```
+        期待する出力: デモの動作確認手順をmarkdown形式で出力してください。シーケンス再生、楽器選択、エフェクト適用、およびテキストエリアの自動再生機能について、期待される動作と確認すべきポイントを詳細に記述し、発見された問題点があれば報告する形式を含めてください。
+        ```
 
-2. Demoの各楽器・エフェクト機能のテスト計画作成 [Issue #31](../issue-notes/31.md)
-   - 最初の小さな一歩: `src/demo/instrument` および `src/demo/effect` ディレクトリ内の全ファイルリストを抽出し、それぞれのモジュールがDemoページでどのように使われているかを特定する。
-   - Agent実行プロンプト:
-     ```
-     対象ファイル: `src/demo/instrument/*.ts`, `src/demo/effect/*.ts`, `src/demo/sequenceLoader.ts`, `src/demo/sequences/*.ts`
+2.  [Issue #31](../issue-notes/31.md) demoのTypeScriptソースコードとビルド成果物の整合性検証
+    -   最初の小さな一歩: `src/demo/modules/uiManager.ts`の最新の変更内容が、`dist/demo/modules/uiManager.js`に正しく反映されているかをdiffツールやコード比較で確認する。
+    -   Agent実行プロンプト:
+        ```
+        対象ファイル: `src/demo/modules/uiManager.ts`, `dist/demo/modules/uiManager.js`, `tsconfig.demo-new.json`, `package.json`
 
-     実行内容: 上記ファイルを分析し、Tone.jsライブラリの各楽器（`src/demo/instrument`以下）とエフェクト（`src/demo/effect`以下）がデモ内でどのようにインスタンス化され、シーケンスに組み込まれているかを洗い出してください。それぞれの楽器・エフェクトが個別に動作確認可能かどうか、またそのための簡単な確認手順案を検討してください。
+        実行内容: `src/demo/modules/uiManager.ts`の最新の内容と、対応するビルド成果物である`dist/demo/modules/uiManager.js`を比較し、TypeScriptの変更がJavaScriptに正しく変換・反映されているかを確認してください。特に、ESMからCJSへの変換やトランスパイル設定に起因する潜在的な問題を特定してください。
 
-     確認事項: 各TypeScriptファイルが最終的にJavaScriptにコンパイルされ、`dist/demo`以下に配置されることを考慮に入れてください。`src/demo/sequences/`内のファイルが各楽器・エフェクトの利用例を提供しているかを確認してください。
+        確認事項: `package.json`の`build`スクリプトや`tsconfig.demo-new.json`のコンパイルオプションを確認し、意図されたビルドプロセスが適用されているか検証してください。`tsc`コマンドの実行結果ログも参照可能であれば考慮してください。
 
-     期待する出力: Markdown形式で、各楽器とエフェクトのテスト観点（例: 音が出るか、パラメータが変更できるか）と、デモにおける簡単な確認手順をまとめたテスト計画を生成してください。
-     ```
+        期待する出力: `uiManager`モジュールのソースとビルド成果物の比較結果をmarkdown形式で報告してください。主要な機能変更が正しく反映されているか、または差異がある場合はその詳細と潜在的な原因を記述してください。
+        ```
 
-3. Demoのビルドプロセスの健全性確認 [Issue #31](../issue-notes/31.md)
-   - 最初の小さな一歩: `package.json`に定義されている主要なビルドスクリプト（例: `npm run build`や`npm run demo:build`など）を実行し、エラーなく完了するかを確認する。
-   - Agent実行プロンプト:
-     ```
-     対象ファイル: `package.json`, `tsconfig.json`, `tsconfig.demo-new.json`, `scripts/copy-to-dist.js`, `scripts/rename-to-mjs.js`, `src/demo/**/*.ts`
+3.  自動生成されるドキュメント（開発状況、プロジェクト概要）の健全性チェック
+    -   最初の小さな一歩: 最新の`generated-docs/development-status.md`と`generated-docs/project-overview.md`の内容が、現在のプロジェクト状況を正確に反映しているか、特にこのプロンプトの出力が適切かを確認する。
+    -   Agent実行プロンプト:
+        ```
+        対象ファイル: `generated-docs/development-status.md`, `generated-docs/project-overview.md`, `.github/workflows/call-daily-project-summary.yml`, `.github/actions-tmp/.github_automation/project_summary/scripts/generate-project-summary.cjs`
 
-     実行内容: `package.json`に定義されているビルド関連スクリプト（例: `npm run build`や`npm run build:demo`など、またはそれらを呼び出す主要なビルドコマンド）を実行し、その実行ログを分析してください。特に、`src/demo`以下のTypeScriptファイルがエラーなく`dist/demo`ディレクトリにJavaScriptファイルとして正しく出力されていることを確認してください。
+        実行内容: `generated-docs/development-status.md`と`generated-docs/project-overview.md`の最新の内容を分析し、それらが現在のプロジェクトのオープンなIssue、コミット履歴、ファイル構造を正確に反映しているか確認してください。特に、本プロンプトの指示に従って生成された`development-status.md`が、指定されたフォーマットと内容の要件を満たしているかを重点的にチェックしてください。
 
-     確認事項: ビルド前に既存の`dist`ディレクトリを削除し、クリーンな状態でビルドを実行してください。ビルドスクリプトの依存関係や設定ファイル（`tsconfig.demo-new.json`など）を網羅的に確認してください。
+        確認事項: `call-daily-project-summary.yml`ワークフローが正常に実行された履歴、および`generate-project-summary.cjs`スクリプトが正しく動作していることを前提とします。手動での更新は考慮しません。
 
-     期待する出力: ビルドプロセスの実行結果をMarkdown形式で報告してください。具体的には、ビルドコマンドの出力（標準出力およびエラー）、発生したエラーや警告、`dist/demo`ディレクトリの内容（主要なJavaScriptファイルが存在し、内容が正当であること）を含めてください。
-     ```
+        期待する出力: 自動生成されたドキュメントの健全性レポートをmarkdown形式で出力してください。現状との乖離や改善点があれば具体的に記述し、特に本プロンプトの出力に関する評価を含めてください。
 
 ---
-Generated at: 2026-01-16 07:09:26 JST
+Generated at: 2026-01-17 07:09:17 JST

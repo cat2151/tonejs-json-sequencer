@@ -1,27 +1,33 @@
-Last updated: 2026-01-16
+Last updated: 2026-01-17
 
 # Project Overview
 
 ## プロジェクト概要
-- Tone.jsの音色・エフェクト・演奏をJSONで記述できる軽量ライブラリ
-- コードを書かず、音をデータで制御できるため、UIやストリーミングと自然に連携
-- 時間順のイベントをデータとして扱い、緻密な演奏表現が可能に
+-   Tone.jsの音色・エフェクト・演奏をJSONで記述できる軽量ライブラリ
+-   コードを書かず、音をデータで制御できるため、UIやストリーミングと自然に連携
+-   時間順のイベントをデータとして扱い、緻密な演奏表現が可能に
 
 ## 技術スタック
-- フロントエンド: Tone.js - Webブラウザ上でシンセサイザー、エフェクト、スケジューリングなど、高度な音響設計をJavaScriptで自由に行うためのオーディオフレームワーク。
-- 音楽・オーディオ: Tone.js - 上記の通り、Web上での音楽生成と再生のコアとなる技術。
-- 開発ツール:
-    - TypeScript - JavaScriptに静的型付けを追加し、大規模なプロジェクト開発の堅牢性と保守性を向上させるプログラミング言語。
-    - Node.js (via `@types/node`) - TypeScriptの型定義ファイルを通じて、Node.js環境での開発ツールやスクリプト実行をサポート。
-- テスト: 現時点では、プロジェクト情報に具体的なテスト関連技術の言及はありません。
-- ビルドツール:
-    - TypeScript Compiler (tsc) - TypeScriptコードをJavaScript（ES ModulesおよびCommonJS形式）にコンパイルするために使用されます。
-    - `scripts/` ディレクトリ内のカスタムスクリプト (`copy-to-dist.js`, `rename-to-mjs.js`) - ビルド後のファイルの配置やモジュール形式の変換を自動化します。
-- 言語機能:
-    - JavaScript (ECMAScript) - WebブラウザおよびNode.js環境で動作するプロジェクトの基盤となるスクリプト言語。
-    - TypeScript - 上記「開発ツール」参照。
-- 自動化・CI/CD: GitHub Actions - `README.md`に自動翻訳に使用されているとの記載があり、継続的インテグレーション/デプロイメントのプロセスに利用されています。
-- 開発標準: .editorconfig - 複数のエディタや開発環境において、コードの書式設定（インデント、改行コードなど）の一貫性を保つための設定ファイル。
+-   フロントエンド:
+    -   **Webブラウザ**: デモやライブラリの利用環境として標準的なWebブラウザを想定しており、CDN経由での利用も可能です。
+-   音楽・オーディオ:
+    -   **Tone.js (v15.0.4)**: Web Audio APIを抽象化し、シンセサイザー、エフェクト、シーケンサーなどの高度な音響処理をJavaScriptで実現するためのライブラリ。本プロジェクトの核となる音源・エフェクトエンジンです。
+-   開発ツール:
+    -   **TypeScript (v5.3.0)**: JavaScriptに静的型付けを追加した言語で、大規模なアプリケーション開発におけるコード品質と保守性の向上に貢献します。
+    -   **@types/node (v20.10.0)**: Node.js環境でTypeScript開発をサポートするための型定義ファイルです。
+    -   **npm**: JavaScriptのパッケージマネージャーであり、ライブラリのインストールや依存関係の管理に使用されます。
+-   テスト:
+    -   [言及なし]
+-   ビルドツール:
+    -   **TypeScriptコンパイラ (tsc)**: TypeScriptソースコードをJavaScript（ES ModulesおよびCommonJS形式）にコンパイルするために使用されます。
+    -   **カスタムスクリプト**: `scripts/copy-to-dist.js`や`scripts/rename-to-mjs.js`など、ビルド後のファイル整理やESM形式への変換を自動化するためのスクリプトが使用されています。
+-   言語機能:
+    -   **TypeScript**: 静的型付け、インターフェース、クラスなど、モダンなJavaScriptの機能に加えて強力な型システムを提供します。
+    -   **ES Modules / CommonJS**: JavaScriptモジュールの標準的な形式に対応し、幅広い環境での利用を可能にしています。
+-   自動化・CI/CD:
+    -   **GitHub Actions**: ドキュメントの自動英訳（`README.md`の生成）に利用されており、プロジェクトの自動化フローの一部として活用されています。
+-   開発標準:
+    -   **.editorconfig**: 複数の開発環境間でインデントスタイル、文字コード、改行コードなどのコードフォーマットを統一するための設定ファイルです。
 
 ## ファイル階層ツリー
 ```
@@ -144,6 +150,7 @@ Last updated: 2026-01-16
   📖 4.md
   📖 40.md
   📖 41.md
+  📖 44.md
   📖 5.md
   📖 7.md
   📖 9.md
@@ -210,121 +217,126 @@ Last updated: 2026-01-16
 
 ## ファイル詳細説明
 
--   **`src/index.ts`**: ライブラリの主要なエントリポイント。`SequencerNodes`クラスと`playSequence`関数をエクスポートし、外部からライブラリ機能を利用できるようにします。
--   **`src/sequencer-nodes.ts`**: `SequencerNodes`クラスを定義。このクラスは、生成されたTone.jsのオーディオノード（シンセサイザー、エフェクトなど）を`nodeId`で一元的に管理するためのマップを提供します。ノードの追加、取得、およびすべてのノードの破棄機能が含まれます。
--   **`src/node-factory.ts`**: `createNode`関数と`connectNode`関数を定義。JSON形式で記述された情報に基づき、Tone.jsの様々なオーディオノードを動的に生成し、それらを相互に、またはオーディオ出力に接続するロジックを担います。
--   **`src/event-scheduler.ts`**: `scheduleOrExecuteEvent`関数と`playSequence`関数を定義。JSON形式のシーケンスイベントを受け取り、イベントタイプ（ノード作成、接続、ノートトリガー、パラメータ変更など）に応じて、対応するTone.jsのメソッド呼び出しをスケジューリングまたは即時実行します。プロジェクトのコア再生ロジックを構成します。
--   **`src/types.ts`**: プロジェクト全体で使用されるJSONシーケンスイベントの構造やノードタイプなどの型定義を集中管理します。TypeScriptによる開発において型安全性を保証する役割を持ちます。
+*   **`src/index.ts`**: ライブラリのエントリーポイント。主要なモジュール（`SequencerNodes`, `playSequence`など）を外部にエクスポートします。
+*   **`src/sequencer-nodes.ts`**: `SequencerNodes`クラスを定義。Tone.jsのノードインスタンスをIDで管理するための中心的な役割を担い、生成、取得、破棄などを効率的に行います。
+*   **`src/node-factory.ts`**: JSONで記述されたイベント定義に基づき、Tone.jsの様々なコンポーネント（シンセサイザー、エフェクトなど）を動的に生成し、それらを適切に接続するロジックを実装しています。
+*   **`src/event-scheduler.ts`**: JSONシーケンス内の各イベントを時間指定に基づいてスケジュールしたり、即時実行したりする中心的なロジックを含んでいます。`playSequence`や`scheduleOrExecuteEvent`といった主要な関数を定義します。
+*   **`src/types.ts`**: プロジェクト全体で使用される型定義（JSONシーケンスイベントの構造など）を集中管理し、コードの型安全性を高めています。
 
--   **`src/demo/main.ts`**: デモアプリケーションのメインスクリプト。UIの初期化、イベントリスナーの設定、サンプルシーケンスの読み込み、オーディオ再生のトリガーなど、デモ全体の制御ロジックを実装しています。
--   **`src/demo/modules/audioManager.ts`**: デモアプリケーションのオーディオ再生関連ロジックをカプセル化。Tone.jsのオーディオコンテキストの開始保証や、メインライブラリの`playSequence`関数の呼び出しを担当します。
--   **`src/demo/modules/uiManager.ts`**: デモアプリケーションのユーザーインターフェース（ボタン、シーケンスセレクタ、テキストエリア）の操作を管理します。DOM要素の取得、イベントリスナーの設定、UI要素へのデータ反映などを行います。
--   **`src/demo/sequenceLoader.ts`**: デモで使用される各種サンプルシーケンス（楽器、エフェクト、基本的な演奏パターンなど）を読み込み、分類して提供する役割を担います。
--   **`src/demo/sequences/*.ts`**: 様々な楽器、エフェクト、および基本的な演奏フレーズをJSON形式で定義したサンプルシーケンスファイル群。プロジェクトの機能と表現力を示す具体的なデータが記述されています。
--   **`src/demo/instrument/*.ts`**: 各種Tone.js楽器（例: Synth, FMSynth, Sampler）のJSON定義を含むサンプルシーケンス。
--   **`src/demo/effect/*.ts`**: 各種Tone.jsエフェクト（例: Reverb, Chorus, Distortion）のJSON定義を含むサンプルシーケンス。
--   **`demo/index.html`**: デモアプリケーションのフロントエンドを構成するHTMLファイル。UI要素の配置と、必要なJavaScript・CSSファイルの読み込みを定義します。
--   **`demo/styles.css`**: デモアプリケーションの視覚的なスタイルを定義するCSSファイル。
+*   **`src/demo/main.ts`**: デモアプリケーションのメインロジック。UIの初期化、ユーザーイベント（再生ボタンクリックなど）のハンドリング、シーケンスのロードと再生のトリガーなどを担当します。
+*   **`src/demo/modules/audioManager.ts`**: デモにおいてTone.jsと`tonejs-json-sequencer`ライブラリを使用してオーディオ再生を管理するモジュール。オーディオコンテキストの開始確認や、シーケンス再生の実行を行います。
+*   **`src/demo/modules/uiManager.ts`**: デモのユーザーインターフェース（再生ボタン、シーケンス選択セレクター、JSON表示テキストエリアなど）の操作と状態管理を担当するモジュールです。
+*   **`src/demo/sequenceLoader.ts`**: デモで使用されるプリセットのJSONシーケンスデータをロードし、管理する機能を提供します。
+*   **`src/demo/sequences/`**: 事前に定義された様々な音楽的シーケンス（JSON形式）が格納されているディレクトリです。
+*   **`src/demo/instrument/`**: デモで使用されるTone.jsの楽器（シンセサイザーなど）のJSONシーケンス定義が格納されています。
+*   **`src/demo/effect/`**: デモで使用されるTone.jsのエフェクトのJSONシーケンス定義が格納されています。
+*   **`src/demo/demo-types.ts`**: デモアプリケーション固有の型定義を格納します。
 
--   **`package.json`**, **`package-lock.json`**: Node.jsプロジェクトの設定ファイル。依存関係（ライブラリ、開発ツール）、スクリプトなどが定義されています。
--   **`tsconfig.json`** など: TypeScriptコンパイラの設定ファイル群。コンパイルのオプションや対象ファイル、出力形式などを指定します。
--   **`scripts/*.js`**: ビルドプロセスを支援するユーティリティスクリプト。例えば、コンパイル後のJavaScriptファイルを`dist/`ディレクトリにコピーしたり、ES Modules形式にリネームしたりする処理を行います。
--   **`README.ja.md`**, **`README.md`**: プロジェクトの概要、インストール方法、使用例、設計思想、ロードマップなどの説明ドキュメント（日本語と英語）。
--   **`docs/tonejs-components-roadmap.ja.md`**, **`docs/tonejs-components-roadmap.md`**: Tone.jsの各コンポーネント（楽器、エフェクトなど）がJSON記述に対応している状況と、今後の実装計画について詳細に記されたドキュメント。
+*   **`dist/` ディレクトリ**: TypeScriptコンパイル後のJavaScriptファイルと型定義ファイル、およびデモ関連のコンパイル済みファイルが格納されます。ES Modules (`.mjs`) と CommonJS (`.js`) の両形式で提供され、ライブラリとして配布される最終成果物です。
+*   **`README.ja.md` / `README.md`**: プロジェクトの目的、使い方、インストール方法、開発状況、ロードマップなどが記述されたドキュメントです。（日本語版と英語版）
+*   **`docs/tonejs-components-roadmap.ja.md`**: Tone.jsの各コンポーネント（楽器、エフェクトなど）のJSON対応状況、実装計画、優先順位などに関する詳細なロードマップドキュメントです。
+*   **`package.json`**: プロジェクトのメタデータ、依存関係、スクリプトなどを定義するファイルです。
+*   **`tsconfig.json`**: TypeScriptコンパイラの動作を制御するための設定ファイルです。
+*   **`scripts/` ディレクトリ**: ビルドプロセスやファイル変換などを補助するカスタムスクリプトが格納されています。
+*   **`examples/` ディレクトリ**: ライブラリの基本的な使用方法を示すコード例（HTMLおよびJavaScriptファイル）が含まれています。
 
 ## 関数詳細説明
 
--   **`scheduleOrExecuteEvent(Tone, nodes, event, scheduledTime?)`**
-    -   **役割**: JSON形式の単一シーケンスイベントを解析し、Tone.jsの適切なメソッドを呼び出して実行またはスケジューリングします。
-    -   **引数**:
-        -   `Tone`: Tone.jsライブラリのインスタンス。
-        -   `nodes`: `SequencerNodes`クラスのインスタンスで、管理対象のTone.jsノードを格納。
-        -   `event`: 実行するイベントを表すJSONオブジェクト（`eventType`、`nodeId`、`args`などを含む）。
-        -   `scheduledTime?`: (オプション) イベントを実行する予定時刻。指定されない場合は即時実行されます。
-    -   **戻り値**: `void`
-    -   **機能**: `event.eventType`の値（例: `createNode`, `connect`, `triggerAttackRelease`, `setParam`）に基づいて処理を分岐させ、`node-factory.ts`の関数を呼び出すか、指定された`nodeId`のTone.jsノードに対して適切なメソッドを引数とともに実行します。
+*   **`SequencerNodes` クラス (コンストラクタ)**
+    *   **役割**: Tone.jsのオーディオノードをIDに基づいて効率的に管理するためのインスタンスを初期化します。
+    *   **引数**: なし。
+    *   **戻り値**: `SequencerNodes`の新しいインスタンス。
+    *   **機能**: 内部にMapを保持し、生成されたTone.jsノードを`nodeId`で参照できるように準備します。
+*   **`SequencerNodes.get(nodeId: number)`**
+    *   **役割**: 指定されたIDを持つTone.jsノードを取得します。
+    *   **引数**: `nodeId` (number) - 取得したいノードのユニークな識別子。
+    *   **戻り値**: 該当するTone.jsノードインスタンス、またはノードが見つからない場合は`undefined`。
+    *   **機能**: 内部のマップから指定された`nodeId`に対応するノードを検索して返します。
+*   **`SequencerNodes.set(nodeId: number, node: Tone.ToneAudioNode | Tone.ToneAudioBuffer)`**
+    *   **役割**: 新しいTone.jsノードを、指定されたIDと関連付けて内部マップに登録します。
+    *   **引数**: `nodeId` (number) - 登録するノードのユニークな識別子。`node` (Tone.ToneAudioNode | Tone.ToneAudioBuffer) - 登録するTone.jsノードのインスタンス。
+    *   **戻り値**: なし。
+    *   **機能**: ノードIDとTone.jsインスタンスのペアをマップに保存し、後で参照できるようにします。
+*   **`SequencerNodes.disposeAll()`**
+    *   **役割**: 管理している全てのTone.jsノードを破棄し、関連するオーディオリソースを解放します。
+    *   **引数**: なし。
+    *   **戻り値**: なし。
+    *   **機能**: 登録されている各ノードの`dispose()`メソッドを呼び出した後、内部マップをクリアしてメモリを解放します。
+*   **`createNode(Tone: typeof Tone, event: CreateNodeEvent, nodes: SequencerNodes)`**
+    *   **役割**: JSONのイベント定義に基づいて、Tone.jsの新しいオーディオノード（シンセサイザーやエフェクトなど）を生成します。
+    *   **引数**: `Tone` (typeof Tone) - Tone.jsライブラリのグローバルオブジェクト。`event` (CreateNodeEvent) - ノード生成の詳細を含むJSONイベントオブジェクト。`nodes` (SequencerNodes) - ノードを管理する`SequencerNodes`のインスタンス。
+    *   **戻り値**: `Promise<void>` (非同期処理のため)。
+    *   **機能**: `event.nodeType` (例: 'Synth', 'Reverb') と`event.args`の引数を使用し、対応するTone.jsのコンストラクタを呼び出してノードを作成し、`nodes.set()`で登録します。
+*   **`connectNode(nodes: SequencerNodes, event: ConnectEvent)`**
+    *   **役割**: JSONのイベント定義に基づいて、既存のTone.jsノード間を接続します。
+    *   **引数**: `nodes` (SequencerNodes) - ノードを管理する`SequencerNodes`のインスタンス。`event` (ConnectEvent) - ノード接続の詳細を含むJSONイベントオブジェクト。
+    *   **戻り値**: `Promise<void>` (非同期処理のため)。
+    *   **機能**: `event.nodeId`で指定されたノードを、`event.connectTo`で指定された別のノードまたは`Tone.Destination`に接続します。
+*   **`scheduleOrExecuteEvent(Tone: typeof Tone, nodes: SequencerNodes, event: SequenceEvent)`**
+    *   **役割**: 単一のJSONシーケンスイベントを、指定された時間にスケジュールまたは即座に実行します。
+    *   **引数**: `Tone` (typeof Tone) - Tone.jsライブラリのグローバルオブジェクト。`nodes` (SequencerNodes) - ノードを管理する`SequencerNodes`のインスタンス。`event` (SequenceEvent) - 実行する単一のJSONシーケンスイベント。
+    *   **戻り値**: `Promise<void>` (非同期処理のため)。
+    *   **機能**: `event.eventType`に基づいて処理を分岐し、ノードの作成、接続、パラメータ設定、音のトリガー（例: `triggerAttackRelease`）などを行います。時間指定がある場合はTone.jsのスケジューリング機能を利用します。
+*   **`playSequence(Tone: typeof Tone, nodes: SequencerNodes, sequence: SequenceEvent[])`**
+    *   **役割**: JSONシーケンスの配列全体を再生します。
+    *   **引数**: `Tone` (typeof Tone) - Tone.jsライブラリのグローバルオブジェクト。`nodes` (SequencerNodes) - ノードを管理する`SequencerNodes`のインスタンス。`sequence` (SequenceEvent[]) - 再生するJSONシーケンスイベントの配列。
+    *   **戻り値**: `Promise<void>` (非同期処理のため)。
+    *   **機能**: シーケンスの再生を開始する前に既存のノードを破棄し、シーケンス内の各イベントを順番に`scheduleOrExecuteEvent`に渡し、全体の再生フローを管理します。
 
--   **`playSequence(Tone, nodes, sequence)`**
-    -   **役割**: JSON形式で定義されたシーケンス（イベントの配列）全体を再生します。
-    -   **引数**:
-        -   `Tone`: Tone.jsライブラリのインスタンス。
-        -   `nodes`: `SequencerNodes`クラスのインスタンス。
-        -   `sequence`: 再生するイベントのJSON配列。
-    -   **戻り値**: `Promise<void>` (非同期処理のため)
-    -   **機能**: シーケンス内の各イベントを順番に処理し、それぞれに対して`scheduleOrExecuteEvent`を呼び出します。再生前に`nodes.disposeAll()`を呼び出して既存のノードをクリーンアップし、オーディオリソースの競合を防ぎます。
-
--   **`createNode(Tone, nodes, event)`**
-    -   **役割**: `createNode`イベントのJSON定義に基づき、新しいTone.jsオーディオノードを生成し、`SequencerNodes`に登録します。
-    -   **引数**:
-        -   `Tone`: Tone.jsライブラリのインスタンス。
-        -   `nodes`: `SequencerNodes`クラスのインスタンス。
-        -   `event`: `createNode`イベントを表すJSONオブジェクト（`nodeType`、`nodeId`、`args`を含む）。
-    -   **戻り値**: `void`
-    -   **機能**: `event.nodeType`で指定されたTone.jsクラス（例: `Synth`, `Reverb`）を`event.args`を引数にインスタンス化し、生成されたノードを`event.nodeId`で`SequencerNodes`に格納します。
-
--   **`connectNode(nodes, event)`**
-    -   **役割**: `connect`イベントのJSON定義に基づき、指定されたTone.jsノードを別のノードまたはオーディオ出力に接続します。
-    -   **引数**:
-        -   `nodes`: `SequencerNodes`クラスのインスタンス。
-        -   `event`: `connect`イベントを表すJSONオブジェクト（`nodeId`、`connectTo`を含む）。
-    -   **戻り値**: `void`
-    -   **機能**: `event.nodeId`で指定されたノードを`nodes`から取得し、`event.connectTo`が`'toDestination'`であれば`node.toDestination()`を呼び出し、それ以外であれば`connectTo`で指定された別のノードに`node.connect()`で接続します。
-
--   **`SequencerNodes`クラスのメソッド**:
-    -   **`constructor()`**: ノードを管理するための内部`Map`を初期化します。
-    -   **`get(nodeId: number | string)`**: 指定された`nodeId`に関連付けられたTone.jsノードを取得します。
-    -   **`set(nodeId: number | string, node: Tone.ToneAudioNode)`**: 指定された`nodeId`でTone.jsノードを`SequencerNodes`に登録します。
-    -   **`disposeAll()`**: 現在`SequencerNodes`で管理されているすべてのTone.jsノードを破棄し、マップをクリアします。これにより、使用されていないオーディオリソースが解放されます。
-
--   **`loadAllSequences()`** (`src/demo/sequenceLoader.ts` 内)
-    -   **役割**: デモで利用可能な全てのサンプルシーケンスデータを読み込み、カテゴリ別に整理して返します。
-    -   **引数**: なし
-    -   **戻り値**: シーケンスデータのコレクションを含むオブジェクト。
-    -   **機能**: `src/demo/sequences/`、`src/demo/instrument/`、`src/demo/effect/`配下にある個々のJSONシーケンスファイルをインポートし、利用しやすい形式に統合します。
-
--   **`initialize()`** (`src/demo/main.ts` 内)
-    -   **役割**: デモアプリケーションの起動時に必要な初期設定をすべて行います。
-    -   **引数**: なし
-    -   **戻り値**: `void`
-    -   **機能**: `uiManager`と`audioManager`のインスタンス化と初期化、サンプルシーケンスの読み込み、UIセレクタへのシーケンスデータの投入、初期シーケンスのテキストエリアへの表示、各種UIイベントリスナーの設定を行います。
-
--   **`playWithAudioContext()`** (`src/demo/main.ts` 内、UIイベントハンドラから呼び出し)
-    -   **役割**: ユーザーアクションに応じてWeb Audio APIのオーディオコンテキストを開始し、選択されたシーケンスの再生をトリガーします。
-    -   **引数**: なし
-    -   **戻り値**: `Promise<void>`
-    -   **機能**: `audioManager.ensureAudioContextStarted()`を呼び出してTone.jsのオーディオコンテキストが確実に開始されるようにし、その後`audioManager.playSequence()`を呼び出して現在選択されているシーケンスの再生を開始します。
-
--   **`ensureAudioContextStarted(Tone)`** (`src/demo/modules/audioManager.ts` 内)
-    -   **役割**: Tone.jsのオーディオコンテキストが確実に開始されていることを保証します。
-    -   **引数**: `Tone`インスタンス。
-    -   **戻り値**: `Promise<void>`
-    -   **機能**: Web Audio APIの仕様により、オーディオコンテキストはユーザーのジェスチャー（クリックなど）によってのみ開始できます。この関数は、`Tone.start()`を呼び出すことで、オーディオが再生可能であることを保証します。既に開始済みの場合は何もしません。
+*   **`DemoApp.initialize()` (src/demo/main.ts)**
+    *   **役割**: デモアプリケーションの初期化処理を実行します。
+    *   **引数**: なし。
+    *   **戻り値**: `Promise<void>`.
+    *   **機能**: シーケンスデータのロード、UI要素の初期設定、イベントリスナーの登録を行います。
+*   **`DemoApp.playWithAudioContext()` (src/demo/main.ts)**
+    *   **役割**: オーディオコンテキストを開始し、選択されたシーケンスの再生をトリガーします。
+    *   **引数**: なし。
+    *   **戻り値**: `Promise<void>`.
+    *   **機能**: `AudioManager.ensureAudioContextStarted()`を呼び出してオーディオコンテキストをアクティブにし、`AudioManager.playSequence()`を介してJSONシーケンスの再生を開始します。
+*   **`AudioManager.ensureAudioContextStarted()` (src/demo/modules/audioManager.ts)**
+    *   **役割**: Tone.jsのオーディオコンテキストが確実に開始されている状態にします。
+    *   **引数**: なし。
+    *   **戻り値**: `Promise<void>`.
+    *   **機能**: Web Audio APIの仕様に基づき、ユーザー操作（クリックなど）をトリガーとしてオーディオ再生を開始するために`Tone.start()`を呼び出します。
+*   **`AudioManager.playSequence(sequence: SequenceEvent[])` (src/demo/modules/audioManager.ts)**
+    *   **役割**: 指定されたJSONシーケンスをオーディオとして再生します。
+    *   **引数**: `sequence` (SequenceEvent[]) - 再生するJSONシーケンスイベントの配列。
+    *   **戻り値**: `Promise<void>`.
+    *   **機能**: コアライブラリの`playSequence`関数を呼び出し、Tone.jsを使用して実際にサウンドを生成・再生します。
+*   **`UIManager.setupEventListeners(sequenceNames: string[], onSequenceChange: (name: string) => void)` (src/demo/modules/uiManager.ts)**
+    *   **役割**: デモUIの各要素に対するイベントリスナー（例: 再生ボタン、シーケンス選択）を設定します。
+    *   **引数**: `sequenceNames` (string[]) - シーケンス名のリスト。`onSequenceChange` (function) - シーケンス選択が変更されたときに呼び出されるコールバック関数。
+    *   **戻り値**: なし。
+    *   **機能**: 再生ボタンのクリックイベントやシーケンス選択ドロップダウンの変更イベントを監視し、対応する処理を起動します。
+*   **`SequenceLoader.loadAllSequences()` (src/demo/sequenceLoader.ts)**
+    *   **役割**: デモで使用する全てのプリセットシーケンス（楽器やエフェクトの定義を含む）をロードし、コレクションとして返します。
+    *   **引数**: なし。
+    *   **戻り値**: `SequenceDataCollection` - シーケンス名をキーとするマップ。
+    *   **機能**: 複数のファイルからJSONシーケンスデータをインポートし、統合されたデータ構造を構築します。
 
 ## 関数呼び出し階層ツリー
 ```
-- playSequence (src/event-scheduler.ts)
-    - scheduleOrExecuteEvent (src/event-scheduler.ts)
-        - createNode (src/node-factory.ts)
-            - SequencerNodes.set (src/sequencer-nodes.ts)
-        - connectNode (src/node-factory.ts)
-            - SequencerNodes.get (src/sequencer-nodes.ts)
-        - SequencerNodes.get (src/sequencer-nodes.ts)
-        - (Tone.jsの各種メソッド呼び出し:例: triggerAttackRelease, set, rampTo)
-    - Tone.start (Tone.jsライブラリ関数、通常はensureAudioContextStarted経由)
-    - SequencerNodes.disposeAll (src/sequencer-nodes.ts)
+- DemoApp.initialize() (src/demo/main.ts)
+  - SequenceLoader.loadAllSequences() (src/demo/sequenceLoader.ts)
+  - UIManager.populateSequenceSelector(sequenceNames: string[]) (src/demo/modules/uiManager.ts)
+  - UIManager.setupEventListeners(sequenceNames: string[], onSequenceChange: (name: string) => void) (src/demo/modules/uiManager.ts)
+    - DemoApp.playWithAudioContext() (コールバックとして登録)
 
-- デモアプリケーションの主要な実行フロー:
-    - initialize (src/demo/main.ts)
-        - uiManager.setupEventListeners (src/demo/modules/uiManager.ts)
-        - sequenceLoader.loadAllSequences (src/demo/sequenceLoader.ts)
-        - uiManager.populateSequenceSelector (src/demo/modules/uiManager.ts)
-        - uiManager.updateTextareaWithSelectedSequence (src/demo/modules/uiManager.ts)
-    - (UIイベントハンドラ: 例: 'playButton'のクリック)
-        - playWithAudioContext (src/demo/main.ts)
-            - audioManager.ensureAudioContextStarted (src/demo/modules/audioManager.ts)
-                - Tone.start (Tone.jsライブラリ関数)
-            - audioManager.playSequence (src/demo/modules/audioManager.ts)
-                - playSequence (上記メインのシーケンス再生関数)
+- DemoApp.playWithAudioContext() (src/demo/main.ts)
+  - AudioManager.ensureAudioContextStarted() (src/demo/modules/audioManager.ts)
+    - Tone.start()
+  - AudioManager.playSequence(sequence: SequenceEvent[]) (src/demo/modules/audioManager.ts)
+    - playSequence(Tone: typeof Tone, nodes: SequencerNodes, sequence: SequenceEvent[]) (src/event-scheduler.ts)
+      - SequencerNodes.disposeAll() (src/sequencer-nodes.ts)
+      - forEach (sequence配列の各イベントを処理)
+        - scheduleOrExecuteEvent(Tone: typeof Tone, nodes: SequencerNodes, event: SequenceEvent) (src/event-scheduler.ts)
+          - (event.eventTypeによる処理分岐)
+          - createNode(Tone: typeof Tone, event: CreateNodeEvent, nodes: SequencerNodes) (src/node-factory.ts) (eventType: 'createNode'の場合)
+            - SequencerNodes.set(nodeId: number, node: Tone.ToneAudioNode | Tone.ToneAudioBuffer) (src/sequencer-nodes.ts)
+          - connectNode(nodes: SequencerNodes, event: ConnectEvent) (src/node-factory.ts) (eventType: 'connect'の場合)
+            - SequencerNodes.get(nodeId: number) (src/sequencer-nodes.ts)
+          - SequencerNodes.get(nodeId: number) (src/sequencer-nodes.ts) (eventType: 'triggerAttackRelease', 'set'などの既存ノード操作の場合)
+          - (Tone.jsのメソッド呼び出し: 例: node.triggerAttackRelease(), node.set()など)
 
 ---
-Generated at: 2026-01-16 07:09:56 JST
+Generated at: 2026-01-17 07:09:53 JST
