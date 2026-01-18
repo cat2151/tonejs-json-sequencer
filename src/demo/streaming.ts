@@ -39,9 +39,19 @@ class StreamingDemo {
       this.stop();
     });
 
-    // Sequence selector change
-    selector.addEventListener('change', () => {
+    // Sequence selector change - immediately play the selected sequence for easier debugging
+    selector.addEventListener('change', async () => {
+      // Stop current playback if any, then load and play the new sequence
+      if (this.player && this.player.playing) {
+        this.stop();
+      }
       this.loadSelectedSequence();
+      // Auto-play when selecting a new sequence for easier debugging
+      try {
+        await this.play();
+      } catch (error) {
+        console.error('Error during auto-play:', error);
+      }
     });
 
     // Loop checkbox change
