@@ -60,15 +60,10 @@ export declare class NDJSONStreamingPlayer {
     private Tone;
     private nodes;
     private config;
-    private isPlaying;
-    private startTime;
-    private currentEvents;
-    private processedEventIndices;
+    private playbackState;
+    private timeParser;
+    private eventProcessor;
     private animationFrameId;
-    private loopCount;
-    private cachedSequenceDuration;
-    private createdNodeIds;
-    private processLoopCount;
     constructor(Tone: typeof ToneTypes, nodes: SequencerNodes, config?: NDJSONStreamingConfig);
     /**
      * Log debug message if debug mode is enabled
@@ -88,41 +83,9 @@ export declare class NDJSONStreamingPlayer {
      */
     private updateEvents;
     /**
-     * Create nodes and connections from events
-     */
-    private createNodesAndConnections;
-    /**
      * Main event processing loop
      */
     private processEvents;
-    /**
-     * Schedule an event at a specific time
-     */
-    private scheduleEvent;
-    /**
-     * Adjust event time to absolute time
-     */
-    private adjustEventTime;
-    /**
-     * Get event time in seconds
-     */
-    private getEventTime;
-    /**
-     * Parse time string to seconds
-     */
-    private parseTimeToSeconds;
-    /**
-     * Parse tick time (e.g., "48i" or "0i")
-     */
-    private parseTickTime;
-    /**
-     * Parse bar:beat:subdivision time
-     */
-    private parseBarBeatTime;
-    /**
-     * Calculate the total duration of the sequence (called once and cached)
-     */
-    private calculateSequenceDuration;
     /**
      * Stop playback
      */

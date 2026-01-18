@@ -5,7 +5,9 @@
 import type * as ToneTypes from 'tone';
 import type { SequenceEvent } from './types.js';
 import type { SequencerNodes } from './sequencer-nodes.js';
-import { scheduleOrExecuteEvent } from './event-scheduler.js';
+import { TimeParser, type TimeParserConfig } from './utils/time-parser.js';
+import { PlaybackState } from './streaming/playback-state.js';
+import { EventProcessor } from './streaming/event-processor.js';
 
 /**
  * Parse NDJSON string into array of events
@@ -104,15 +106,10 @@ export class NDJSONStreamingPlayer {
   private Tone: typeof ToneTypes;
   private nodes: SequencerNodes;
   private config: Required<NDJSONStreamingConfig>;
-  private isPlaying: boolean = false;
-  private startTime: number = 0;
-  private currentEvents: SequenceEvent[] = [];
-  private processedEventIndices: Set<number> = new Set();
+  private playbackState: PlaybackState;
+  private timeParser: TimeParser;
+  private eventProcessor: EventProcessor;
   private animationFrameId: number | null = null;
-  private loopCount: number = 0;
-  private cachedSequenceDuration: number = 0;
-  private createdNodeIds: Set<number> = new Set();
-  private processLoopCount: number = 0;
 
   constructor(
     Tone: typeof ToneTypes,
@@ -133,6 +130,15 @@ export class NDJSONStreamingPlayer {
       debug: config.debug ?? false,
       onDebug: config.onDebug ?? ((msg, data) => console.log(`[DEBUG] ${msg}`, data ?? ''))
     };
+
+    this.playbackState = new PlaybackState();
+    this.timeParser = new TimeParser({
+      ticksPerQuarter: this.config.ticksPerQuarter,
+      beatsPerMinute: this.config.beatsPerMinute,
+      beatsPerBar: this.config.beatsPerBar,
+      subdivisionsPerBeat: this.config.subdivisionsPerBeat
+    });
+    this.eventProcessor = new EventProcessor(this.Tone, this.nodes, this.timeParser);
   }
 
   /**
@@ -155,7 +161,7 @@ export class NDJSONStreamingPlayer {
       : eventsOrNDJSON;
 
     // If not playing, initialize playback
-    if (!this.isPlaying) {
+    if (!this.playbackState.isPlaying) {
       await this.initializePlayback(events);
     } else {
       // If already playing, update events for live editing
@@ -176,30 +182,30 @@ export class NDJSONStreamingPlayer {
     this.debug('=== Initializing Playback ===');
     this.debug('Total events', events.length);
 
-    this.isPlaying = true;
-    this.currentEvents = events;
-    this.processedEventIndices.clear();
-    this.loopCount = 0;
-    this.createdNodeIds.clear();
-    this.processLoopCount = 0;
-    
     // Set start time as current time + lookahead
-    this.startTime = this.Tone.now() + this.config.lookaheadMs / 1000;
+    const startTime = this.Tone.now() + this.config.lookaheadMs / 1000;
+    this.playbackState.start(events, startTime);
 
     this.debug('Start time', { 
-      startTime: this.startTime.toFixed(3),
+      startTime: startTime.toFixed(3),
       currentTime: this.Tone.now().toFixed(3),
       lookaheadMs: this.config.lookaheadMs
     });
 
     // Create nodes and connections first
-    await this.createNodesAndConnections();
+    await this.eventProcessor.createNodesAndConnections(
+      events,
+      this.playbackState.createdNodeIds
+    );
 
     // Cache sequence duration
-    this.cachedSequenceDuration = this.calculateSequenceDuration();
+    this.playbackState.cachedSequenceDuration = this.eventProcessor.calculateSequenceDuration(
+      events,
+      this.config.endBufferSeconds
+    );
 
     this.debug('Sequence duration', {
-      duration: this.cachedSequenceDuration.toFixed(3),
+      duration: this.playbackState.cachedSequenceDuration.toFixed(3),
       loopEnabled: this.config.loop
     });
 
@@ -218,118 +224,84 @@ export class NDJSONStreamingPlayer {
     }
 
     this.debug('=== Live Editing: Updating Events ===', { 
-      previousCount: this.currentEvents.length,
+      previousCount: this.playbackState.currentEvents.length,
       newCount: events.length
     });
 
-    // Find events that need to be created/connected
-    const newCreateAndConnectEvents = events.filter(
-      e => e.eventType === 'createNode' || e.eventType === 'connect'
-    );
-    
-    this.debug('Processing new node/connection events', newCreateAndConnectEvents.length);
-    
     // Process any new node creation or connection events (idempotent)
-    newCreateAndConnectEvents.forEach(event => {
-      try {
-        // Check if node already exists for createNode events
-        if (event.eventType === 'createNode') {
-          if (this.createdNodeIds.has(event.nodeId)) {
-            return; // Skip if node already created
-          }
-          this.createdNodeIds.add(event.nodeId);
-        }
-        scheduleOrExecuteEvent(this.Tone, this.nodes, event);
-      } catch (error) {
-        console.error('Error processing new node/connection:', error);
-      }
-    });
+    this.eventProcessor.processNewCreateAndConnectEvents(
+      events,
+      this.playbackState.createdNodeIds
+    );
 
     // Update current events
-    this.currentEvents = events;
+    this.playbackState.currentEvents = events;
     
     // Reset processed indices so that edited events can be scheduled
-    this.processedEventIndices.clear();
+    this.playbackState.resetProcessedEvents();
     
     // Recalculate sequence duration
-    const previousDuration = this.cachedSequenceDuration;
-    this.cachedSequenceDuration = this.calculateSequenceDuration();
+    const previousDuration = this.playbackState.cachedSequenceDuration;
+    this.playbackState.cachedSequenceDuration = this.eventProcessor.calculateSequenceDuration(
+      events,
+      this.config.endBufferSeconds
+    );
 
     this.debug('Updated sequence duration', {
       previous: previousDuration.toFixed(3),
-      new: this.cachedSequenceDuration.toFixed(3)
+      new: this.playbackState.cachedSequenceDuration.toFixed(3)
     });
-  }
-
-  /**
-   * Create nodes and connections from events
-   */
-  private async createNodesAndConnections(): Promise<void> {
-    this.currentEvents.forEach(event => {
-      try {
-        if (event.eventType === 'createNode' || event.eventType === 'connect') {
-          if (event.eventType === 'createNode') {
-            this.createdNodeIds.add(event.nodeId);
-          }
-          scheduleOrExecuteEvent(this.Tone, this.nodes, event);
-        }
-      } catch (error) {
-        console.error('Error creating node or connection:', error);
-      }
-    });
-
-    // Wait for audio buffers to load
-    await this.Tone.loaded();
   }
 
   /**
    * Main event processing loop
    */
   private processEvents(): void {
-    if (!this.isPlaying) return;
+    if (!this.playbackState.isPlaying) return;
 
     const processStartTime = performance.now();
-    this.processLoopCount++;
+    this.playbackState.incrementProcessLoopCount();
 
     const currentTime = this.Tone.now();
     const lookaheadTime = currentTime + this.config.lookaheadMs / 1000;
 
     // Use cached sequence duration
-    const sequenceDuration = this.cachedSequenceDuration;
+    const sequenceDuration = this.playbackState.cachedSequenceDuration;
 
     // Debug: Log processing loop info periodically (every 60 loops, ~1 second)
-    if (this.config.debug && this.processLoopCount % 60 === 0) {
-      const timeSinceStart = currentTime - this.startTime;
+    if (this.config.debug && this.playbackState.processLoopCount % 60 === 0) {
+      const timeSinceStart = currentTime - this.playbackState.startTime;
       this.debug('=== Processing Loop Status ===', {
-        loopIteration: this.loopCount,
-        processLoopCount: this.processLoopCount,
+        loopIteration: this.playbackState.loopCount,
+        processLoopCount: this.playbackState.processLoopCount,
         currentTime: currentTime.toFixed(3),
         lookaheadTime: lookaheadTime.toFixed(3),
         timeSinceStart: timeSinceStart.toFixed(3),
-        processedEvents: this.processedEventIndices.size,
-        totalEvents: this.currentEvents.length
+        processedEvents: this.playbackState.processedEventIndices.size,
+        totalEvents: this.playbackState.currentEvents.length
       });
     }
 
     let scheduledInThisLoop = 0;
 
     // Process events within lookahead window
-    this.currentEvents.forEach((event, index) => {
+    this.playbackState.currentEvents.forEach((event, index) => {
       // Skip createNode and connect events
       if (event.eventType === 'createNode' || event.eventType === 'connect') {
         return;
       }
 
       // Get event time from args (last argument is time)
-      const eventTime = this.getEventTime(event);
+      const eventTime = this.eventProcessor.getEventTime(event);
       if (eventTime === null) return;
 
       // Calculate absolute time with loop offset
-      const loopOffset = this.loopCount * sequenceDuration;
-      const absoluteTime = this.startTime + eventTime + loopOffset;
+      const loopOffset = this.playbackState.loopCount * sequenceDuration;
+      const absoluteTime = this.playbackState.startTime + eventTime + loopOffset;
 
       // Check if event should be scheduled
-      if (absoluteTime <= lookaheadTime && !this.processedEventIndices.has(index + this.loopCount * this.currentEvents.length)) {
+      const eventKey = index + this.playbackState.loopCount * this.playbackState.currentEvents.length;
+      if (absoluteTime <= lookaheadTime && !this.playbackState.processedEventIndices.has(eventKey)) {
         const timeDelta = absoluteTime - currentTime;
         
         if (this.config.debug) {
@@ -339,7 +311,7 @@ export class NDJSONStreamingPlayer {
             scheduledTime: absoluteTime,
             currentTime: currentTime,
             timeDelta: timeDelta,
-            loopIteration: this.loopCount
+            loopIteration: this.playbackState.loopCount
           };
           this.debug(`Scheduling event #${index} (${event.eventType})`, {
             ...debugInfo,
@@ -350,25 +322,25 @@ export class NDJSONStreamingPlayer {
           });
         }
 
-        this.scheduleEvent(event, absoluteTime);
-        this.processedEventIndices.add(index + this.loopCount * this.currentEvents.length);
+        this.eventProcessor.scheduleEvent(event, absoluteTime);
+        this.playbackState.processedEventIndices.add(eventKey);
         scheduledInThisLoop++;
       }
     });
 
     // Check if we need to loop
     if (this.config.loop && sequenceDuration > 0) {
-      const timeSinceStart = currentTime - this.startTime;
+      const timeSinceStart = currentTime - this.playbackState.startTime;
       const completedLoops = Math.floor(timeSinceStart / sequenceDuration);
       
       // Guard against multiple increments due to processing delays
-      if (completedLoops > this.loopCount) {
-        const previousLoopCount = this.loopCount;
-        this.loopCount = completedLoops;
+      if (completedLoops > this.playbackState.loopCount) {
+        const previousLoopCount = this.playbackState.loopCount;
+        this.playbackState.loopCount = completedLoops;
         
         this.debug('=== Loop Completed ===', {
           previousLoop: previousLoopCount,
-          currentLoop: this.loopCount,
+          currentLoop: this.playbackState.loopCount,
           timeSinceStart: timeSinceStart.toFixed(3),
           sequenceDuration: sequenceDuration.toFixed(3)
         });
@@ -393,152 +365,28 @@ export class NDJSONStreamingPlayer {
   }
 
   /**
-   * Schedule an event at a specific time
-   */
-  private scheduleEvent(event: SequenceEvent, absoluteTime: number): void {
-    try {
-      // Create a modified event with adjusted time
-      const modifiedEvent = this.adjustEventTime(event, absoluteTime);
-      scheduleOrExecuteEvent(this.Tone, this.nodes, modifiedEvent);
-    } catch (error) {
-      console.error('Error scheduling event:', error, event);
-    }
-  }
-
-  /**
-   * Adjust event time to absolute time
-   */
-  private adjustEventTime(event: SequenceEvent, absoluteTime: number): SequenceEvent {
-    const modifiedEvent = { ...event };
-    
-    if ('args' in modifiedEvent && Array.isArray(modifiedEvent.args)) {
-      const args = [...modifiedEvent.args];
-      // Last argument is typically the time
-      if (args.length > 0) {
-        args[args.length - 1] = absoluteTime.toString();
-      }
-      modifiedEvent.args = args;
-    }
-    
-    return modifiedEvent;
-  }
-
-  /**
-   * Get event time in seconds
-   */
-  private getEventTime(event: SequenceEvent): number | null {
-    if (!('args' in event) || !Array.isArray(event.args) || event.args.length === 0) {
-      return null;
-    }
-
-    const timeArg = event.args[event.args.length - 1];
-    return this.parseTimeToSeconds(timeArg);
-  }
-
-  /**
-   * Parse time string to seconds
-   */
-  private parseTimeToSeconds(timeStr: string): number {
-    // Handle different time formats
-    if (timeStr.startsWith('+')) {
-      // Relative time with tick notation (e.g., "+0i")
-      return this.parseTickTime(timeStr.substring(1));
-    } else if (timeStr.includes(':')) {
-      // Bar:beat:subdivision format (e.g., "0:0:2")
-      return this.parseBarBeatTime(timeStr);
-    } else {
-      // Direct number or tick notation
-      return this.parseTickTime(timeStr);
-    }
-  }
-
-  /**
-   * Parse tick time (e.g., "48i" or "0i")
-   */
-  private parseTickTime(timeStr: string): number {
-    const match = timeStr.match(/^(\d+(?:\.\d+)?)(i)?$/);
-    if (!match) return 0;
-
-    const value = parseFloat(match[1]);
-    const ticksPerQuarter = this.config.ticksPerQuarter;
-    const secondsPerBeat = 60 / this.config.beatsPerMinute;
-    return (value / ticksPerQuarter) * secondsPerBeat;
-  }
-
-  /**
-   * Parse bar:beat:subdivision time
-   */
-  private parseBarBeatTime(timeStr: string): number {
-    const parts = timeStr.split(':').map(Number);
-    if (parts.length !== 3) return 0;
-
-    // Validate that all parts are valid numbers
-    if (parts.some(isNaN)) {
-      console.error('Invalid bar:beat:subdivision format:', timeStr);
-      return 0;
-    }
-
-    const [bars, beats, subdivisions] = parts;
-    const beatsPerBar = this.config.beatsPerBar;
-    const secondsPerBeat = 60 / this.config.beatsPerMinute;
-    const subdivisionsPerBeat = this.config.subdivisionsPerBeat;
-
-    return (
-      bars * beatsPerBar * secondsPerBeat +
-      beats * secondsPerBeat +
-      subdivisions * (secondsPerBeat / subdivisionsPerBeat)
-    );
-  }
-
-  /**
-   * Calculate the total duration of the sequence (called once and cached)
-   */
-  private calculateSequenceDuration(): number {
-    let maxTime = 0;
-
-    this.currentEvents.forEach(event => {
-      if (event.eventType === 'createNode' || event.eventType === 'connect') {
-        return;
-      }
-
-      const eventTime = this.getEventTime(event);
-      if (eventTime !== null && eventTime > maxTime) {
-        maxTime = eventTime;
-      }
-    });
-
-    // Add buffer for the last note's duration
-    return maxTime + this.config.endBufferSeconds;
-  }
-
-  /**
    * Stop playback
    */
   stop(): void {
     this.debug('=== Stopping Playback ===', {
-      processedEvents: this.processedEventIndices.size,
-      loopCount: this.loopCount,
-      processLoopCount: this.processLoopCount
+      processedEvents: this.playbackState.processedEventIndices.size,
+      loopCount: this.playbackState.loopCount,
+      processLoopCount: this.playbackState.processLoopCount
     });
 
-    this.isPlaying = false;
+    this.playbackState.stop();
     if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
     }
     // Don't dispose nodes here - let the caller manage node lifecycle
     // this.nodes.disposeAll();
-    this.processedEventIndices.clear();
-    this.loopCount = 0;
-    this.createdNodeIds.clear();
-    this.cachedSequenceDuration = 0;
-    this.processLoopCount = 0;
   }
 
   /**
    * Check if player is currently playing
    */
   get playing(): boolean {
-    return this.isPlaying;
+    return this.playbackState.isPlaying;
   }
 }
