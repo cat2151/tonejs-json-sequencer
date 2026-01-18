@@ -6,6 +6,8 @@ class StreamingDemo {
         this.player = null;
         this.nodes = new SequencerNodes();
         this.sequences = loadAllSequences();
+        this.debugMessages = [];
+        this.maxDebugMessages = 100;
         this.initializeUI();
         this.loadInitialSequence();
     }
@@ -37,6 +39,26 @@ class StreamingDemo {
                 this.stop();
                 this.play();
             }
+        });
+        // Debug checkbox change
+        document.getElementById('debugCheckbox')?.addEventListener('change', (e) => {
+            const enabled = e.target.checked;
+            const debugOutput = document.getElementById('debugOutput');
+            if (debugOutput) {
+                debugOutput.style.display = enabled ? 'block' : 'none';
+            }
+            if (!enabled) {
+                this.clearDebugOutput();
+            }
+            // If playing, restart with new debug setting
+            if (this.player && this.player.playing) {
+                this.stop();
+                this.play();
+            }
+        });
+        // Clear debug button
+        document.getElementById('clearDebugButton')?.addEventListener('click', () => {
+            this.clearDebugOutput();
         });
         // Textarea change (live editing)
         const textarea = document.getElementById('sequenceEditor');
@@ -72,6 +94,8 @@ class StreamingDemo {
             await Tone.start();
             const loopCheckbox = document.getElementById('loopCheckbox');
             const loop = loopCheckbox.checked;
+            const debugCheckbox = document.getElementById('debugCheckbox');
+            const debug = debugCheckbox.checked;
             // Create player only if it doesn't exist or isn't playing
             if (!this.player || !this.player.playing) {
                 // Dispose old nodes and create fresh instance
@@ -80,6 +104,8 @@ class StreamingDemo {
                 this.player = new NDJSONStreamingPlayer(Tone, this.nodes, {
                     lookaheadMs: 50,
                     loop: loop,
+                    debug: debug,
+                    onDebug: (message, data) => this.handleDebugMessage(message, data),
                     onLoopComplete: () => {
                         this.updateStatus('Playing (looped)');
                     }
@@ -131,6 +157,36 @@ class StreamingDemo {
         if (statusElement) {
             statusElement.textContent = `Status: ${status}`;
         }
+    }
+    handleDebugMessage(message, data) {
+        const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
+        let debugLine = `[${timestamp}] ${message}`;
+        if (data !== undefined && data !== null && data !== '') {
+            if (typeof data === 'object') {
+                debugLine += ': ' + JSON.stringify(data);
+            }
+            else {
+                debugLine += ': ' + data;
+            }
+        }
+        this.debugMessages.push(debugLine);
+        // Keep only the last N messages
+        if (this.debugMessages.length > this.maxDebugMessages) {
+            this.debugMessages.shift();
+        }
+        this.updateDebugOutput();
+    }
+    updateDebugOutput() {
+        const debugOutput = document.getElementById('debugOutput');
+        if (debugOutput) {
+            debugOutput.textContent = this.debugMessages.join('\n');
+            // Auto-scroll to bottom
+            debugOutput.scrollTop = debugOutput.scrollHeight;
+        }
+    }
+    clearDebugOutput() {
+        this.debugMessages = [];
+        this.updateDebugOutput();
     }
 }
 // Initialize demo when page loads

@@ -21,5 +21,7 @@ export { scheduleOrExecuteEvent, playSequence } from './event-scheduler.js';
 export { 
   NDJSONStreamingPlayer, 
   parseNDJSON,
-  type NDJSONStreamingConfig 
+  type NDJSONStreamingConfig,
+  type DebugEventInfo,
+  type DebugCallback
 } from './ndjson-streaming.js';
