@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tone.js JSON Sequencer - Offline Rendering Demo</title>
+  <title>Tone.js JSON Sequencer - オフラインレンダリングデモ</title>
   <link rel="stylesheet" href="styles.css">
   <style>
     /* Additional CSS for offline rendering demo elements */
@@ -156,81 +156,81 @@
   </style>
 </head>
 <body>
-  <h1>Offline Rendering Demo</h1>
+  <h1>オフラインレンダリングデモ</h1>
   
   <p style="margin: 10px 0;">
-    <a href="index.html">← Back to Main Demo</a> | 
-    <a href="streaming.html">NDJSON Streaming Demo →</a>
+    <a href="index.html">← メインデモに戻る</a> | 
+    <a href="streaming.html">NDJSONストリーミングデモ →</a>
   </p>
   
   <div class="info">
-    <h3>Features:</h3>
+    <h3>機能:</h3>
     <ul>
-      <li><strong>Offline Rendering:</strong> Renders the sequence offline using Tone.Offline for perfect timing</li>
-      <li><strong>WAV Export:</strong> Exports the rendered audio as a WAV file</li>
-      <li><strong>Preview Playback:</strong> Preview the rendered audio before downloading</li>
-      <li><strong>Configurable Settings:</strong> Adjust sample rate, buffer time, and timing parameters</li>
+      <li><strong>オフラインレンダリング:</strong> Tone.Offlineを使用してシーケンスをオフラインでレンダリングし、完璧なタイミングを実現</li>
+      <li><strong>WAVエクスポート:</strong> レンダリングされた音声をWAVファイルとしてエクスポート</li>
+      <li><strong>プレビュー再生:</strong> ダウンロード前にレンダリングされた音声をプレビュー</li>
+      <li><strong>設定のカスタマイズ:</strong> サンプルレート、バッファ時間、タイミングパラメータを調整可能</li>
     </ul>
   </div>
 
   <div class="rendering-controls">
-    <button id="renderButton" autofocus>Render Audio</button>
-    <button id="downloadButton" disabled>Download WAV</button>
+    <button id="renderButton" autofocus>音声をレンダリング</button>
+    <button id="downloadButton" disabled>WAVをダウンロード</button>
     <select id="sequenceSelector">
       <!-- Options populated by JavaScript -->
     </select>
   </div>
 
-  <div class="status" id="status">Status: Ready</div>
+  <div class="status" id="status">ステータス: 準備完了</div>
 
   <div class="progress-container" id="progressContainer">
-    <h3>Rendering Progress:</h3>
+    <h3>レンダリング進行状況:</h3>
     <div class="progress-bar">
       <div class="progress-fill" id="progressFill">0%</div>
     </div>
   </div>
 
   <div class="audio-player" id="audioPlayer">
-    <h3>Preview Rendered Audio:</h3>
+    <h3>レンダリングされた音声のプレビュー:</h3>
     <audio id="audioElement" controls></audio>
-    <p><em>You can preview the audio here before downloading</em></p>
+    <p><em>ダウンロード前にここで音声をプレビューできます</em></p>
   </div>
 
   <div class="config-section">
-    <h3>Rendering Configuration:</h3>
+    <h3>レンダリング設定:</h3>
     <div class="config-row">
       <div class="config-item">
-        <label for="sampleRate">Sample Rate:</label>
+        <label for="sampleRate">サンプルレート:</label>
         <input type="number" id="sampleRate" value="44100" step="1" min="8000" max="192000">
         <span>Hz</span>
       </div>
       <div class="config-item">
-        <label for="endBuffer">End Buffer:</label>
+        <label for="endBuffer">終了バッファ:</label>
         <input type="number" id="endBuffer" value="1" step="0.1" min="0" max="10">
-        <span>seconds</span>
+        <span>秒</span>
       </div>
     </div>
     <div class="config-row">
       <div class="config-item">
-        <label for="filename">Filename:</label>
+        <label for="filename">ファイル名:</label>
         <input type="text" id="filename" value="output.wav">
       </div>
     </div>
   </div>
 
-  <h3>Sequence (NDJSON format - one event per line):</h3>
+  <h3>シーケンス（NDJSON形式 - 1行につき1イベント）:</h3>
   <textarea id="sequenceEditor" rows="30" cols="80"></textarea>
 
   <div class="info">
-    <h3>How to use:</h3>
+    <h3>使い方:</h3>
     <ol>
-      <li>Select a sequence from the dropdown or edit the NDJSON in the textarea</li>
-      <li>Adjust rendering configuration if needed (sample rate, end buffer, filename)</li>
-      <li>Click "Render Audio" to start offline rendering</li>
-      <li>Preview the rendered audio in the player</li>
-      <li>Click "Download WAV" to save the audio file</li>
+      <li>ドロップダウンからシーケンスを選択するか、テキストエリアでNDJSONを編集します</li>
+      <li>必要に応じてレンダリング設定を調整します（サンプルレート、終了バッファ、ファイル名）</li>
+      <li>「音声をレンダリング」をクリックしてオフラインレンダリングを開始します</li>
+      <li>プレーヤーでレンダリングされた音声をプレビューします</li>
+      <li>「WAVをダウンロード」をクリックして音声ファイルを保存します</li>
     </ol>
-    <p><strong>Note:</strong> Offline rendering is faster than real-time and produces perfect timing!</p>
+    <p><strong>注意:</strong> オフラインレンダリングはリアルタイムより高速で、完璧なタイミングを生成します！</p>
   </div>
 
   <script src="https://unpkg.com/tone@15.2.7/build/Tone.js"></script>
