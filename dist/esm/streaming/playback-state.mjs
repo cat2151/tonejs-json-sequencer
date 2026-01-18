@@ -78,6 +78,13 @@ export class PlaybackState {
         this._processLoopCount = 0;
     }
     /**
+     * Mark an event as processed
+     * @param eventKey - The event key to mark as processed
+     */
+    markEventAsProcessed(eventKey) {
+        this._processedEventIndices.add(eventKey);
+    }
+    /**
      * Reset all processed events (used for complete reset)
      */
     resetProcessedEvents() {

@@ -95,6 +95,14 @@ export class PlaybackState {
   }
 
   /**
+   * Mark an event as processed
+   * @param eventKey - The event key to mark as processed
+   */
+  markEventAsProcessed(eventKey: number): void {
+    this._processedEventIndices.add(eventKey);
+  }
+
+  /**
    * Reset all processed events (used for complete reset)
    */
   resetProcessedEvents(): void {

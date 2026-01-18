@@ -166,7 +166,7 @@ export class NDJSONStreamingPlayer {
                 // If this event's scheduled time has passed, mark it as processed
                 if (absoluteTime <= currentTime) {
                     const eventKey = index + loop * events.length;
-                    this.playbackState.processedEventIndices.add(eventKey);
+                    this.playbackState.markEventAsProcessed(eventKey);
                 }
             }
         });
