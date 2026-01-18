@@ -228,11 +228,20 @@ class StreamingDemo {
       const maxTime = Math.max(...timelineEvents.map(e => e.startTime + e.duration));
       const timeScale = maxTime > 0 ? (canvas.width - 40) / maxTime : 1;
 
+      // Layout parameters for vertical stacking of events
+      const laneHeight = 30;
+      const topMargin = 40;
+      const bottomMargin = 40;
+      const requiredHeight = topMargin + timelineEvents.length * laneHeight + bottomMargin;
+      if (canvas.height < requiredHeight) {
+        canvas.height = requiredHeight;
+      }
+
       // Draw events
       timelineEvents.forEach((event, index) => {
         const x = 20 + event.startTime * timeScale;
         const width = Math.max(event.duration * timeScale, 2);
-        const y = 40 + (index % 5) * 30;
+        const y = topMargin + index * laneHeight;
         const height = 20;
 
         // Draw event rectangle
@@ -277,19 +286,41 @@ class StreamingDemo {
   }
 
   private parseTimeString(timeStr: string, ticksPerQuarter: number, beatsPerMinute: number): number {
-    // Simple tick notation parser (matches ndjson-streaming.ts logic)
+    // Time string parser to mirror NDJSONStreamingPlayer.parseTimeToSeconds behavior
     const secondsPerBeat = 60 / beatsPerMinute;
 
     // Remove '+' prefix if present
     const cleanStr = timeStr.startsWith('+') ? timeStr.substring(1) : timeStr;
 
-    // Parse tick notation
-    const match = cleanStr.match(/^(\d+(?:\.\d+)?)(i)?$/);
-    if (match) {
-      const value = parseFloat(match[1]);
+    // Parse tick notation, e.g. "48i"
+    const tickMatch = cleanStr.match(/^(\d+(?:\.\d+)?)(i)?$/);
+    if (tickMatch) {
+      const value = parseFloat(tickMatch[1]);
       return (value / ticksPerQuarter) * secondsPerBeat;
     }
 
+    // Parse bar:beat:subdivision notation, e.g. "0:0:2"
+    // Assumptions (aligned with typical Tone.js defaults):
+    // - 4/4 time signature: 4 beats per bar
+    // - third field is sixteenth-note subdivisions: 4 per beat
+    const bbsMatch = cleanStr.match(/^(\d+):(\d+)(?::(\d+))?$/);
+    if (bbsMatch) {
+      const bars = parseInt(bbsMatch[1], 10);
+      const beats = parseInt(bbsMatch[2], 10);
+      const subdivisions = bbsMatch[3] !== undefined ? parseInt(bbsMatch[3], 10) : 0;
+
+      const beatsPerBar = 4;
+      const subdivisionsPerBeat = 4;
+
+      const totalBeats =
+        bars * beatsPerBar +
+        beats +
+        subdivisions / subdivisionsPerBeat;
+
+      return totalBeats * secondsPerBeat;
+    }
+
+    // Fallback for unsupported formats
     return 0;
   }
 }

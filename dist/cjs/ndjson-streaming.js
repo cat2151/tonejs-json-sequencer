@@ -237,13 +237,18 @@ class NDJSONStreamingPlayer {
             const args = [...modifiedEvent.args];
             // For triggerAttackRelease, we need to convert both duration and time
             if (event.eventType === 'triggerAttackRelease' && args.length >= 3) {
-                // Convert duration (second argument) from tick notation to seconds if needed
+                // Convert duration (args[1], the second argument) from tick notation to seconds if needed.
+                // Preserve Tone.js time notation (e.g. "8n", "4n") unchanged.
                 const durationArg = args[1];
                 if (typeof durationArg === 'string') {
-                    const durationSeconds = this.parseTickTime(durationArg);
-                    args[1] = durationSeconds.toString();
+                    // Only convert tick notation (values ending with "i", e.g. "48i")
+                    if (/^(\d+(?:\.\d+)?)i$/.test(durationArg)) {
+                        const durationSeconds = this.parseTickTime(durationArg);
+                        args[1] = durationSeconds.toString();
+                    }
+                    // Otherwise preserve the original format (e.g. "8n", "4n", etc.)
                 }
-                // Set absolute time (third argument) in seconds
+                // Set absolute time (args[2], the third argument) in seconds
                 args[2] = absoluteTime.toString();
             }
             else {

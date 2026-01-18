@@ -6,7 +6,7 @@
 </head>
 <body>
   <h1>Test Streaming Bug - FIXED</h1>
-  <p>Expected: C5 and D5 should play at equal intervals (48 ticks each = 0.1 seconds each)</p>
+  <p>Expected: C5 and D5 should play at equal intervals (48 ticks each = 0.05 seconds each)</p>
   <button id="playButton">Play Test Sequence</button>
   <button id="stopButton">Stop</button>
   <div id="status">Ready</div>
@@ -57,8 +57,8 @@ Events:
 
         await player.start(ndjson);
         debug('Player started');
-        debug('With the fix, both notes should play for 0.1 seconds each');
-        debug('C5 starts at ~0.05s (lookahead), D5 starts at ~0.15s (0.05 + 0.1)');
+        debug('With the fix, both notes should play for 0.05 seconds each');
+        debug('C5 starts at ~0.05s (lookahead), D5 starts at ~0.10s (0.05 + 0.05)');
         
         document.getElementById('status').textContent = 'Playing...';
       } catch (error) {
