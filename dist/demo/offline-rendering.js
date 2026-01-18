@@ -56,7 +56,9 @@ class OfflineRenderingDemo {
     }
     async render() {
         try {
-            // Ensure audio context is started
+            // Ensure audio context is started (required for Tone.js initialization)
+            // Even though offline rendering doesn't use the main audio context,
+            // Tone.js requires context initialization before creating offline contexts
             await Tone.start();
             // Disable render button during rendering
             const renderButton = document.getElementById('renderButton');

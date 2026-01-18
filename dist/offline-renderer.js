@@ -176,10 +176,16 @@ function writeString(view, offset, string) {
 }
 /**
  * Download AudioBuffer as WAV file
+ * Note: This function is browser-only and requires DOM access
  * @param buffer - The AudioBuffer to download
  * @param filename - The filename for the download (default: 'output.wav')
+ * @throws Error if not running in a browser environment
  */
 function downloadWav(buffer, filename = 'output.wav') {
+    // Check if running in browser environment
+    if (typeof document === 'undefined') {
+        throw new Error('downloadWav is only available in browser environments');
+    }
     const wav = audioBufferToWav(buffer);
     const blob = new Blob([wav], { type: 'audio/wav' });
     const url = URL.createObjectURL(blob);
@@ -189,8 +195,10 @@ function downloadWav(buffer, filename = 'output.wav') {
     a.download = filename;
     document.body.appendChild(a);
     a.click();
+    // Cleanup timeout in milliseconds
+    const CLEANUP_TIMEOUT_MS = 100;
     setTimeout(() => {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-    }, 100);
+    }, CLEANUP_TIMEOUT_MS);
 }

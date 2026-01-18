@@ -63,7 +63,9 @@ export declare class OfflineRenderer {
 export declare function audioBufferToWav(buffer: AudioBuffer): ArrayBuffer;
 /**
  * Download AudioBuffer as WAV file
+ * Note: This function is browser-only and requires DOM access
  * @param buffer - The AudioBuffer to download
  * @param filename - The filename for the download (default: 'output.wav')
+ * @throws Error if not running in a browser environment
  */
 export declare function downloadWav(buffer: AudioBuffer, filename?: string): void;
