@@ -33,6 +33,10 @@ class StreamingDemo {
         });
         // Sequence selector change - immediately play the selected sequence
         selector.addEventListener('change', () => {
+            // Stop current playback if any, then load and play the new sequence
+            if (this.player && this.player.playing) {
+                this.stop();
+            }
             this.loadSelectedSequence();
             // Auto-play when selecting a new sequence for easier debugging
             this.play();
