@@ -84,6 +84,18 @@ export declare class NDJSONStreamingPlayer {
     private updateEvents;
     /**
      * Main event processing loop
+     *
+     * TIMING SPECIFICATION:
+     * This loop runs continuously via requestAnimationFrame (~60fps, every ~16ms).
+     * For each iteration:
+     * 1. Calculate current time and lookahead window (current + 50ms)
+     * 2. For each event, calculate its absolute playback time (startTime + eventTime)
+     * 3. If the event's absolute time falls within the lookahead window:
+     *    - Schedule the event to play at its absolute time
+     *    - Mark it as processed to prevent duplicate scheduling
+     *
+     * This ensures events are scheduled ~50ms before they need to play,
+     * compensating for jitter and providing the audio context with advance notice.
      */
     private processEvents;
     /**

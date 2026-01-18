@@ -182,7 +182,13 @@ export class NDJSONStreamingPlayer {
     this.debug('=== Initializing Playback ===');
     this.debug('Total events', events.length);
 
-    // Set start time as current time + lookahead
+    // TIMING SPECIFICATION:
+    // Set start time as current time + lookahead buffer (default 50ms)
+    // This captures the actual time when playback begins and adds a buffer to compensate for:
+    // - JavaScript execution jitter
+    // - Audio context scheduling time
+    // - Event processing overhead
+    // All events will be scheduled relative to this startTime
     const startTime = this.Tone.now() + this.config.lookaheadMs / 1000;
     this.playbackState.start(events, startTime);
 
@@ -255,6 +261,18 @@ export class NDJSONStreamingPlayer {
 
   /**
    * Main event processing loop
+   * 
+   * TIMING SPECIFICATION:
+   * This loop runs continuously via requestAnimationFrame (~60fps, every ~16ms).
+   * For each iteration:
+   * 1. Calculate current time and lookahead window (current + 50ms)
+   * 2. For each event, calculate its absolute playback time (startTime + eventTime)
+   * 3. If the event's absolute time falls within the lookahead window:
+   *    - Schedule the event to play at its absolute time
+   *    - Mark it as processed to prevent duplicate scheduling
+   * 
+   * This ensures events are scheduled ~50ms before they need to play,
+   * compensating for jitter and providing the audio context with advance notice.
    */
   private processEvents(): void {
     if (!this.playbackState.isPlaying) return;
@@ -262,7 +280,11 @@ export class NDJSONStreamingPlayer {
     const processStartTime = performance.now();
     this.playbackState.incrementProcessLoopCount();
 
+    // Get current audio context time
     const currentTime = this.Tone.now();
+    
+    // Calculate lookahead window: events within [currentTime, currentTime + 50ms]
+    // will be scheduled in this iteration
     const lookaheadTime = currentTime + this.config.lookaheadMs / 1000;
 
     // Use cached sequence duration
@@ -285,6 +307,7 @@ export class NDJSONStreamingPlayer {
     let scheduledInThisLoop = 0;
 
     // Process events within lookahead window
+    // For each event, check if it should be scheduled in this iteration
     this.playbackState.currentEvents.forEach((event, index) => {
       // Skip createNode and connect events
       if (event.eventType === 'createNode' || event.eventType === 'connect') {
@@ -295,11 +318,17 @@ export class NDJSONStreamingPlayer {
       const eventTime = this.eventProcessor.getEventTime(event);
       if (eventTime === null) return;
 
-      // Calculate absolute time with loop offset
+      // SCHEDULING CALCULATION:
+      // absoluteTime = when this event should actually play in audio context time
+      // = startTime (captured at play button press + 50ms buffer)
+      // + eventTime (time specified in the event, e.g., 0.5s for second beat)
+      // + loopOffset (0 for first iteration, sequenceDuration * N for Nth loop)
       const loopOffset = this.playbackState.loopCount * sequenceDuration;
       const absoluteTime = this.playbackState.startTime + eventTime + loopOffset;
 
-      // Check if event should be scheduled
+      // Check if event should be scheduled:
+      // - absoluteTime <= lookaheadTime: event is within the 50ms lookahead window
+      // - !processedEventIndices.has(eventKey): event hasn't been scheduled yet
       const eventKey = index + this.playbackState.loopCount * this.playbackState.currentEvents.length;
       if (absoluteTime <= lookaheadTime && !this.playbackState.processedEventIndices.has(eventKey)) {
         const timeDelta = absoluteTime - currentTime;
