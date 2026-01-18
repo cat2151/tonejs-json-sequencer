@@ -9,19 +9,23 @@
     /* Additional CSS for offline rendering demo elements */
     :root {
       --status-bg: #f0f0f0;
-      --info-bg: #e8f4f8;
-      --info-border: #2196F3;
+      --info-bg: #fff8e1;
+      --info-border: #ff9800;
       --progress-bg: #e0e0e0;
-      --progress-fill: #4CAF50;
+      --progress-fill: #ff9800;
+      --warning-bg: #fff3cd;
+      --warning-border: #ffc107;
     }
     
     @media (prefers-color-scheme: dark) {
       :root {
         --status-bg: #2d2d30;
-        --info-bg: #2d2d30;
-        --info-border: #0078d4;
+        --info-bg: #3d3520;
+        --info-border: #ff9800;
         --progress-bg: #3d3d40;
-        --progress-fill: #4CAF50;
+        --progress-fill: #ff9800;
+        --warning-bg: #3d3520;
+        --warning-border: #ffc107;
       }
     }
     
@@ -37,6 +41,17 @@
       padding: 10px 20px;
       font-size: 16px;
       cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .rendering-controls button#renderButton {
+      background: #ff9800;
+      color: white;
+      border: 2px solid #f57c00;
+    }
+    
+    .rendering-controls button#renderButton:hover:not(:disabled) {
+      background: #f57c00;
     }
     
     .rendering-controls button:disabled {
@@ -164,18 +179,22 @@
   </p>
   
   <div class="info">
-    <h3>機能:</h3>
+    <h3>このデモについて:</h3>
+    <p><strong>🎯 One-shot（一括レンダリング）方式</strong></p>
     <ul>
-      <li><strong>オフラインレンダリング:</strong> Tone.Offlineを使用してシーケンスをオフラインでレンダリングし、完璧なタイミングを実現</li>
-      <li><strong>WAVエクスポート:</strong> レンダリングされた音声をWAVファイルとしてエクスポート</li>
-      <li><strong>プレビュー再生:</strong> ダウンロード前にレンダリングされた音声をプレビュー</li>
-      <li><strong>設定のカスタマイズ:</strong> サンプルレート、バッファ時間、タイミングパラメータを調整可能</li>
+      <li><strong>バッチ処理:</strong> ボタンを押すと、シーケンス全体を一度に処理してWAVファイルを生成</li>
+      <li><strong>非リアルタイム:</strong> リアルタイム再生ではなく、オフライン処理で高速レンダリング</li>
+      <li><strong>完璧なタイミング:</strong> CPU負荷の影響を受けず、正確なタイミングを保証</li>
+      <li><strong>ファイル出力用途:</strong> WAVファイルのエクスポートや音声素材の生成に最適</li>
     </ul>
+    <p style="margin-top: 10px; padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+      <strong>💡 ヒント:</strong> リアルタイム再生やライブ編集が必要な場合は、<a href="streaming.html">ストリーミングデモ</a>をご利用ください（Streaming方式）
+    </p>
   </div>
 
   <div class="rendering-controls">
-    <button id="renderButton" autofocus>音声をレンダリング</button>
-    <button id="downloadButton" disabled>WAVをダウンロード</button>
+    <button id="renderButton" autofocus>🎬 シーケンス全体をレンダリング</button>
+    <button id="downloadButton" disabled>💾 WAVファイルをダウンロード</button>
     <select id="sequenceSelector">
       <!-- Options populated by JavaScript -->
     </select>
@@ -224,13 +243,13 @@
   <div class="info">
     <h3>使い方:</h3>
     <ol>
-      <li>ドロップダウンからシーケンスを選択するか、テキストエリアでNDJSONを編集します</li>
-      <li>必要に応じてレンダリング設定を調整します（サンプルレート、終了バッファ、ファイル名）</li>
-      <li>「音声をレンダリング」をクリックしてオフラインレンダリングを開始します</li>
-      <li>プレーヤーでレンダリングされた音声をプレビューします</li>
-      <li>「WAVをダウンロード」をクリックして音声ファイルを保存します</li>
+      <li><strong>準備:</strong> ドロップダウンからシーケンスを選択、またはテキストエリアでNDJSONを編集</li>
+      <li><strong>設定:</strong> サンプルレート、終了バッファ、ファイル名を必要に応じて調整</li>
+      <li><strong>レンダリング:</strong> 「シーケンス全体をレンダリング」ボタンを押して一括処理を開始</li>
+      <li><strong>プレビュー:</strong> 完成した音声をプレーヤーで確認</li>
+      <li><strong>保存:</strong> 「WAVファイルをダウンロード」で音声ファイルを取得</li>
     </ol>
-    <p><strong>注意:</strong> オフラインレンダリングはリアルタイムより高速で、完璧なタイミングを生成します！</p>
+    <p><strong>📝 Note:</strong> この方式はストリーミング再生ではなく、全体を一括でレンダリングする<strong>バッチ処理</strong>です。リアルタイムより高速で、正確なタイミングが保証されます。</p>
   </div>
 
   <script src="https://unpkg.com/tone@15.2.7/build/Tone.js"></script>
