@@ -18,7 +18,11 @@ export interface OfflineRendererConfig {
     sampleRate?: number;
     /** Number of channels (default: 2 for stereo) */
     channels?: number;
-    /** Callback for progress updates (0-100) */
+    /**
+     * Callback for progress updates (0-100)
+     * Note: Due to Tone.Offline's faster-than-realtime rendering, only start (0)
+     * and completion (100) progress states are reported
+     */
     onProgress?: (progress: number) => void;
 }
 /**
@@ -49,6 +53,12 @@ export declare class OfflineRenderer {
      * Calculate the total duration of the sequence
      */
     private calculateSequenceDuration;
+    /**
+     * Parse Tone.js duration notation to seconds
+     * Supports: 1n, 2n, 4n, 8n, 16n, 32n, 64n (with dots and triplets)
+     * Examples: "4n" = quarter note, "8n." = dotted eighth, "4t" = quarter triplet
+     */
+    private parseDurationToSeconds;
     /**
      * Get event time in seconds
      */
