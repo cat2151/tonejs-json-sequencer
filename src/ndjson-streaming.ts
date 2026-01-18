@@ -233,14 +233,8 @@ export class NDJSONStreamingPlayer {
       events,
       this.playbackState.createdNodeIds
     );
-
-    // Update current events
-    this.playbackState.currentEvents = events;
     
-    // Reset processed indices so that edited events can be scheduled
-    this.playbackState.resetProcessedEvents();
-    
-    // Recalculate sequence duration
+    // Recalculate sequence duration with new events
     const previousDuration = this.playbackState.cachedSequenceDuration;
     this.playbackState.cachedSequenceDuration = this.eventProcessor.calculateSequenceDuration(
       events,
@@ -250,6 +244,45 @@ export class NDJSONStreamingPlayer {
     this.debug('Updated sequence duration', {
       previous: previousDuration.toFixed(3),
       new: this.playbackState.cachedSequenceDuration.toFixed(3)
+    });
+
+    // Get current time to determine which events have already been scheduled
+    const currentTime = this.Tone.now();
+    const sequenceDuration = this.playbackState.cachedSequenceDuration;
+    
+    // Clear and rebuild processed events set
+    // Mark events as processed if their scheduled time has already passed
+    this.playbackState.processedEventIndices.clear();
+    
+    events.forEach((event, index) => {
+      // Skip createNode and connect events
+      if (event.eventType === 'createNode' || event.eventType === 'connect') {
+        return;
+      }
+
+      const eventTime = this.eventProcessor.getEventTime(event);
+      if (eventTime === null) return;
+
+      // Check all loop iterations that may have occurred
+      for (let loop = 0; loop <= this.playbackState.loopCount; loop++) {
+        const loopOffset = loop * sequenceDuration;
+        const absoluteTime = this.playbackState.startTime + eventTime + loopOffset;
+        
+        // If this event's scheduled time has passed, mark it as processed
+        if (absoluteTime <= currentTime) {
+          const eventKey = index + loop * events.length;
+          this.playbackState.processedEventIndices.add(eventKey);
+        }
+      }
+    });
+    
+    // Update current events after rebuilding processed indices
+    this.playbackState.currentEvents = events;
+
+    this.debug('Live editing: rebuilt processed events based on time', {
+      processedCount: this.playbackState.processedEventIndices.size,
+      currentTime: currentTime.toFixed(3),
+      timeSinceStart: (currentTime - this.playbackState.startTime).toFixed(3)
     });
   }
 

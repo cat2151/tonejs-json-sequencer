@@ -33,7 +33,7 @@ export declare class PlaybackState {
      */
     stop(): void;
     /**
-     * Reset processed events for live editing
+     * Reset all processed events (used for complete reset)
      */
     resetProcessedEvents(): void;
 }

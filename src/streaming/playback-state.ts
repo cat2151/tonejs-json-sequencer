@@ -95,7 +95,7 @@ export class PlaybackState {
   }
 
   /**
-   * Reset processed events for live editing
+   * Reset all processed events (used for complete reset)
    */
   resetProcessedEvents(): void {
     this._processedEventIndices.clear();
