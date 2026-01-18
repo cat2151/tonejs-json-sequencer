@@ -53,6 +53,7 @@ class NDJSONStreamingPlayer {
         this.config = {
             lookaheadMs: config.lookaheadMs ?? 50,
             loop: config.loop ?? false,
+            loopWaitSeconds: config.loopWaitSeconds ?? 0.5,
             onLoopComplete: config.onLoopComplete ?? (() => { }),
             ticksPerQuarter: config.ticksPerQuarter ?? 480,
             beatsPerMinute: config.beatsPerMinute ?? 120,
@@ -170,7 +171,7 @@ class NDJSONStreamingPlayer {
             for (let loop = 0; loop <= this.playbackState.loopCount; loop++) {
                 // Use previous duration for loop offset calculation
                 // because that's what was used when events were originally scheduled
-                const loopOffset = loop * previousDuration;
+                const loopOffset = loop * (previousDuration + this.config.loopWaitSeconds);
                 const absoluteTime = this.playbackState.startTime + eventTime + loopOffset;
                 // If this event's scheduled time has passed, mark it as processed
                 if (absoluteTime <= currentTime) {
@@ -226,7 +227,7 @@ class NDJSONStreamingPlayer {
             if (eventTime === null)
                 return;
             // Calculate absolute time with loop offset
-            const loopOffset = this.playbackState.loopCount * sequenceDuration;
+            const loopOffset = this.playbackState.loopCount * (sequenceDuration + this.config.loopWaitSeconds);
             const absoluteTime = this.playbackState.startTime + eventTime + loopOffset;
             // Check if event should be scheduled
             const eventKey = index + this.playbackState.loopCount * this.playbackState.currentEvents.length;
@@ -257,7 +258,8 @@ class NDJSONStreamingPlayer {
         // Check if we need to loop
         if (this.config.loop && sequenceDuration > 0) {
             const timeSinceStart = currentTime - this.playbackState.startTime;
-            const completedLoops = Math.floor(timeSinceStart / sequenceDuration);
+            const loopDuration = sequenceDuration + this.config.loopWaitSeconds;
+            const completedLoops = Math.floor(timeSinceStart / loopDuration);
             // Guard against multiple increments due to processing delays
             if (completedLoops > this.playbackState.loopCount) {
                 const previousLoopCount = this.playbackState.loopCount;
@@ -266,7 +268,8 @@ class NDJSONStreamingPlayer {
                     previousLoop: previousLoopCount,
                     currentLoop: this.playbackState.loopCount,
                     timeSinceStart: timeSinceStart.toFixed(3),
-                    sequenceDuration: sequenceDuration.toFixed(3)
+                    sequenceDuration: sequenceDuration.toFixed(3),
+                    loopWaitSeconds: this.config.loopWaitSeconds
                 });
                 this.config.onLoopComplete();
             }
