@@ -50,7 +50,6 @@ export class NDJSONStreamingPlayer {
         this.cachedSequenceDuration = 0;
         this.createdNodeIds = new Set();
         this.processLoopCount = 0;
-        this.lastProcessTime = 0;
         this.Tone = Tone;
         this.nodes = nodes;
         this.config = {
@@ -109,7 +108,6 @@ export class NDJSONStreamingPlayer {
         this.loopCount = 0;
         this.createdNodeIds.clear();
         this.processLoopCount = 0;
-        this.lastProcessTime = 0;
         // Set start time as current time + lookahead
         this.startTime = this.Tone.now() + this.config.lookaheadMs / 1000;
         this.debug('Start time', {
@@ -244,6 +242,7 @@ export class NDJSONStreamingPlayer {
                         loopIteration: this.loopCount
                     };
                     this.debug(`Scheduling event #${index} (${event.eventType})`, {
+                        ...debugInfo,
                         scheduledAt: absoluteTime.toFixed(3),
                         timeDelta: timeDelta.toFixed(3),
                         eventTime: eventTime.toFixed(3),
@@ -410,7 +409,6 @@ export class NDJSONStreamingPlayer {
         this.createdNodeIds.clear();
         this.cachedSequenceDuration = 0;
         this.processLoopCount = 0;
-        this.lastProcessTime = 0;
     }
     /**
      * Check if player is currently playing

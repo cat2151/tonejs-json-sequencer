@@ -69,7 +69,6 @@ export declare class NDJSONStreamingPlayer {
     private cachedSequenceDuration;
     private createdNodeIds;
     private processLoopCount;
-    private lastProcessTime;
     constructor(Tone: typeof ToneTypes, nodes: SequencerNodes, config?: NDJSONStreamingConfig);
     /**
      * Log debug message if debug mode is enabled
