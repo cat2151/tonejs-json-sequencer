@@ -154,7 +154,10 @@ class StreamingDemo {
                     // Skip invalid JSON
                 }
             }
-            // Extract timing information
+            // Extract timing information using the same constants as NDJSONStreamingPlayer
+            // These match the default configuration values in NDJSONStreamingConfig
+            const DEFAULT_TICKS_PER_QUARTER = 480;
+            const DEFAULT_BEATS_PER_MINUTE = 120;
             const timelineEvents = [];
             for (const event of events) {
                 if (event.eventType === 'triggerAttackRelease' && 'args' in event && Array.isArray(event.args) && event.args.length >= 3) {
@@ -162,9 +165,9 @@ class StreamingDemo {
                     const durationStr = event.args[1];
                     const timeStr = event.args[2];
                     // Parse duration
-                    const duration = this.parseTimeString(durationStr);
+                    const duration = this.parseTimeString(durationStr, DEFAULT_TICKS_PER_QUARTER, DEFAULT_BEATS_PER_MINUTE);
                     // Parse start time
-                    const startTime = this.parseTimeString(timeStr);
+                    const startTime = this.parseTimeString(timeStr, DEFAULT_TICKS_PER_QUARTER, DEFAULT_BEATS_PER_MINUTE);
                     timelineEvents.push({ note, duration, startTime });
                 }
             }
@@ -228,10 +231,8 @@ class StreamingDemo {
             console.error('Error visualizing timeline:', error);
         }
     }
-    parseTimeString(timeStr) {
+    parseTimeString(timeStr, ticksPerQuarter, beatsPerMinute) {
         // Simple tick notation parser (matches ndjson-streaming.ts logic)
-        const ticksPerQuarter = 480;
-        const beatsPerMinute = 120;
         const secondsPerBeat = 60 / beatsPerMinute;
         // Remove '+' prefix if present
         const cleanStr = timeStr.startsWith('+') ? timeStr.substring(1) : timeStr;

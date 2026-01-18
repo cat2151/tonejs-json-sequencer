@@ -185,7 +185,11 @@ class StreamingDemo {
         }
       }
 
-      // Extract timing information
+      // Extract timing information using the same constants as NDJSONStreamingPlayer
+      // These match the default configuration values in NDJSONStreamingConfig
+      const DEFAULT_TICKS_PER_QUARTER = 480;
+      const DEFAULT_BEATS_PER_MINUTE = 120;
+      
       const timelineEvents: Array<{note: string, duration: number, startTime: number}> = [];
       
       for (const event of events) {
@@ -195,9 +199,9 @@ class StreamingDemo {
           const timeStr = event.args[2];
 
           // Parse duration
-          const duration = this.parseTimeString(durationStr);
+          const duration = this.parseTimeString(durationStr, DEFAULT_TICKS_PER_QUARTER, DEFAULT_BEATS_PER_MINUTE);
           // Parse start time
-          const startTime = this.parseTimeString(timeStr);
+          const startTime = this.parseTimeString(timeStr, DEFAULT_TICKS_PER_QUARTER, DEFAULT_BEATS_PER_MINUTE);
 
           timelineEvents.push({ note, duration, startTime });
         }
@@ -272,10 +276,8 @@ class StreamingDemo {
     }
   }
 
-  private parseTimeString(timeStr: string): number {
+  private parseTimeString(timeStr: string, ticksPerQuarter: number, beatsPerMinute: number): number {
     // Simple tick notation parser (matches ndjson-streaming.ts logic)
-    const ticksPerQuarter = 480;
-    const beatsPerMinute = 120;
     const secondsPerBeat = 60 / beatsPerMinute;
 
     // Remove '+' prefix if present
