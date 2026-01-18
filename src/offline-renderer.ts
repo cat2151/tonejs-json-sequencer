@@ -191,7 +191,7 @@ export class OfflineRenderer {
     const cleanStr = isDotted || isTriplet ? durationStr.slice(0, -1) : durationStr;
     
     // Extract note value (e.g., "4" from "4n")
-    const match = cleanStr.match(/^(\d+)n?$/);
+    const match = cleanStr.match(/^(\d+)n$/);
     if (!match) {
       console.warn(`Unknown duration format: ${durationStr}, using 0`);
       return 0;
