@@ -6,6 +6,21 @@
   <title>Tone.js JSON Sequencer - NDJSON Streaming Demo</title>
   <link rel="stylesheet" href="styles.css">
   <style>
+    /* Additional CSS variables for streaming demo elements */
+    :root {
+      --status-bg: #f0f0f0;
+      --info-bg: #e8f4f8;
+      --info-border: #2196F3;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --status-bg: #2d2d30;
+        --info-bg: #2d2d30;
+        --info-border: #0078d4;
+      }
+    }
+    
     .streaming-controls {
       margin: 20px 0;
       display: flex;
@@ -28,7 +43,8 @@
     .status {
       margin: 10px 0;
       padding: 10px;
-      background: #f0f0f0;
+      background: var(--status-bg);
+      color: var(--text-color);
       border-radius: 4px;
       font-family: monospace;
     }
@@ -36,13 +52,15 @@
     .info {
       margin: 20px 0;
       padding: 15px;
-      background: #e8f4f8;
-      border-left: 4px solid #2196F3;
+      background: var(--info-bg);
+      color: var(--text-color);
+      border-left: 4px solid var(--info-border);
       border-radius: 4px;
     }
     
     .info h3 {
       margin-top: 0;
+      color: var(--text-color);
     }
     
     .info ul {
