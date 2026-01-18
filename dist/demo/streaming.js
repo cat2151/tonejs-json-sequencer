@@ -31,15 +31,23 @@ class StreamingDemo {
         document.getElementById('stopButton')?.addEventListener('click', () => {
             this.stop();
         });
-        // Sequence selector change - immediately play the selected sequence
-        selector.addEventListener('change', () => {
-            // Stop current playback if any, then load and play the new sequence
-            if (this.player && this.player.playing) {
+        // Sequence selector change - reload the selected sequence and restart only if already playing
+        selector.addEventListener('change', async () => {
+            const wasPlaying = !!(this.player && this.player.playing);
+            // Stop current playback if any, then load the new sequence
+            if (wasPlaying) {
                 this.stop();
             }
             this.loadSelectedSequence();
-            // Auto-play when selecting a new sequence for easier debugging
-            this.play();
+            // Auto-play only if the player was already playing, for consistency with other controls
+            if (wasPlaying) {
+                try {
+                    await this.play();
+                }
+                catch (error) {
+                    console.error('Error during auto-play:', error);
+                }
+            }
         });
         // Loop checkbox change
         document.getElementById('loopCheckbox')?.addEventListener('change', () => {
