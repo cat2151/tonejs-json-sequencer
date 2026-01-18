@@ -154,7 +154,7 @@ class NDJSONStreamingPlayer {
         const sequenceDuration = this.playbackState.cachedSequenceDuration;
         // Clear and rebuild processed events set
         // Mark events as processed if their scheduled time has already passed
-        this.playbackState.processedEventIndices.clear();
+        this.playbackState.resetProcessedEvents();
         events.forEach((event, index) => {
             // Skip createNode and connect events
             if (event.eventType === 'createNode' || event.eventType === 'connect') {

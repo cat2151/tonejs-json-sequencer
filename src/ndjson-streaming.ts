@@ -252,7 +252,7 @@ export class NDJSONStreamingPlayer {
     
     // Clear and rebuild processed events set
     // Mark events as processed if their scheduled time has already passed
-    this.playbackState.processedEventIndices.clear();
+    this.playbackState.resetProcessedEvents();
     
     events.forEach((event, index) => {
       // Skip createNode and connect events
