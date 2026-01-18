@@ -25,3 +25,12 @@ export {
   type DebugEventInfo,
   type DebugCallback
 } from './ndjson-streaming.js';
+
+// Export offline rendering functionality
+export {
+  OfflineRenderer,
+  audioBufferToWav,
+  downloadWav,
+  type OfflineRendererConfig,
+  type OfflineRenderResult
+} from './offline-renderer.js';

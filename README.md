@@ -6,6 +6,7 @@
   <a href="README.md"><img src="https://img.shields.io/badge/🇺🇸-English-blue.svg" alt="English"></a>
   <a href="https://cat2151.github.io/tonejs-json-sequencer/demo/index.html"><img src="https://img.shields.io/badge/🚀-Live%20Demo-brightgreen.svg" alt="Demo"></a>
   <a href="https://cat2151.github.io/tonejs-json-sequencer/demo/streaming.html"><img src="https://img.shields.io/badge/🎵-Streaming%20Demo-orange.svg" alt="Streaming Demo"></a>
+  <a href="https://cat2151.github.io/tonejs-json-sequencer/demo/offline-rendering.html"><img src="https://img.shields.io/badge/🎙️-Offline%20Rendering-purple.svg" alt="Offline Rendering Demo"></a>
 </p>
 
 # Status
@@ -278,6 +279,53 @@ player.stop();
 
 See `demo/streaming.html` for a complete interactive demo with live editing and loop playback.
 
+## Offline Rendering
+
+tonejs-json-sequencer supports offline audio rendering for exporting sequences as WAV files. This feature uses Tone.js's `Tone.Offline` to render audio faster than real-time with perfect timing.
+
+### Features
+
+- **Offline Rendering**: Renders sequences offline using Tone.Offline for perfect timing
+- **WAV Export**: Exports the rendered audio as a WAV file
+- **Audio Preview**: Preview the rendered audio before downloading
+- **Configurable Settings**: Adjust sample rate, buffer time, and timing parameters
+- **Fast Processing**: Renders faster than real-time
+
+### Basic Usage
+
+```typescript
+import * as Tone from 'tone';
+import { OfflineRenderer, downloadWav } from 'tonejs-json-sequencer';
+
+// Create offline renderer with configuration
+const renderer = new OfflineRenderer(Tone, {
+  sampleRate: 44100,        // Sample rate in Hz
+  endBufferSeconds: 1,      // Buffer time after last event
+  onProgress: (progress) => {
+    console.log(`Rendering: ${progress}%`);
+  }
+});
+
+// Define your sequence
+const ndjson = `
+{"eventType":"createNode","nodeId":0,"nodeType":"Synth"}
+{"eventType":"connect","nodeId":0,"connectTo":"toDestination"}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["C4","4n","0"]}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["E4","4n","0:1:0"]}
+`;
+
+// Render the sequence offline
+const result = await renderer.render(ndjson);
+console.log(`Rendered ${result.duration}s of audio`);
+
+// Download as WAV file
+downloadWav(result.buffer, 'output.wav');
+```
+
+### Demo
+
+See `demo/offline-rendering.html` for a complete interactive demo with rendering, preview, and WAV export.
+
 # JSON Support for Tone.js Components
 
 tonejs-json-sequencer enables describing major Tone.js components in JSON.
@@ -318,6 +366,7 @@ This document includes the following information:
 - * Later, it might be good to split into two types of samples: a simple one focused on a single topic for ease of use, and a practical one combining multiple topics to clearly showcase strengths.
 - Programming
   - Done : NDJSON streaming with live editing and loop playback (see demo/streaming.html)
+  - Done : Offline rendering with WAV export (see demo/offline-rendering.html)
 - Structure
   - Done : Multitimbral, FM Bass, and Saw Chord
 - Performance Techniques
@@ -371,6 +420,20 @@ This document includes the following information:
     - Uses `requestAnimationFrame` for continuous event processing.
     - Supports both array and NDJSON string input via `parseNDJSON` function.
     - Separate demo at `demo/streaming.html` with its own source file.
+- Offline rendering
+  - Status: ✅ **Implemented** (see `demo/offline-rendering.html` and `src/offline-renderer.ts`)
+  - Features implemented:
+    - Offline audio rendering using `Tone.Offline` for perfect timing
+    - WAV file export with configurable sample rate
+    - Audio preview before download
+    - Progress tracking during rendering
+    - Faster-than-realtime rendering
+  - Implementation details:
+    - `OfflineRenderer` class handles offline rendering using Tone.js offline context
+    - Includes `audioBufferToWav` utility for converting AudioBuffer to WAV format
+    - Includes `downloadWav` helper for triggering browser downloads
+    - Separate demo at `demo/offline-rendering.html` with its own source file
+    - Implemented as a layer on top of the core sequencer, similar to streaming
 - Will not use Tone.Transport.schedule yet.
   - When I tried having an agent generate code, complex code was produced, but no improvement in the unnaturalness of sound generation was observed.
   - Decided it's premature; it's better to wait until test data is ready.

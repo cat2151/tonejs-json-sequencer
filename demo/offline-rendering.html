@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tone.js JSON Sequencer - Offline Rendering Demo</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Additional CSS for offline rendering demo elements */
+    :root {
+      --status-bg: #f0f0f0;
+      --info-bg: #e8f4f8;
+      --info-border: #2196F3;
+      --progress-bg: #e0e0e0;
+      --progress-fill: #4CAF50;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --status-bg: #2d2d30;
+        --info-bg: #2d2d30;
+        --info-border: #0078d4;
+        --progress-bg: #3d3d40;
+        --progress-fill: #4CAF50;
+      }
+    }
+    
+    .rendering-controls {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .rendering-controls button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    
+    .rendering-controls button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .status {
+      margin: 10px 0;
+      padding: 10px;
+      background: var(--status-bg);
+      color: var(--text-color);
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    
+    .info {
+      margin: 20px 0;
+      padding: 15px;
+      background: var(--info-bg);
+      color: var(--text-color);
+      border-left: 4px solid var(--info-border);
+      border-radius: 4px;
+    }
+    
+    .info h3 {
+      margin-top: 0;
+      color: var(--text-color);
+    }
+    
+    .info ul {
+      margin: 10px 0;
+      padding-left: 20px;
+    }
+    
+    .progress-container {
+      margin: 20px 0;
+      display: none;
+    }
+    
+    .progress-container.active {
+      display: block;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 30px;
+      background: var(--progress-bg);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: var(--progress-fill);
+      transition: width 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    
+    .audio-player {
+      margin: 20px 0;
+      display: none;
+    }
+    
+    .audio-player.active {
+      display: block;
+    }
+    
+    .audio-player audio {
+      width: 100%;
+      margin-top: 10px;
+    }
+    
+    .config-section {
+      margin: 20px 0;
+      padding: 15px;
+      background: var(--status-bg);
+      border-radius: 4px;
+    }
+    
+    .config-section h3 {
+      margin-top: 0;
+    }
+    
+    .config-row {
+      display: flex;
+      gap: 20px;
+      margin: 10px 0;
+      flex-wrap: wrap;
+    }
+    
+    .config-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .config-item label {
+      font-weight: bold;
+    }
+    
+    .config-item input[type="number"],
+    .config-item input[type="text"] {
+      padding: 5px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background: var(--bg-color);
+      color: var(--text-color);
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Offline Rendering Demo</h1>
+  
+  <p style="margin: 10px 0;">
+    <a href="index.html">← Back to Main Demo</a> | 
+    <a href="streaming.html">NDJSON Streaming Demo →</a>
+  </p>
+  
+  <div class="info">
+    <h3>Features:</h3>
+    <ul>
+      <li><strong>Offline Rendering:</strong> Renders the sequence offline using Tone.Offline for perfect timing</li>
+      <li><strong>WAV Export:</strong> Exports the rendered audio as a WAV file</li>
+      <li><strong>Preview Playback:</strong> Preview the rendered audio before downloading</li>
+      <li><strong>Configurable Settings:</strong> Adjust sample rate, buffer time, and timing parameters</li>
+    </ul>
+  </div>
+
+  <div class="rendering-controls">
+    <button id="renderButton" autofocus>Render Audio</button>
+    <button id="downloadButton" disabled>Download WAV</button>
+    <select id="sequenceSelector">
+      <!-- Options populated by JavaScript -->
+    </select>
+  </div>
+
+  <div class="status" id="status">Status: Ready</div>
+
+  <div class="progress-container" id="progressContainer">
+    <h3>Rendering Progress:</h3>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill">0%</div>
+    </div>
+  </div>
+
+  <div class="audio-player" id="audioPlayer">
+    <h3>Preview Rendered Audio:</h3>
+    <audio id="audioElement" controls></audio>
+    <p><em>You can preview the audio here before downloading</em></p>
+  </div>
+
+  <div class="config-section">
+    <h3>Rendering Configuration:</h3>
+    <div class="config-row">
+      <div class="config-item">
+        <label for="sampleRate">Sample Rate:</label>
+        <input type="number" id="sampleRate" value="44100" step="1" min="8000" max="192000">
+        <span>Hz</span>
+      </div>
+      <div class="config-item">
+        <label for="endBuffer">End Buffer:</label>
+        <input type="number" id="endBuffer" value="1" step="0.1" min="0" max="10">
+        <span>seconds</span>
+      </div>
+    </div>
+    <div class="config-row">
+      <div class="config-item">
+        <label for="filename">Filename:</label>
+        <input type="text" id="filename" value="output.wav">
+      </div>
+    </div>
+  </div>
+
+  <h3>Sequence (NDJSON format - one event per line):</h3>
+  <textarea id="sequenceEditor" rows="30" cols="80"></textarea>
+
+  <div class="info">
+    <h3>How to use:</h3>
+    <ol>
+      <li>Select a sequence from the dropdown or edit the NDJSON in the textarea</li>
+      <li>Adjust rendering configuration if needed (sample rate, end buffer, filename)</li>
+      <li>Click "Render Audio" to start offline rendering</li>
+      <li>Preview the rendered audio in the player</li>
+      <li>Click "Download WAV" to save the audio file</li>
+    </ol>
+    <p><strong>Note:</strong> Offline rendering is faster than real-time and produces perfect timing!</p>
+  </div>
+
+  <script src="https://unpkg.com/tone@15.2.7/build/Tone.js"></script>
+  <script type="module" src="../dist/demo/offline-rendering.js"></script>
+</body>
+</html>
