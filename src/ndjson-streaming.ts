@@ -234,8 +234,11 @@ export class NDJSONStreamingPlayer {
       this.playbackState.createdNodeIds
     );
     
-    // Recalculate sequence duration with new events
+    // Store previous values before updating
+    const previousEvents = this.playbackState.currentEvents;
     const previousDuration = this.playbackState.cachedSequenceDuration;
+    
+    // Recalculate sequence duration with new events
     this.playbackState.cachedSequenceDuration = this.eventProcessor.calculateSequenceDuration(
       events,
       this.config.endBufferSeconds
@@ -248,10 +251,11 @@ export class NDJSONStreamingPlayer {
 
     // Get current time to determine which events have already been scheduled
     const currentTime = this.Tone.now();
-    const sequenceDuration = this.playbackState.cachedSequenceDuration;
     
     // Clear and rebuild processed events set
     // Mark events as processed if their scheduled time has already passed
+    // IMPORTANT: Use previous duration and previous array length for calculations
+    // because that's what was used when events were actually scheduled
     this.playbackState.resetProcessedEvents();
     
     events.forEach((event, index) => {
@@ -265,12 +269,16 @@ export class NDJSONStreamingPlayer {
 
       // Check all loop iterations that may have occurred
       for (let loop = 0; loop <= this.playbackState.loopCount; loop++) {
-        const loopOffset = loop * sequenceDuration;
+        // Use previous duration for loop offset calculation
+        // because that's what was used when events were originally scheduled
+        const loopOffset = loop * previousDuration;
         const absoluteTime = this.playbackState.startTime + eventTime + loopOffset;
         
         // If this event's scheduled time has passed, mark it as processed
         if (absoluteTime <= currentTime) {
-          const eventKey = index + loop * events.length;
+          // Use previous array length for event key calculation
+          // because that's what was used when events were originally scheduled
+          const eventKey = index + loop * previousEvents.length;
           this.playbackState.markEventAsProcessed(eventKey);
         }
       }
