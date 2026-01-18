@@ -7,3 +7,5 @@ export { SequencerNodes } from './sequencer-nodes.mjs';
 export { scheduleOrExecuteEvent, playSequence } from './event-scheduler.mjs';
 // Export NDJSON streaming functionality
 export { NDJSONStreamingPlayer, parseNDJSON } from './ndjson-streaming.mjs';
+// Export offline rendering functionality
+export { OfflineRenderer, audioBufferToWav, downloadWav } from './offline-renderer.mjs';
