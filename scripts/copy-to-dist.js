@@ -1,30 +1,39 @@
 const fs = require('fs');
 const path = require('path');
 
-// Copy index.js and index.d.ts from dist/cjs to dist/
+// Copy all files from dist/cjs to dist/ (recursively)
 const cjsDir = path.join(__dirname, '../dist/cjs');
 const distDir = path.join(__dirname, '../dist');
 
-const indexJs = path.join(cjsDir, 'index.js');
-const distIndexJs = path.join(distDir, 'index.js');
-if (fs.existsSync(indexJs)) {
-  try {
-    fs.copyFileSync(indexJs, distIndexJs);
-    console.log(`Copied: ${indexJs} -> ${distIndexJs}`);
-  } catch (err) {
-    console.error(`Failed to copy ${indexJs} to ${distIndexJs}:`, err);
-    process.exit(1);
+function copyRecursive(src, dest) {
+  const exists = fs.existsSync(src);
+  const stats = exists && fs.statSync(src);
+  const isDirectory = exists && stats.isDirectory();
+  
+  if (isDirectory) {
+    // Create directory if it doesn't exist
+    if (!fs.existsSync(dest)) {
+      fs.mkdirSync(dest, { recursive: true });
+    }
+    
+    // Copy contents
+    fs.readdirSync(src).forEach(childItemName => {
+      copyRecursive(
+        path.join(src, childItemName),
+        path.join(dest, childItemName)
+      );
+    });
+  } else {
+    // Copy file
+    fs.copyFileSync(src, dest);
+    console.log(`Copied: ${src} -> ${dest}`);
   }
 }
 
-const indexDts = path.join(cjsDir, 'index.d.ts');
-const distIndexDts = path.join(distDir, 'index.d.ts');
-if (fs.existsSync(indexDts)) {
-  try {
-    fs.copyFileSync(indexDts, distIndexDts);
-    console.log(`Copied: ${indexDts} -> ${distIndexDts}`);
-  } catch (err) {
-    console.error(`Failed to copy ${indexDts} to ${distIndexDts}:`, err);
-    process.exit(1);
-  }
+// Copy all CJS files to dist root
+try {
+  copyRecursive(cjsDir, distDir);
+} catch (err) {
+  console.error('Failed to copy CJS files to dist:', err);
+  process.exit(1);
 }
