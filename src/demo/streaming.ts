@@ -129,7 +129,7 @@ class StreamingDemo {
           debug: debug,
           onDebug: (message: string, data?: any) => this.handleDebugMessage(message, data),
           onLoopComplete: () => {
-            this.updateStatus('Playing (looped)');
+            this.updateStatus('再生中（ループ）');
           }
         });
       }
@@ -140,15 +140,15 @@ class StreamingDemo {
       // Start playback
       await this.player.start(ndjson);
       
-      this.updateStatus(loop ? 'Playing (loop enabled)' : 'Playing');
+      this.updateStatus(loop ? '再生中（ループ有効）' : '再生中');
       
       // Disable play button, enable stop button
       (document.getElementById('playButton') as HTMLButtonElement).disabled = true;
       (document.getElementById('stopButton') as HTMLButtonElement).disabled = false;
     } catch (error) {
       console.error('Error during playback:', error);
-      this.updateStatus('Error: ' + (error as Error).message);
-      alert('Failed to start playback. Please check the console for details.');
+      this.updateStatus('エラー: ' + (error as Error).message);
+      alert('再生の開始に失敗しました。詳細はコンソールを確認してください。');
     }
   }
 
@@ -161,7 +161,7 @@ class StreamingDemo {
     // Dispose all nodes on stop
     this.nodes.disposeAll();
     
-    this.updateStatus('Stopped');
+    this.updateStatus('停止中');
     
     // Enable play button, disable stop button
     (document.getElementById('playButton') as HTMLButtonElement).disabled = false;
@@ -174,7 +174,7 @@ class StreamingDemo {
       try {
         const ndjson = this.getNDJSONFromTextarea();
         this.player.start(ndjson);
-        this.updateStatus('Playing (live editing)');
+        this.updateStatus('再生中（ライブ編集）');
       } catch (error) {
         console.error('Error updating sequence:', error);
         // Don't stop playback on edit errors
@@ -185,7 +185,7 @@ class StreamingDemo {
   private updateStatus(status: string): void {
     const statusElement = document.getElementById('status');
     if (statusElement) {
-      statusElement.textContent = `Status: ${status}`;
+      statusElement.textContent = `ステータス: ${status}`;
     }
   }
 

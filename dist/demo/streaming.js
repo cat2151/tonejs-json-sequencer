@@ -107,7 +107,7 @@ class StreamingDemo {
                     debug: debug,
                     onDebug: (message, data) => this.handleDebugMessage(message, data),
                     onLoopComplete: () => {
-                        this.updateStatus('Playing (looped)');
+                        this.updateStatus('再生中（ループ）');
                     }
                 });
             }
@@ -115,15 +115,15 @@ class StreamingDemo {
             const ndjson = this.getNDJSONFromTextarea();
             // Start playback
             await this.player.start(ndjson);
-            this.updateStatus(loop ? 'Playing (loop enabled)' : 'Playing');
+            this.updateStatus(loop ? '再生中（ループ有効）' : '再生中');
             // Disable play button, enable stop button
             document.getElementById('playButton').disabled = true;
             document.getElementById('stopButton').disabled = false;
         }
         catch (error) {
             console.error('Error during playback:', error);
-            this.updateStatus('Error: ' + error.message);
-            alert('Failed to start playback. Please check the console for details.');
+            this.updateStatus('エラー: ' + error.message);
+            alert('再生の開始に失敗しました。詳細はコンソールを確認してください。');
         }
     }
     stop() {
@@ -133,7 +133,7 @@ class StreamingDemo {
         }
         // Dispose all nodes on stop
         this.nodes.disposeAll();
-        this.updateStatus('Stopped');
+        this.updateStatus('停止中');
         // Enable play button, disable stop button
         document.getElementById('playButton').disabled = false;
         document.getElementById('stopButton').disabled = true;
@@ -144,7 +144,7 @@ class StreamingDemo {
             try {
                 const ndjson = this.getNDJSONFromTextarea();
                 this.player.start(ndjson);
-                this.updateStatus('Playing (live editing)');
+                this.updateStatus('再生中（ライブ編集）');
             }
             catch (error) {
                 console.error('Error updating sequence:', error);
@@ -155,7 +155,7 @@ class StreamingDemo {
     updateStatus(status) {
         const statusElement = document.getElementById('status');
         if (statusElement) {
-            statusElement.textContent = `Status: ${status}`;
+            statusElement.textContent = `ステータス: ${status}`;
         }
     }
     handleDebugMessage(message, data) {

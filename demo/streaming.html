@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tone.js JSON Sequencer - NDJSON Streaming Demo</title>
+  <title>Tone.js JSON Sequencer - NDJSONストリーミングデモ</title>
   <link rel="stylesheet" href="styles.css">
   <style>
     /* Additional CSS variables for streaming demo elements */
@@ -96,61 +96,66 @@
   </style>
 </head>
 <body>
-  <h1>NDJSON Streaming Demo</h1>
+  <h1>NDJSONストリーミングデモ</h1>
   
   <p style="margin: 10px 0;">
-    <a href="index.html">← Back to Main Demo</a> | 
-    <a href="offline-rendering.html">Offline Rendering Demo →</a>
+    <a href="index.html">← メインデモに戻る</a> | 
+    <a href="offline-rendering.html">オフラインレンダリングデモ →</a>
   </p>
   
   <div class="info">
-    <h3>Features:</h3>
+    <h3>このデモについて:</h3>
+    <p><strong>🎵 Streaming（ストリーミング再生）方式</strong></p>
     <ul>
-      <li><strong>Live Editing:</strong> Edit the sequence in the textarea while playing - changes will be reflected in real-time</li>
-      <li><strong>Loop Playback:</strong> Enable loop mode to continuously play the sequence</li>
-      <li><strong>50ms Lookahead:</strong> Events are scheduled 50ms ahead for smooth playback</li>
-      <li><strong>Debug Mode:</strong> Enable debug output to see detailed timing and scheduling information</li>
+      <li><strong>ライブ編集:</strong> 再生中にテキストエリアでシーケンスを編集 - 変更はリアルタイムに反映されます</li>
+      <li><strong>ループ再生:</strong> ループモードを有効にすると、シーケンスを連続再生できます</li>
+      <li><strong>50ms先読み:</strong> スムーズな再生のため、イベントは50msの先読みでスケジュールされます</li>
+      <li><strong>デバッグモード:</strong> 詳細なタイミングとスケジューリング情報を確認できます</li>
     </ul>
+    <p style="margin-top: 10px; padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+      <strong>💡 ヒント:</strong> シーケンス全体を一括でレンダリングする場合は、<a href="offline-rendering.html">オフラインレンダリングデモ</a>をご利用ください（One-shot方式）
+    </p>
   </div>
 
   <div class="streaming-controls">
-    <button id="playButton" autofocus>Play</button>
-    <button id="stopButton">Stop</button>
+    <button id="playButton" autofocus>再生</button>
+    <button id="stopButton">停止</button>
     <label>
       <input type="checkbox" id="loopCheckbox">
-      Loop Playback
+      ループ再生
     </label>
     <label>
       <input type="checkbox" id="debugCheckbox">
-      Debug Mode
+      デバッグモード
     </label>
     <select id="sequenceSelector">
       <!-- Options populated by JavaScript -->
     </select>
   </div>
 
-  <div class="status" id="status">Status: Stopped</div>
+  <div class="status" id="status">ステータス: 停止中</div>
 
   <div class="debug-section">
     <div class="debug-controls">
-      <h3>Debug Output:</h3>
-      <button id="clearDebugButton">Clear Debug</button>
+      <h3>デバッグ出力:</h3>
+      <button id="clearDebugButton">デバッグをクリア</button>
     </div>
     <pre id="debugOutput"></pre>
   </div>
 
-  <h3>Sequence (NDJSON format - one event per line):</h3>
+  <h3>シーケンス（NDJSON形式 - 1行につき1イベント）:</h3>
   <textarea id="sequenceEditor" rows="30" cols="80"></textarea>
 
   <div class="info">
-    <h3>How to use:</h3>
+    <h3>使い方:</h3>
     <ol>
-      <li>Click "Play" to start playback with 50ms lookahead scheduling</li>
-      <li>Edit the sequence in the textarea while playing - changes take effect immediately</li>
-      <li>Enable "Loop Playback" to continuously repeat the sequence</li>
-      <li>Enable "Debug Mode" to see detailed event scheduling and timing information</li>
-      <li>Click "Stop" to stop playback and reset</li>
+      <li><strong>再生:</strong> 「再生」ボタンをクリックすると、50msの先読みスケジューリングで再生が開始されます</li>
+      <li><strong>ライブ編集:</strong> 再生中にテキストエリアでシーケンスを編集 - 変更は即座に反映されます</li>
+      <li><strong>ループ:</strong> 「ループ再生」を有効にすると、シーケンスを連続的に繰り返し再生できます</li>
+      <li><strong>デバッグ:</strong> 「デバッグモード」を有効にすると、イベントのスケジューリングとタイミングの詳細情報が表示されます</li>
+      <li><strong>停止:</strong> 「停止」ボタンをクリックすると、再生が停止してリセットされます</li>
     </ol>
+    <p><strong>📝 Note:</strong> この方式は<strong>リアルタイムストリーミング再生</strong>です。ライブ編集や連続再生が可能で、対話的な音楽制作に最適です。</p>
   </div>
 
   <script src="https://unpkg.com/tone@15.2.7/build/Tone.js"></script>
