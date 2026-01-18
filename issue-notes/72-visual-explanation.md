@@ -142,7 +142,7 @@ const startTime = this.Tone.now() + this.config.lookaheadMs / 1000;
 ```
 
 ### Processing Loop
-**File:** `src/ndjson-streaming.ts`, lines 277-365
+**File:** `src/ndjson-streaming.ts`, lines 277-394
 ```typescript
 private processEvents(): void {
   const currentTime = this.Tone.now();

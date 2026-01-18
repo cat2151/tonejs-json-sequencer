@@ -21,7 +21,7 @@ const startTime = this.Tone.now() + this.config.lookaheadMs / 1000;
 This `startTime` becomes the reference point for all event scheduling.
 
 ### 2. Continuous Processing Loop
-**File:** `src/ndjson-streaming.ts`, lines 277-365
+**File:** `src/ndjson-streaming.ts`, lines 277-394
 
 The `processEvents()` function runs continuously via `requestAnimationFrame` (~60fps, every ~16ms):
 
@@ -155,7 +155,7 @@ const startTime = this.Tone.now() + this.config.lookaheadMs / 1000;
 この`startTime`がすべてのイベントスケジューリングの基準点になります。
 
 ### 2. 継続的な処理ループ
-**ファイル：** `src/ndjson-streaming.ts` 277-365行目
+**ファイル：** `src/ndjson-streaming.ts` 277-394行目
 
 `processEvents()`関数が`requestAnimationFrame`で継続実行（約60fps、16ms間隔）：
 

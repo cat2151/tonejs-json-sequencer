@@ -10,7 +10,7 @@ Investigate whether the streaming implementation follows the specification:
 
 1. **Play Button Press (Playback Start)**
    - When play is pressed, the actual time is captured
-   - File: `src/ndjson-streaming.ts`, line 186
+   - File: `src/ndjson-streaming.ts`, line 192
    ```typescript
    const startTime = this.Tone.now() + this.config.lookaheadMs / 1000;
    ```
@@ -19,17 +19,17 @@ Investigate whether the streaming implementation follows the specification:
 
 2. **Event Processing Loop**
    - Runs continuously via `requestAnimationFrame`
-   - File: `src/ndjson-streaming.ts`, lines 259-365
+   - File: `src/ndjson-streaming.ts`, lines 277-394
    
 3. **Lookahead Window Calculation**
-   - Line 266:
+   - Line 288:
    ```typescript
    const lookaheadTime = currentTime + this.config.lookaheadMs / 1000;
    ```
    - Creates a 50ms window into the future
 
 4. **Event Time Calculation**
-   - Line 300:
+   - Line 327:
    ```typescript
    const absoluteTime = this.playbackState.startTime + eventTime + loopOffset;
    ```
@@ -37,7 +37,7 @@ Investigate whether the streaming implementation follows the specification:
    - `absoluteTime` = when this event should actually play in audio context time
 
 5. **Scheduling Decision**
-   - Line 304:
+   - Line 333:
    ```typescript
    if (absoluteTime <= lookaheadTime && !this.playbackState.processedEventIndices.has(eventKey)) {
    ```
@@ -108,7 +108,7 @@ The current implementation correctly follows the specification:
 
 ### Key Points:
 
-- The startTime is set once when playback begins (line 186)
+- The startTime is set once when playback begins (line 192)
 - This creates a stable reference point for all event timing
 - The 50ms lookahead window continuously checks which events need scheduling
 - Events are scheduled at their absolute time (startTime + eventTime)
