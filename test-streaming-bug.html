@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Test Streaming Bug</title>
+</head>
+<body>
+  <h1>Test Streaming Bug</h1>
+  <button id="playButton">Play Test Sequence</button>
+  <button id="stopButton">Stop</button>
+  <div id="status">Ready</div>
+  <pre id="events">
+Events:
+{"eventType":"createNode","nodeId":0,"nodeType":"Synth"}
+{"eventType":"connect","nodeId":0,"connectTo":"toDestination"}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["C5","48i","+0i"]}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["D5","48i","+48i"]}
+  </pre>
+
+  <h2>Debug Output</h2>
+  <pre id="debug"></pre>
+
+  <script src="https://unpkg.com/tone@15.2.7/build/Tone.js"></script>
+  <script type="module">
+    import { SequencerNodes, NDJSONStreamingPlayer } from './dist/index.mjs';
+
+    const debugElement = document.getElementById('debug');
+    function debug(msg) {
+      console.log(msg);
+      debugElement.textContent += msg + '\n';
+    }
+
+    const ndjson = `{"eventType":"createNode","nodeId":0,"nodeType":"Synth"}
+{"eventType":"connect","nodeId":0,"connectTo":"toDestination"}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["C5","48i","+0i"]}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["D5","48i","+48i"]}`;
+
+    let player = null;
+    let nodes = null;
+
+    document.getElementById('playButton').addEventListener('click', async () => {
+      try {
+        await Tone.start();
+        
+        debug('Starting playback...');
+        debug('Current Tone.now(): ' + Tone.now());
+        
+        nodes = new SequencerNodes();
+        player = new NDJSONStreamingPlayer(Tone, nodes, {
+          lookaheadMs: 50,
+          loop: false
+        });
+
+        await player.start(ndjson);
+        debug('Player started');
+        
+        document.getElementById('status').textContent = 'Playing...';
+      } catch (error) {
+        console.error('Error:', error);
+        debug('Error: ' + error.message);
+      }
+    });
+
+    document.getElementById('stopButton').addEventListener('click', () => {
+      if (player) {
+        player.stop();
+        nodes.disposeAll();
+        player = null;
+        nodes = null;
+        debug('Stopped');
+        document.getElementById('status').textContent = 'Stopped';
+      }
+    });
+  </script>
+</body>
+</html>
