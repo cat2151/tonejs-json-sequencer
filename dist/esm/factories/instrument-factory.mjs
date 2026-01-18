@@ -70,7 +70,7 @@ function createPolySynth(Tone, args) {
                     return new Tone.PolySynth(Tone.Synth, args.options);
                 }
                 else {
-                    return new Tone.PolySynth(args || {});
+                    return new Tone.PolySynth(args ? args : {});
                 }
             }
         }
@@ -81,7 +81,7 @@ function createPolySynth(Tone, args) {
                 return new Tone.PolySynth(Tone.Synth, args.options);
             }
             else {
-                return new Tone.PolySynth(args || {});
+                return new Tone.PolySynth(args ? args : {});
             }
         }
     }
@@ -93,7 +93,7 @@ function createPolySynth(Tone, args) {
         }
         else {
             // Backward compatibility: pass args directly (might be options or empty)
-            return new Tone.PolySynth(args || {});
+            return new Tone.PolySynth(args ? args : {});
         }
     }
 }
@@ -101,13 +101,22 @@ function createPolySynth(Tone, args) {
  * Create a Sampler with callbacks
  */
 function createSampler(Tone, args) {
+    // Preserve user-provided callbacks while adding default logging
+    const userOnload = args?.onload;
+    const userOnerror = args?.onerror;
     return new Tone.Sampler({
         ...args,
         onload: () => {
             console.log('Sampler loaded successfully');
+            if (userOnload) {
+                userOnload();
+            }
         },
         onerror: (error) => {
             console.error('Sampler loading error:', error);
+            if (userOnerror) {
+                userOnerror(error);
+            }
         }
     });
 }
