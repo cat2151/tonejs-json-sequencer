@@ -31,9 +31,11 @@ class StreamingDemo {
         document.getElementById('stopButton')?.addEventListener('click', () => {
             this.stop();
         });
-        // Sequence selector change
+        // Sequence selector change - immediately play the selected sequence
         selector.addEventListener('change', () => {
             this.loadSelectedSequence();
+            // Auto-play when selecting a new sequence for easier debugging
+            this.play();
         });
         // Loop checkbox change
         document.getElementById('loopCheckbox')?.addEventListener('change', () => {
