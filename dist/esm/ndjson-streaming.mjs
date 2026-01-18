@@ -39,7 +39,12 @@ export class NDJSONStreamingPlayer {
         this.config = {
             lookaheadMs: config.lookaheadMs ?? 50,
             loop: config.loop ?? false,
-            onLoopComplete: config.onLoopComplete ?? (() => { })
+            onLoopComplete: config.onLoopComplete ?? (() => { }),
+            ticksPerQuarter: config.ticksPerQuarter ?? 480,
+            beatsPerMinute: config.beatsPerMinute ?? 120,
+            beatsPerBar: config.beatsPerBar ?? 4,
+            subdivisionsPerBeat: config.subdivisionsPerBeat ?? 4,
+            endBufferSeconds: config.endBufferSeconds ?? 1
         };
     }
     /**
@@ -216,9 +221,8 @@ export class NDJSONStreamingPlayer {
         if (!match)
             return 0;
         const value = parseFloat(match[1]);
-        // Assume 480 ticks per quarter note, and 120 BPM (0.5 seconds per beat)
-        const ticksPerQuarter = 480;
-        const secondsPerBeat = 0.5;
+        const ticksPerQuarter = this.config.ticksPerQuarter;
+        const secondsPerBeat = 60 / this.config.beatsPerMinute;
         return (value / ticksPerQuarter) * secondsPerBeat;
     }
     /**
@@ -229,10 +233,9 @@ export class NDJSONStreamingPlayer {
         if (parts.length !== 3)
             return 0;
         const [bars, beats, subdivisions] = parts;
-        // Assume 4/4 time signature and 120 BPM
-        const beatsPerBar = 4;
-        const secondsPerBeat = 0.5;
-        const subdivisionsPerBeat = 4;
+        const beatsPerBar = this.config.beatsPerBar;
+        const secondsPerBeat = 60 / this.config.beatsPerMinute;
+        const subdivisionsPerBeat = this.config.subdivisionsPerBeat;
         return (bars * beatsPerBar * secondsPerBeat +
             beats * secondsPerBeat +
             subdivisions * (secondsPerBeat / subdivisionsPerBeat));
@@ -251,8 +254,8 @@ export class NDJSONStreamingPlayer {
                 maxTime = eventTime;
             }
         });
-        // Add a small buffer for the last note's duration
-        return maxTime + 1;
+        // Add buffer for the last note's duration
+        return maxTime + this.config.endBufferSeconds;
     }
     /**
      * Stop playback

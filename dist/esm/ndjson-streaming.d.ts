@@ -17,6 +17,16 @@ export interface NDJSONStreamingConfig {
     loop?: boolean;
     /** Callback when playback completes a loop iteration */
     onLoopComplete?: () => void;
+    /** Ticks per quarter note for timing calculations (default: 480) */
+    ticksPerQuarter?: number;
+    /** Beats per minute for timing calculations (default: 120) */
+    beatsPerMinute?: number;
+    /** Beats per bar for time signature (default: 4) */
+    beatsPerBar?: number;
+    /** Subdivisions per beat (default: 4) */
+    subdivisionsPerBeat?: number;
+    /** Buffer time in seconds to add after last event (default: 1) */
+    endBufferSeconds?: number;
 }
 /**
  * NDJSON Streaming Player
