@@ -8,6 +8,8 @@ class StreamingDemo {
         this.sequences = loadAllSequences();
         this.debugMessages = [];
         this.maxDebugMessages = 100;
+        this.debounceTimer = null;
+        this.updateMode = 'manual';
         this.initializeUI();
         this.loadInitialSequence();
     }
@@ -60,10 +62,39 @@ class StreamingDemo {
         document.getElementById('clearDebugButton')?.addEventListener('click', () => {
             this.clearDebugOutput();
         });
+        // Update mode radio buttons
+        document.getElementById('updateModeManual')?.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                this.updateMode = 'manual';
+            }
+        });
+        document.getElementById('updateModeDebounce')?.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                this.updateMode = 'debounce';
+            }
+        });
         // Textarea change (live editing)
         const textarea = document.getElementById('sequenceEditor');
+        // Input event handler for debounce mode
         textarea.addEventListener('input', () => {
-            this.onSequenceEdit();
+            if (this.updateMode === 'debounce') {
+                this.onSequenceEditDebounced();
+            }
+        });
+        // Keyboard shortcuts for manual mode (CTRL+S and SHIFT+ENTER)
+        textarea.addEventListener('keydown', (e) => {
+            if (this.updateMode === 'manual') {
+                // CTRL+S (prevent default save behavior)
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    this.onSequenceEdit();
+                }
+                // SHIFT+ENTER
+                else if (e.shiftKey && e.key === 'Enter') {
+                    e.preventDefault();
+                    this.onSequenceEdit();
+                }
+            }
         });
     }
     loadInitialSequence() {
@@ -151,6 +182,17 @@ class StreamingDemo {
                 // Don't stop playback on edit errors
             }
         }
+    }
+    onSequenceEditDebounced() {
+        // Clear existing timer
+        if (this.debounceTimer !== null) {
+            window.clearTimeout(this.debounceTimer);
+        }
+        // Set new timer for 1 second debounce
+        this.debounceTimer = window.setTimeout(() => {
+            this.onSequenceEdit();
+            this.debounceTimer = null;
+        }, 1000);
     }
     updateStatus(status) {
         const statusElement = document.getElementById('status');

@@ -10,6 +10,8 @@ class StreamingDemo {
   private sequences = loadAllSequences();
   private debugMessages: string[] = [];
   private maxDebugMessages = 100;
+  private debounceTimer: number | null = null;
+  private updateMode: 'manual' | 'debounce' = 'manual';
 
   constructor() {
     this.initializeUI();
@@ -72,10 +74,43 @@ class StreamingDemo {
       this.clearDebugOutput();
     });
 
+    // Update mode radio buttons
+    document.getElementById('updateModeManual')?.addEventListener('change', (e) => {
+      if ((e.target as HTMLInputElement).checked) {
+        this.updateMode = 'manual';
+      }
+    });
+
+    document.getElementById('updateModeDebounce')?.addEventListener('change', (e) => {
+      if ((e.target as HTMLInputElement).checked) {
+        this.updateMode = 'debounce';
+      }
+    });
+
     // Textarea change (live editing)
     const textarea = document.getElementById('sequenceEditor') as HTMLTextAreaElement;
+    
+    // Input event handler for debounce mode
     textarea.addEventListener('input', () => {
-      this.onSequenceEdit();
+      if (this.updateMode === 'debounce') {
+        this.onSequenceEditDebounced();
+      }
+    });
+
+    // Keyboard shortcuts for manual mode (CTRL+S and SHIFT+ENTER)
+    textarea.addEventListener('keydown', (e) => {
+      if (this.updateMode === 'manual') {
+        // CTRL+S (prevent default save behavior)
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+          e.preventDefault();
+          this.onSequenceEdit();
+        }
+        // SHIFT+ENTER
+        else if (e.shiftKey && e.key === 'Enter') {
+          e.preventDefault();
+          this.onSequenceEdit();
+        }
+      }
     });
   }
 
@@ -180,6 +215,19 @@ class StreamingDemo {
         // Don't stop playback on edit errors
       }
     }
+  }
+
+  private onSequenceEditDebounced(): void {
+    // Clear existing timer
+    if (this.debounceTimer !== null) {
+      window.clearTimeout(this.debounceTimer);
+    }
+
+    // Set new timer for 1 second debounce
+    this.debounceTimer = window.setTimeout(() => {
+      this.onSequenceEdit();
+      this.debounceTimer = null;
+    }, 1000);
   }
 
   private updateStatus(status: string): void {

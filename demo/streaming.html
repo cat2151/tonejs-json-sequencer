@@ -133,6 +133,18 @@
     </select>
   </div>
 
+  <div class="streaming-controls">
+    <label style="font-weight: bold; margin-right: 10px;">編集の反映方式:</label>
+    <label>
+      <input type="radio" name="updateMode" id="updateModeManual" value="manual" checked>
+      CTRL+SかSHIFT+ENTERで反映
+    </label>
+    <label>
+      <input type="radio" name="updateMode" id="updateModeDebounce" value="debounce">
+      デバウンス1秒で反映
+    </label>
+  </div>
+
   <div class="status" id="status">ステータス: 停止中</div>
 
   <div class="debug-section">
