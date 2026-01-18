@@ -1,0 +1,110 @@
+// Tone.js JSON Sequencer - Event Processor
+// Based on tonejs-json-sequencer by cat2151
+// https://github.com/cat2151/tonejs-json-sequencer
+import { scheduleOrExecuteEvent } from '../event-scheduler.js';
+/**
+ * Processes events for the streaming player
+ */
+export class EventProcessor {
+    constructor(Tone, nodes, timeParser) {
+        this.Tone = Tone;
+        this.nodes = nodes;
+        this.timeParser = timeParser;
+    }
+    /**
+     * Create nodes and connections from events
+     */
+    async createNodesAndConnections(events, createdNodeIds) {
+        events.forEach(event => {
+            try {
+                if (event.eventType === 'createNode' || event.eventType === 'connect') {
+                    if (event.eventType === 'createNode') {
+                        createdNodeIds.add(event.nodeId);
+                    }
+                    scheduleOrExecuteEvent(this.Tone, this.nodes, event);
+                }
+            }
+            catch (error) {
+                console.error('Error creating node or connection:', error);
+            }
+        });
+        // Wait for audio buffers to load
+        await this.Tone.loaded();
+    }
+    /**
+     * Process new node creation and connection events (for live editing)
+     */
+    processNewCreateAndConnectEvents(events, createdNodeIds) {
+        const newCreateAndConnectEvents = events.filter(e => e.eventType === 'createNode' || e.eventType === 'connect');
+        newCreateAndConnectEvents.forEach(event => {
+            try {
+                // Check if node already exists for createNode events
+                if (event.eventType === 'createNode') {
+                    if (createdNodeIds.has(event.nodeId)) {
+                        return; // Skip if node already created
+                    }
+                    createdNodeIds.add(event.nodeId);
+                }
+                scheduleOrExecuteEvent(this.Tone, this.nodes, event);
+            }
+            catch (error) {
+                console.error('Error processing new node/connection:', error);
+            }
+        });
+    }
+    /**
+     * Schedule an event at a specific time
+     */
+    scheduleEvent(event, absoluteTime) {
+        try {
+            // Create a modified event with adjusted time
+            const modifiedEvent = this.adjustEventTime(event, absoluteTime);
+            scheduleOrExecuteEvent(this.Tone, this.nodes, modifiedEvent);
+        }
+        catch (error) {
+            console.error('Error scheduling event:', error, event);
+        }
+    }
+    /**
+     * Adjust event time to absolute time
+     */
+    adjustEventTime(event, absoluteTime) {
+        const modifiedEvent = { ...event };
+        if ('args' in modifiedEvent && Array.isArray(modifiedEvent.args)) {
+            const args = [...modifiedEvent.args];
+            // Last argument is typically the time
+            if (args.length > 0) {
+                args[args.length - 1] = absoluteTime.toString();
+            }
+            modifiedEvent.args = args;
+        }
+        return modifiedEvent;
+    }
+    /**
+     * Get event time in seconds
+     */
+    getEventTime(event) {
+        if (!('args' in event) || !Array.isArray(event.args) || event.args.length === 0) {
+            return null;
+        }
+        const timeArg = event.args[event.args.length - 1];
+        return this.timeParser.parseTimeToSeconds(timeArg);
+    }
+    /**
+     * Calculate the total duration of the sequence
+     */
+    calculateSequenceDuration(events, endBufferSeconds) {
+        let maxTime = 0;
+        events.forEach(event => {
+            if (event.eventType === 'createNode' || event.eventType === 'connect') {
+                return;
+            }
+            const eventTime = this.getEventTime(event);
+            if (eventTime !== null && eventTime > maxTime) {
+                maxTime = eventTime;
+            }
+        });
+        // Add buffer for the last note's duration
+        return maxTime + endBufferSeconds;
+    }
+}
