@@ -10,6 +10,7 @@ class StreamingDemo {
         this.maxDebugMessages = 100;
         this.debounceTimer = null;
         this.updateMode = 'manual';
+        this.DEBOUNCE_DELAY_MS = 1000;
         this.initializeUI();
         this.loadInitialSequence();
     }
@@ -67,10 +68,7 @@ class StreamingDemo {
             if (e.target.checked) {
                 this.updateMode = 'manual';
                 // Clear any pending debounce timer when switching to manual mode
-                if (this.debounceTimer !== null) {
-                    window.clearTimeout(this.debounceTimer);
-                    this.debounceTimer = null;
-                }
+                this.clearDebounceTimer();
             }
         });
         document.getElementById('updateModeDebounce')?.addEventListener('change', (e) => {
@@ -90,7 +88,7 @@ class StreamingDemo {
         textarea.addEventListener('keydown', (e) => {
             if (this.updateMode === 'manual') {
                 // CTRL+S (prevent default save behavior)
-                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+                if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
                     e.preventDefault();
                     this.onSequenceEdit();
                 }
@@ -168,10 +166,7 @@ class StreamingDemo {
             this.player = null;
         }
         // Clear any pending debounce timer
-        if (this.debounceTimer !== null) {
-            window.clearTimeout(this.debounceTimer);
-            this.debounceTimer = null;
-        }
+        this.clearDebounceTimer();
         // Dispose all nodes on stop
         this.nodes.disposeAll();
         this.updateStatus('停止中');
@@ -195,14 +190,18 @@ class StreamingDemo {
     }
     onSequenceEditDebounced() {
         // Clear existing timer
-        if (this.debounceTimer !== null) {
-            window.clearTimeout(this.debounceTimer);
-        }
-        // Set new timer for 1 second debounce
+        this.clearDebounceTimer();
+        // Set new timer for debounce
         this.debounceTimer = window.setTimeout(() => {
             this.onSequenceEdit();
             this.debounceTimer = null;
-        }, 1000);
+        }, this.DEBOUNCE_DELAY_MS);
+    }
+    clearDebounceTimer() {
+        if (this.debounceTimer !== null) {
+            window.clearTimeout(this.debounceTimer);
+            this.debounceTimer = null;
+        }
     }
     updateStatus(status) {
         const statusElement = document.getElementById('status');

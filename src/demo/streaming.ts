@@ -12,6 +12,7 @@ class StreamingDemo {
   private maxDebugMessages = 100;
   private debounceTimer: number | null = null;
   private updateMode: 'manual' | 'debounce' = 'manual';
+  private readonly DEBOUNCE_DELAY_MS = 1000;
 
   constructor() {
     this.initializeUI();
@@ -79,10 +80,7 @@ class StreamingDemo {
       if ((e.target as HTMLInputElement).checked) {
         this.updateMode = 'manual';
         // Clear any pending debounce timer when switching to manual mode
-        if (this.debounceTimer !== null) {
-          window.clearTimeout(this.debounceTimer);
-          this.debounceTimer = null;
-        }
+        this.clearDebounceTimer();
       }
     });
 
@@ -106,7 +104,7 @@ class StreamingDemo {
     textarea.addEventListener('keydown', (e) => {
       if (this.updateMode === 'manual') {
         // CTRL+S (prevent default save behavior)
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
           e.preventDefault();
           this.onSequenceEdit();
         }
@@ -199,10 +197,7 @@ class StreamingDemo {
     }
     
     // Clear any pending debounce timer
-    if (this.debounceTimer !== null) {
-      window.clearTimeout(this.debounceTimer);
-      this.debounceTimer = null;
-    }
+    this.clearDebounceTimer();
     
     // Dispose all nodes on stop
     this.nodes.disposeAll();
@@ -230,15 +225,20 @@ class StreamingDemo {
 
   private onSequenceEditDebounced(): void {
     // Clear existing timer
-    if (this.debounceTimer !== null) {
-      window.clearTimeout(this.debounceTimer);
-    }
+    this.clearDebounceTimer();
 
-    // Set new timer for 1 second debounce
+    // Set new timer for debounce
     this.debounceTimer = window.setTimeout(() => {
       this.onSequenceEdit();
       this.debounceTimer = null;
-    }, 1000);
+    }, this.DEBOUNCE_DELAY_MS);
+  }
+
+  private clearDebounceTimer(): void {
+    if (this.debounceTimer !== null) {
+      window.clearTimeout(this.debounceTimer);
+      this.debounceTimer = null;
+    }
   }
 
   private updateStatus(status: string): void {
