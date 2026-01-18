@@ -5,10 +5,15 @@ import type { SequencerNodes } from './sequencer-nodes.js';
  * Parse NDJSON string into array of events
  * @param ndjson - NDJSON string (newline-delimited JSON)
  * @returns Array of sequence events
+ * @throws Error if any line fails to parse
  */
 export declare function parseNDJSON(ndjson: string): SequenceEvent[];
 /**
  * Configuration for NDJSON streaming player
+ *
+ * Note: Timing-related properties (beatsPerMinute, ticksPerQuarter, etc.) are used
+ * only for internal time format parsing (converting tick notation and bar:beat:subdivision
+ * format to seconds). These do not affect global Tone.Transport settings.
  */
 export interface NDJSONStreamingConfig {
     /** Lookahead time in milliseconds (default: 50ms) */
@@ -42,6 +47,8 @@ export declare class NDJSONStreamingPlayer {
     private processedEventIndices;
     private animationFrameId;
     private loopCount;
+    private cachedSequenceDuration;
+    private createdNodeIds;
     constructor(Tone: typeof ToneTypes, nodes: SequencerNodes, config?: NDJSONStreamingConfig);
     /**
      * Start or update the streaming playback
@@ -89,9 +96,9 @@ export declare class NDJSONStreamingPlayer {
      */
     private parseBarBeatTime;
     /**
-     * Get the total duration of the sequence
+     * Calculate the total duration of the sequence (called once and cached)
      */
-    private getSequenceDuration;
+    private calculateSequenceDuration;
     /**
      * Stop playback
      */

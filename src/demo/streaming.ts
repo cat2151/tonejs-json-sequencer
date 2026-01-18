@@ -90,8 +90,12 @@ class StreamingDemo {
       const loopCheckbox = document.getElementById('loopCheckbox') as HTMLInputElement;
       const loop = loopCheckbox.checked;
 
-      // Create or recreate player
+      // Create player only if it doesn't exist or isn't playing
       if (!this.player || !this.player.playing) {
+        // Dispose old nodes and create fresh instance
+        this.nodes.disposeAll();
+        this.nodes = new SequencerNodes();
+        
         this.player = new NDJSONStreamingPlayer(Tone, this.nodes, {
           lookaheadMs: 50,
           loop: loop,
@@ -124,6 +128,9 @@ class StreamingDemo {
       this.player.stop();
       this.player = null;
     }
+    
+    // Dispose all nodes on stop
+    this.nodes.disposeAll();
     
     this.updateStatus('Stopped');
     

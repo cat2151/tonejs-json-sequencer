@@ -6,21 +6,34 @@ import { scheduleOrExecuteEvent } from './event-scheduler.mjs';
  * Parse NDJSON string into array of events
  * @param ndjson - NDJSON string (newline-delimited JSON)
  * @returns Array of sequence events
+ * @throws Error if any line fails to parse
  */
 export function parseNDJSON(ndjson) {
-    return ndjson
-        .split('\n')
-        .filter(line => line.trim().length > 0)
-        .map(line => {
+    const lines = ndjson.split('\n');
+    const events = [];
+    lines.forEach((rawLine, index) => {
+        const line = rawLine.trim();
+        // Skip empty or whitespace-only lines
+        if (line.length === 0) {
+            return;
+        }
         try {
-            return JSON.parse(line);
+            const parsed = JSON.parse(line);
+            events.push(parsed);
         }
         catch (error) {
-            console.error('Failed to parse NDJSON line:', line, error);
-            return null;
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            // Log detailed information for debugging
+            console.error('Failed to parse NDJSON line:', {
+                lineNumber: index + 1,
+                lineContent: line,
+                error,
+            });
+            // Surface a clear, user-facing error so invalid NDJSON can be fixed
+            throw new Error(`Failed to parse NDJSON input at line ${index + 1}: ${errorMessage}`);
         }
-    })
-        .filter((event) => event !== null);
+    });
+    return events;
 }
 /**
  * NDJSON Streaming Player
@@ -34,6 +47,8 @@ export class NDJSONStreamingPlayer {
         this.processedEventIndices = new Set();
         this.animationFrameId = null;
         this.loopCount = 0;
+        this.cachedSequenceDuration = 0;
+        this.createdNodeIds = new Set();
         this.Tone = Tone;
         this.nodes = nodes;
         this.config = {
@@ -69,14 +84,22 @@ export class NDJSONStreamingPlayer {
      * Initialize playback
      */
     async initializePlayback(events) {
+        // Handle empty events array
+        if (events.length === 0) {
+            console.warn('No events to play');
+            return;
+        }
         this.isPlaying = true;
         this.currentEvents = events;
         this.processedEventIndices.clear();
         this.loopCount = 0;
+        this.createdNodeIds.clear();
         // Set start time as current time + lookahead
         this.startTime = this.Tone.now() + this.config.lookaheadMs / 1000;
         // Create nodes and connections first
         await this.createNodesAndConnections();
+        // Cache sequence duration
+        this.cachedSequenceDuration = this.calculateSequenceDuration();
         // Start processing loop
         this.processEvents();
     }
@@ -84,11 +107,23 @@ export class NDJSONStreamingPlayer {
      * Update events during playback (for live editing)
      */
     updateEvents(events) {
+        // Handle empty events array
+        if (events.length === 0) {
+            console.warn('No events to update');
+            return;
+        }
         // Find events that need to be created/connected
         const newCreateAndConnectEvents = events.filter(e => e.eventType === 'createNode' || e.eventType === 'connect');
-        // Process any new node creation or connection events
+        // Process any new node creation or connection events (idempotent)
         newCreateAndConnectEvents.forEach(event => {
             try {
+                // Check if node already exists for createNode events
+                if (event.eventType === 'createNode') {
+                    if (this.createdNodeIds.has(event.nodeId)) {
+                        return; // Skip if node already created
+                    }
+                    this.createdNodeIds.add(event.nodeId);
+                }
                 scheduleOrExecuteEvent(this.Tone, this.nodes, event);
             }
             catch (error) {
@@ -97,7 +132,10 @@ export class NDJSONStreamingPlayer {
         });
         // Update current events
         this.currentEvents = events;
-        // Don't reset processedEventIndices to avoid re-processing old events
+        // Reset processed indices so that edited events can be scheduled
+        this.processedEventIndices.clear();
+        // Recalculate sequence duration
+        this.cachedSequenceDuration = this.calculateSequenceDuration();
     }
     /**
      * Create nodes and connections from events
@@ -106,6 +144,9 @@ export class NDJSONStreamingPlayer {
         this.currentEvents.forEach(event => {
             try {
                 if (event.eventType === 'createNode' || event.eventType === 'connect') {
+                    if (event.eventType === 'createNode') {
+                        this.createdNodeIds.add(event.nodeId);
+                    }
                     scheduleOrExecuteEvent(this.Tone, this.nodes, event);
                 }
             }
@@ -124,8 +165,8 @@ export class NDJSONStreamingPlayer {
             return;
         const currentTime = this.Tone.now();
         const lookaheadTime = currentTime + this.config.lookaheadMs / 1000;
-        // Get sequence duration for loop calculation
-        const sequenceDuration = this.getSequenceDuration();
+        // Use cached sequence duration
+        const sequenceDuration = this.cachedSequenceDuration;
         // Process events within lookahead window
         this.currentEvents.forEach((event, index) => {
             // Skip createNode and connect events
@@ -148,9 +189,10 @@ export class NDJSONStreamingPlayer {
         // Check if we need to loop
         if (this.config.loop && sequenceDuration > 0) {
             const timeSinceStart = currentTime - this.startTime;
-            const loopOffset = this.loopCount * sequenceDuration;
-            if (timeSinceStart >= loopOffset + sequenceDuration) {
-                this.loopCount++;
+            const completedLoops = Math.floor(timeSinceStart / sequenceDuration);
+            // Guard against multiple increments due to processing delays
+            if (completedLoops > this.loopCount) {
+                this.loopCount = completedLoops;
                 this.config.onLoopComplete();
             }
         }
@@ -232,6 +274,11 @@ export class NDJSONStreamingPlayer {
         const parts = timeStr.split(':').map(Number);
         if (parts.length !== 3)
             return 0;
+        // Validate that all parts are valid numbers
+        if (parts.some(isNaN)) {
+            console.error('Invalid bar:beat:subdivision format:', timeStr);
+            return 0;
+        }
         const [bars, beats, subdivisions] = parts;
         const beatsPerBar = this.config.beatsPerBar;
         const secondsPerBeat = 60 / this.config.beatsPerMinute;
@@ -241,9 +288,9 @@ export class NDJSONStreamingPlayer {
             subdivisions * (secondsPerBeat / subdivisionsPerBeat));
     }
     /**
-     * Get the total duration of the sequence
+     * Calculate the total duration of the sequence (called once and cached)
      */
-    getSequenceDuration() {
+    calculateSequenceDuration() {
         let maxTime = 0;
         this.currentEvents.forEach(event => {
             if (event.eventType === 'createNode' || event.eventType === 'connect') {
@@ -266,9 +313,12 @@ export class NDJSONStreamingPlayer {
             cancelAnimationFrame(this.animationFrameId);
             this.animationFrameId = null;
         }
-        this.nodes.disposeAll();
+        // Don't dispose nodes here - let the caller manage node lifecycle
+        // this.nodes.disposeAll();
         this.processedEventIndices.clear();
         this.loopCount = 0;
+        this.createdNodeIds.clear();
+        this.cachedSequenceDuration = 0;
     }
     /**
      * Check if player is currently playing
