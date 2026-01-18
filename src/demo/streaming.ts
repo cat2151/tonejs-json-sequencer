@@ -39,21 +39,18 @@ class StreamingDemo {
       this.stop();
     });
 
-    // Sequence selector change - reload the selected sequence and restart only if already playing
+    // Sequence selector change - immediately play the selected sequence for easier debugging
     selector.addEventListener('change', async () => {
-      const wasPlaying = !!(this.player && this.player.playing);
-      // Stop current playback if any, then load the new sequence
-      if (wasPlaying) {
+      // Stop current playback if any, then load and play the new sequence
+      if (this.player && this.player.playing) {
         this.stop();
       }
       this.loadSelectedSequence();
-      // Auto-play only if the player was already playing, for consistency with other controls
-      if (wasPlaying) {
-        try {
-          await this.play();
-        } catch (error) {
-          console.error('Error during auto-play:', error);
-        }
+      // Auto-play when selecting a new sequence for easier debugging
+      try {
+        await this.play();
+      } catch (error) {
+        console.error('Error during auto-play:', error);
       }
     });
 
