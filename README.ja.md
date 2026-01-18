@@ -222,6 +222,61 @@ document.getElementById('playButton').addEventListener('click', play);
 - `examples/cdn-example.html` - CDNを使用したブラウザでの使用例
 - `examples/npm-example.mjs` - npmパッケージとしての使用例
 
+## NDJSON ストリーミング
+
+tonejs-json-sequencerは、リアルタイム再生、ライブ編集、ループ再生をサポートするNDJSON（改行区切りJSON）ストリーミングに対応しています。
+
+### 機能
+
+- **ライブ編集**: 再生中にシーケンスを編集可能 - 再起動なしでリアルタイムに変更が反映されます
+- **ループ再生**: シーケンスが終了すると自動的にループします
+- **50ms先読み**: イベントは50ms先にスケジュールされ、スムーズで正確な再生を実現します
+
+### 基本的な使い方
+
+```typescript
+import * as Tone from 'tone';
+import { SequencerNodes, NDJSONStreamingPlayer } from 'tonejs-json-sequencer';
+
+// ノードマネージャーを作成
+const nodes = new SequencerNodes();
+
+// 設定付きでストリーミングプレーヤーを作成
+const player = new NDJSONStreamingPlayer(Tone, nodes, {
+  lookaheadMs: 50,    // 先読み時間（ミリ秒）
+  loop: true,         // ループ再生を有効化
+  onLoopComplete: () => {
+    console.log('ループ完了！');
+  }
+});
+
+// NDJSON文字列またはイベント配列で再生開始
+const ndjson = `
+{"eventType":"createNode","nodeId":0,"nodeType":"Synth"}
+{"eventType":"connect","nodeId":0,"connectTo":"toDestination"}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["C4","8n","0"]}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["E4","8n","0:0:2"]}
+`;
+
+await Tone.start();
+await player.start(ndjson);
+
+// 再生中にシーケンスを更新（ライブ編集）
+const updatedNdjson = `
+{"eventType":"createNode","nodeId":0,"nodeType":"Synth"}
+{"eventType":"connect","nodeId":0,"connectTo":"toDestination"}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["G4","8n","0"]}
+`;
+await player.start(updatedNdjson);  // 停止せずに更新
+
+// 再生を停止
+player.stop();
+```
+
+### デモ
+
+ライブ編集とループ再生の完全なインタラクティブデモについては、`demo/streaming.html` を参照してください。
+
 # Tone.js コンポーネントのJSON対応
 
 tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記述できるようにします。
@@ -261,7 +316,7 @@ tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記
 - ※順不同
 - ※のち2種類に切り分けて、利用しやすさ優先で1つのtopicに絞ったシンプルなサンプルと、強みがわかりやすいよう複数topicを実用的にまとめたサンプル、がよさげ
 - プログラム
-  - NDJSON streaming、内容は後述
+  - 済 : NDJSON streamingとライブ編集、ループ再生（demo/streaming.htmlを参照）
 - 構造
   - 済 : マルチティンバー、FM Bassと、Saw Chord
 - 奏法
@@ -305,13 +360,16 @@ tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記
 - tonejs-mml-to-jsonとの連携
   - 後回し。tonejs-json-sequencerの検証dataを整理してから、検討する
 - NDJSON streaming
-  - 実現したいこと
-    - ライブ編集、textareaを編集したときは、再演奏ではなく、演奏を継続したまま、編集内容が反映される
-    - ループ演奏、末尾までいったら先頭から演奏
-  - 方法
-    - 今から50msec後までに演奏されるもの、をNDJSON streaming
-    - playボタンを開始した時刻の50msec後を0tick とし、以降、sequencer部でevent発生時刻を+50msecする加工を行う。ループ時はさらに加算
-    - 別htmlの別srcに切り分ける想定
+  - ステータス: ✅ **実装完了** （`demo/streaming.html` と `src/ndjson-streaming.ts` を参照）
+  - 実装した機能:
+    - ライブ編集: textareaを編集したときは、再演奏ではなく、演奏を継続したまま、編集内容が反映される
+    - ループ演奏: 末尾までいったら先頭から演奏
+    - 50ms先読み: イベントは50ms先にスケジュールされ、スムーズに再生される
+  - 実装の詳細:
+    - `NDJSONStreamingPlayer` クラスが先読みタイミングでイベントを処理
+    - `requestAnimationFrame` を使用した連続的なイベント処理
+    - `parseNDJSON` 関数で配列とNDJSON文字列の両方に対応
+    - `demo/streaming.html` に独立したデモと専用のソースファイルを配置
 - Tone.Transport.schedule はまだ使わない
   - 試しにagentにcode生成させたところ、複雑なcodeが生成された割に、発音の不自然さの改善が確認できなかった
   - 時期尚早である、test dataが揃ってからがよい、と判断する

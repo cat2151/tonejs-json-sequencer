@@ -5,3 +5,5 @@
 export { SequencerNodes } from './sequencer-nodes.mjs';
 // Export main functions
 export { scheduleOrExecuteEvent, playSequence } from './event-scheduler.mjs';
+// Export NDJSON streaming functionality
+export { NDJSONStreamingPlayer, parseNDJSON } from './ndjson-streaming.mjs';

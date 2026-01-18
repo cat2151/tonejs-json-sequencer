@@ -222,6 +222,61 @@ For more detailed usage examples, refer to the `examples/` directory:
 - `examples/cdn-example.html` - Browser usage example using CDN
 - `examples/npm-example.mjs` - Usage example as an npm package
 
+## NDJSON Streaming
+
+tonejs-json-sequencer supports NDJSON (Newline Delimited JSON) streaming for real-time playback with live editing and loop support.
+
+### Features
+
+- **Live Editing**: Edit the sequence while playing - changes are reflected in real-time without restarting playback
+- **Loop Playback**: Automatically loop the sequence when it reaches the end
+- **50ms Lookahead**: Events are scheduled 50ms ahead for smooth, precise playback
+
+### Basic Usage
+
+```typescript
+import * as Tone from 'tone';
+import { SequencerNodes, NDJSONStreamingPlayer } from 'tonejs-json-sequencer';
+
+// Create nodes manager
+const nodes = new SequencerNodes();
+
+// Create streaming player with configuration
+const player = new NDJSONStreamingPlayer(Tone, nodes, {
+  lookaheadMs: 50,    // Lookahead time in milliseconds
+  loop: true,         // Enable loop playback
+  onLoopComplete: () => {
+    console.log('Loop completed!');
+  }
+});
+
+// Start playback with NDJSON string or event array
+const ndjson = `
+{"eventType":"createNode","nodeId":0,"nodeType":"Synth"}
+{"eventType":"connect","nodeId":0,"connectTo":"toDestination"}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["C4","8n","0"]}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["E4","8n","0:0:2"]}
+`;
+
+await Tone.start();
+await player.start(ndjson);
+
+// Update sequence during playback (live editing)
+const updatedNdjson = `
+{"eventType":"createNode","nodeId":0,"nodeType":"Synth"}
+{"eventType":"connect","nodeId":0,"connectTo":"toDestination"}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["G4","8n","0"]}
+`;
+await player.start(updatedNdjson);  // Updates without stopping
+
+// Stop playback
+player.stop();
+```
+
+### Demo
+
+See `demo/streaming.html` for a complete interactive demo with live editing and loop playback.
+
 # JSON Support for Tone.js Components
 
 tonejs-json-sequencer enables describing major Tone.js components in JSON.
@@ -261,7 +316,7 @@ This document includes the following information:
 - * Order is not fixed.
 - * Later, it might be good to split into two types of samples: a simple one focused on a single topic for ease of use, and a practical one combining multiple topics to clearly showcase strengths.
 - Programming
-  - NDJSON streaming, details described later.
+  - Done : NDJSON streaming with live editing and loop playback (see demo/streaming.html)
 - Structure
   - Done : Multitimbral, FM Bass, and Saw Chord
 - Performance Techniques
@@ -305,13 +360,16 @@ This document includes the following information:
 - Integration with tonejs-mml-to-json
   - Postponed. Will consider after organizing verification data for tonejs-json-sequencer.
 - NDJSON streaming
-  - Goals
-    - Live editing: When a textarea is edited, the changes should be reflected without restarting playback, continuing the performance.
+  - Status: ✅ **Implemented** (see `demo/streaming.html` and `src/ndjson-streaming.ts`)
+  - Features implemented:
+    - Live editing: When a textarea is edited, the changes are reflected without restarting playback, continuing the performance.
     - Loop playback: When the end is reached, playback resumes from the beginning.
-  - Approach
-    - NDJSON streaming for events to be played within the next 50ms.
-    - Set 50ms after the "play" button press as 0-tick. Subsequently, the sequencer will add +50ms to event occurrence times. Additional increments will be applied during loops.
-    - Intended to be split into a separate HTML and source file.
+    - 50ms lookahead: Events are scheduled 50ms ahead for smooth playback.
+  - Implementation details:
+    - `NDJSONStreamingPlayer` class processes events with lookahead timing.
+    - Uses `requestAnimationFrame` for continuous event processing.
+    - Supports both array and NDJSON string input via `parseNDJSON` function.
+    - Separate demo at `demo/streaming.html` with its own source file.
 - Will not use Tone.Transport.schedule yet.
   - When I tried having an agent generate code, complex code was produced, but no improvement in the unnaturalness of sound generation was observed.
   - Decided it's premature; it's better to wait until test data is ready.
