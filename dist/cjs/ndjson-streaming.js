@@ -171,7 +171,9 @@ class NDJSONStreamingPlayer {
             for (let loop = 0; loop <= this.playbackState.loopCount; loop++) {
                 // Use previous duration for loop offset calculation
                 // because that's what was used when events were originally scheduled
-                const loopOffset = loop * (previousDuration + this.config.loopWaitSeconds);
+                // Wait time is only added between loops (not for the first iteration)
+                const loopWaitOffset = loop > 0 ? loop * this.config.loopWaitSeconds : 0;
+                const loopOffset = loop * previousDuration + loopWaitOffset;
                 const absoluteTime = this.playbackState.startTime + eventTime + loopOffset;
                 // If this event's scheduled time has passed, mark it as processed
                 if (absoluteTime <= currentTime) {
@@ -227,7 +229,9 @@ class NDJSONStreamingPlayer {
             if (eventTime === null)
                 return;
             // Calculate absolute time with loop offset
-            const loopOffset = this.playbackState.loopCount * (sequenceDuration + this.config.loopWaitSeconds);
+            // Wait time is only added between loops (not for the first iteration)
+            const loopWaitOffset = this.playbackState.loopCount > 0 ? this.playbackState.loopCount * this.config.loopWaitSeconds : 0;
+            const loopOffset = this.playbackState.loopCount * sequenceDuration + loopWaitOffset;
             const absoluteTime = this.playbackState.startTime + eventTime + loopOffset;
             // Check if event should be scheduled
             const eventKey = index + this.playbackState.loopCount * this.playbackState.currentEvents.length;
@@ -258,8 +262,15 @@ class NDJSONStreamingPlayer {
         // Check if we need to loop
         if (this.config.loop && sequenceDuration > 0) {
             const timeSinceStart = currentTime - this.playbackState.startTime;
-            const loopDuration = sequenceDuration + this.config.loopWaitSeconds;
-            const completedLoops = Math.floor(timeSinceStart / loopDuration);
+            // Calculate which loop we should be on
+            // The first loop has no wait, subsequent loops have wait time added
+            let completedLoops = 0;
+            let accumulatedTime = sequenceDuration; // First loop ends after sequenceDuration
+            while (accumulatedTime <= timeSinceStart) {
+                completedLoops++;
+                // Add wait time before the next loop iteration
+                accumulatedTime += this.config.loopWaitSeconds + sequenceDuration;
+            }
             // Guard against multiple increments due to processing delays
             if (completedLoops > this.playbackState.loopCount) {
                 const previousLoopCount = this.playbackState.loopCount;
