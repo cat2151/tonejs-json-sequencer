@@ -8,6 +8,9 @@ class StreamingDemo {
         this.sequences = loadAllSequences();
         this.debugMessages = [];
         this.maxDebugMessages = 100;
+        this.debounceTimer = null;
+        this.updateMode = 'manual';
+        this.DEBOUNCE_DELAY_MS = 1000;
         this.initializeUI();
         this.loadInitialSequence();
     }
@@ -60,10 +63,41 @@ class StreamingDemo {
         document.getElementById('clearDebugButton')?.addEventListener('click', () => {
             this.clearDebugOutput();
         });
+        // Update mode radio buttons
+        document.getElementById('updateModeManual')?.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                this.updateMode = 'manual';
+                // Clear any pending debounce timer when switching to manual mode
+                this.clearDebounceTimer();
+            }
+        });
+        document.getElementById('updateModeDebounce')?.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                this.updateMode = 'debounce';
+            }
+        });
         // Textarea change (live editing)
         const textarea = document.getElementById('sequenceEditor');
+        // Input event handler for debounce mode
         textarea.addEventListener('input', () => {
-            this.onSequenceEdit();
+            if (this.updateMode === 'debounce') {
+                this.onSequenceEditDebounced();
+            }
+        });
+        // Keyboard shortcuts for manual mode (CTRL+S and SHIFT+ENTER)
+        textarea.addEventListener('keydown', (e) => {
+            if (this.updateMode === 'manual') {
+                // CTRL+S (prevent default save behavior)
+                if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+                    e.preventDefault();
+                    this.onSequenceEdit();
+                }
+                // SHIFT+ENTER
+                else if (e.shiftKey && e.key === 'Enter') {
+                    e.preventDefault();
+                    this.onSequenceEdit();
+                }
+            }
         });
     }
     loadInitialSequence() {
@@ -131,6 +165,8 @@ class StreamingDemo {
             this.player.stop();
             this.player = null;
         }
+        // Clear any pending debounce timer
+        this.clearDebounceTimer();
         // Dispose all nodes on stop
         this.nodes.disposeAll();
         this.updateStatus('停止中');
@@ -150,6 +186,21 @@ class StreamingDemo {
                 console.error('Error updating sequence:', error);
                 // Don't stop playback on edit errors
             }
+        }
+    }
+    onSequenceEditDebounced() {
+        // Clear existing timer
+        this.clearDebounceTimer();
+        // Set new timer for debounce
+        this.debounceTimer = window.setTimeout(() => {
+            this.onSequenceEdit();
+            this.debounceTimer = null;
+        }, this.DEBOUNCE_DELAY_MS);
+    }
+    clearDebounceTimer() {
+        if (this.debounceTimer !== null) {
+            window.clearTimeout(this.debounceTimer);
+            this.debounceTimer = null;
         }
     }
     updateStatus(status) {
