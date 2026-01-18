@@ -3,25 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tone.js JSON Sequencer - Offline Rendering Demo</title>
+  <title>Tone.js JSON Sequencer - オフラインレンダリングデモ</title>
   <link rel="stylesheet" href="styles.css">
   <style>
     /* Additional CSS for offline rendering demo elements */
     :root {
       --status-bg: #f0f0f0;
-      --info-bg: #e8f4f8;
-      --info-border: #2196F3;
+      --info-bg: #fff8e1;
+      --info-border: #ff9800;
       --progress-bg: #e0e0e0;
-      --progress-fill: #4CAF50;
+      --progress-fill: #ff9800;
+      --warning-bg: #fff3cd;
+      --warning-border: #ffc107;
     }
     
     @media (prefers-color-scheme: dark) {
       :root {
         --status-bg: #2d2d30;
-        --info-bg: #2d2d30;
-        --info-border: #0078d4;
+        --info-bg: #3d3520;
+        --info-border: #ff9800;
         --progress-bg: #3d3d40;
-        --progress-fill: #4CAF50;
+        --progress-fill: #ff9800;
+        --warning-bg: #3d3520;
+        --warning-border: #ffc107;
       }
     }
     
@@ -37,6 +41,17 @@
       padding: 10px 20px;
       font-size: 16px;
       cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .rendering-controls button#renderButton {
+      background: #ff9800;
+      color: white;
+      border: 2px solid #f57c00;
+    }
+    
+    .rendering-controls button#renderButton:hover:not(:disabled) {
+      background: #f57c00;
     }
     
     .rendering-controls button:disabled {
@@ -156,81 +171,85 @@
   </style>
 </head>
 <body>
-  <h1>Offline Rendering Demo</h1>
+  <h1>オフラインレンダリングデモ</h1>
   
   <p style="margin: 10px 0;">
-    <a href="index.html">← Back to Main Demo</a> | 
-    <a href="streaming.html">NDJSON Streaming Demo →</a>
+    <a href="index.html">← メインデモに戻る</a> | 
+    <a href="streaming.html">NDJSONストリーミングデモ →</a>
   </p>
   
   <div class="info">
-    <h3>Features:</h3>
+    <h3>このデモについて:</h3>
+    <p><strong>🎯 One-shot（一括レンダリング）方式</strong></p>
     <ul>
-      <li><strong>Offline Rendering:</strong> Renders the sequence offline using Tone.Offline for perfect timing</li>
-      <li><strong>WAV Export:</strong> Exports the rendered audio as a WAV file</li>
-      <li><strong>Preview Playback:</strong> Preview the rendered audio before downloading</li>
-      <li><strong>Configurable Settings:</strong> Adjust sample rate, buffer time, and timing parameters</li>
+      <li><strong>バッチ処理:</strong> ボタンを押すと、シーケンス全体を一度に処理してWAVファイルを生成</li>
+      <li><strong>非リアルタイム:</strong> リアルタイム再生ではなく、オフライン処理で高速レンダリング</li>
+      <li><strong>完璧なタイミング:</strong> CPU負荷の影響を受けず、正確なタイミングを保証</li>
+      <li><strong>ファイル出力用途:</strong> WAVファイルのエクスポートや音声素材の生成に最適</li>
     </ul>
+    <p style="margin-top: 10px; padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+      <strong>💡 ヒント:</strong> リアルタイム再生やライブ編集が必要な場合は、<a href="streaming.html">ストリーミングデモ</a>をご利用ください（Streaming方式）
+    </p>
   </div>
 
   <div class="rendering-controls">
-    <button id="renderButton" autofocus>Render Audio</button>
-    <button id="downloadButton" disabled>Download WAV</button>
+    <button id="renderButton" autofocus>🎬 シーケンス全体をレンダリング</button>
+    <button id="downloadButton" disabled>💾 WAVファイルをダウンロード</button>
     <select id="sequenceSelector">
       <!-- Options populated by JavaScript -->
     </select>
   </div>
 
-  <div class="status" id="status">Status: Ready</div>
+  <div class="status" id="status">ステータス: 準備完了</div>
 
   <div class="progress-container" id="progressContainer">
-    <h3>Rendering Progress:</h3>
+    <h3>レンダリング進行状況:</h3>
     <div class="progress-bar">
       <div class="progress-fill" id="progressFill">0%</div>
     </div>
   </div>
 
   <div class="audio-player" id="audioPlayer">
-    <h3>Preview Rendered Audio:</h3>
+    <h3>レンダリングされた音声のプレビュー:</h3>
     <audio id="audioElement" controls></audio>
-    <p><em>You can preview the audio here before downloading</em></p>
+    <p><em>ダウンロード前にここで音声をプレビューできます</em></p>
   </div>
 
   <div class="config-section">
-    <h3>Rendering Configuration:</h3>
+    <h3>レンダリング設定:</h3>
     <div class="config-row">
       <div class="config-item">
-        <label for="sampleRate">Sample Rate:</label>
+        <label for="sampleRate">サンプルレート:</label>
         <input type="number" id="sampleRate" value="44100" step="1" min="8000" max="192000">
         <span>Hz</span>
       </div>
       <div class="config-item">
-        <label for="endBuffer">End Buffer:</label>
+        <label for="endBuffer">終了バッファ:</label>
         <input type="number" id="endBuffer" value="1" step="0.1" min="0" max="10">
-        <span>seconds</span>
+        <span>秒</span>
       </div>
     </div>
     <div class="config-row">
       <div class="config-item">
-        <label for="filename">Filename:</label>
+        <label for="filename">ファイル名:</label>
         <input type="text" id="filename" value="output.wav">
       </div>
     </div>
   </div>
 
-  <h3>Sequence (NDJSON format - one event per line):</h3>
+  <h3>シーケンス（NDJSON形式 - 1行につき1イベント）:</h3>
   <textarea id="sequenceEditor" rows="30" cols="80"></textarea>
 
   <div class="info">
-    <h3>How to use:</h3>
+    <h3>使い方:</h3>
     <ol>
-      <li>Select a sequence from the dropdown or edit the NDJSON in the textarea</li>
-      <li>Adjust rendering configuration if needed (sample rate, end buffer, filename)</li>
-      <li>Click "Render Audio" to start offline rendering</li>
-      <li>Preview the rendered audio in the player</li>
-      <li>Click "Download WAV" to save the audio file</li>
+      <li><strong>準備:</strong> ドロップダウンからシーケンスを選択、またはテキストエリアでNDJSONを編集</li>
+      <li><strong>設定:</strong> サンプルレート、終了バッファ、ファイル名を必要に応じて調整</li>
+      <li><strong>レンダリング:</strong> 「シーケンス全体をレンダリング」ボタンを押して一括処理を開始</li>
+      <li><strong>プレビュー:</strong> 完成した音声をプレーヤーで確認</li>
+      <li><strong>保存:</strong> 「WAVファイルをダウンロード」で音声ファイルを取得</li>
     </ol>
-    <p><strong>Note:</strong> Offline rendering is faster than real-time and produces perfect timing!</p>
+    <p><strong>📝 Note:</strong> この方式はストリーミング再生ではなく、全体を一括でレンダリングする<strong>バッチ処理</strong>です。リアルタイムより高速で、正確なタイミングが保証されます。</p>
   </div>
 
   <script src="https://unpkg.com/tone@15.2.7/build/Tone.js"></script>

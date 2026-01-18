@@ -96,7 +96,7 @@ class OfflineRenderingDemo {
       if (progressContainer) progressContainer.classList.add('active');
 
       // Update status
-      this.updateStatus('Initializing renderer...');
+      this.updateStatus('レンダラーを初期化中...');
       this.updateProgress(0);
 
       // Create renderer with configuration
@@ -112,14 +112,14 @@ class OfflineRenderingDemo {
       const ndjson = this.getNDJSONFromTextarea();
 
       // Update status
-      this.updateStatus('Rendering audio offline...');
+      this.updateStatus('音声をオフラインでレンダリング中...');
 
       // Render offline
       const result = await this.renderer.render(ndjson);
       this.currentBuffer = result.buffer;
 
       // Update status
-      this.updateStatus(`Rendering complete! Duration: ${result.duration.toFixed(2)}s`);
+      this.updateStatus(`レンダリング完了！ 長さ: ${result.duration.toFixed(2)}秒`);
 
       // Create audio URL for preview
       this.createAudioPreview(result.buffer);
@@ -134,8 +134,8 @@ class OfflineRenderingDemo {
       renderButton.disabled = false;
     } catch (error) {
       console.error('Error during rendering:', error);
-      this.updateStatus('Error: ' + (error as Error).message);
-      alert('Failed to render audio. Please check the console for details.');
+      this.updateStatus('エラー: ' + (error as Error).message);
+      alert('音声のレンダリングに失敗しました。詳細はコンソールを確認してください。');
       
       // Re-enable render button
       const renderButton = document.getElementById('renderButton') as HTMLButtonElement;
@@ -171,7 +171,7 @@ class OfflineRenderingDemo {
 
   private download(): void {
     if (!this.currentBuffer) {
-      alert('No audio to download. Please render first.');
+      alert('ダウンロードする音声がありません。先にレンダリングしてください。');
       return;
     }
 
@@ -180,17 +180,17 @@ class OfflineRenderingDemo {
       const filename = filenameInput.value || 'output.wav';
       
       downloadWav(this.currentBuffer, filename);
-      this.updateStatus('Download started: ' + filename);
+      this.updateStatus('ダウンロード開始: ' + filename);
     } catch (error) {
       console.error('Error downloading WAV:', error);
-      alert('Failed to download WAV. Please check the console for details.');
+      alert('WAVのダウンロードに失敗しました。詳細はコンソールを確認してください。');
     }
   }
 
   private updateStatus(status: string): void {
     const statusElement = document.getElementById('status');
     if (statusElement) {
-      statusElement.textContent = `Status: ${status}`;
+      statusElement.textContent = `ステータス: ${status}`;
     }
   }
 
