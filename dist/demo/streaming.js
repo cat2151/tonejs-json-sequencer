@@ -66,6 +66,11 @@ class StreamingDemo {
         document.getElementById('updateModeManual')?.addEventListener('change', (e) => {
             if (e.target.checked) {
                 this.updateMode = 'manual';
+                // Clear any pending debounce timer when switching to manual mode
+                if (this.debounceTimer !== null) {
+                    window.clearTimeout(this.debounceTimer);
+                    this.debounceTimer = null;
+                }
             }
         });
         document.getElementById('updateModeDebounce')?.addEventListener('change', (e) => {
@@ -85,7 +90,7 @@ class StreamingDemo {
         textarea.addEventListener('keydown', (e) => {
             if (this.updateMode === 'manual') {
                 // CTRL+S (prevent default save behavior)
-                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
                     e.preventDefault();
                     this.onSequenceEdit();
                 }
@@ -161,6 +166,11 @@ class StreamingDemo {
         if (this.player) {
             this.player.stop();
             this.player = null;
+        }
+        // Clear any pending debounce timer
+        if (this.debounceTimer !== null) {
+            window.clearTimeout(this.debounceTimer);
+            this.debounceTimer = null;
         }
         // Dispose all nodes on stop
         this.nodes.disposeAll();
