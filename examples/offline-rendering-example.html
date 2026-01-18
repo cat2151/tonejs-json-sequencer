@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Offline Rendering Example</title>
+  <script src="https://unpkg.com/tone@15.2.7/build/Tone.js"></script>
+</head>
+<body>
+  <h1>Offline Rendering Example</h1>
+  <button id="renderButton">Render and Download</button>
+  <div id="status"></div>
+  
+  <script type="module">
+    import { OfflineRenderer, downloadWav } from 'https://cdn.jsdelivr.net/npm/tonejs-json-sequencer@0.0.1/dist/index.mjs';
+
+    const sequence = `
+{"eventType":"createNode","nodeId":0,"nodeType":"Synth","args":{"oscillator":{"type":"sine"}}}
+{"eventType":"connect","nodeId":0,"connectTo":"toDestination"}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["C4","4n","0"]}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["E4","4n","0:1:0"]}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["G4","4n","0:2:0"]}
+{"eventType":"triggerAttackRelease","nodeId":0,"args":["C5","4n","0:3:0"]}
+`;
+
+    document.getElementById('renderButton').addEventListener('click', async () => {
+      const statusEl = document.getElementById('status');
+      
+      try {
+        statusEl.textContent = 'Rendering...';
+        
+        // Create renderer
+        const renderer = new OfflineRenderer(Tone, {
+          sampleRate: 44100,
+          endBufferSeconds: 1,
+          onProgress: (progress) => {
+            statusEl.textContent = `Rendering: ${progress.toFixed(0)}%`;
+          }
+        });
+        
+        // Render
+        const result = await renderer.render(sequence);
+        
+        statusEl.textContent = `Rendered ${result.duration.toFixed(2)}s. Downloading...`;
+        
+        // Download
+        downloadWav(result.buffer, 'example-output.wav');
+        
+        statusEl.textContent = 'Download complete!';
+      } catch (error) {
+        statusEl.textContent = 'Error: ' + error.message;
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
