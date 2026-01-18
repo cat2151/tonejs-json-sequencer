@@ -33,7 +33,12 @@ export declare class PlaybackState {
      */
     stop(): void;
     /**
-     * Reset processed events for live editing
+     * Mark an event as processed
+     * @param eventKey - The event key to mark as processed
+     */
+    markEventAsProcessed(eventKey: number): void;
+    /**
+     * Reset all processed events (used for complete reset)
      */
     resetProcessedEvents(): void;
 }
