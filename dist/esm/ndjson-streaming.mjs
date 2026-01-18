@@ -261,11 +261,15 @@ export class NDJSONStreamingPlayer {
             // Calculate which loop we should be on
             // The first loop has no wait, subsequent loops have wait time added
             let completedLoops = 0;
-            let accumulatedTime = sequenceDuration; // First loop ends after sequenceDuration
-            while (accumulatedTime <= timeSinceStart) {
-                completedLoops++;
-                // Add wait time before the next loop iteration
-                accumulatedTime += this.config.loopWaitSeconds + sequenceDuration;
+            if (timeSinceStart > sequenceDuration) {
+                // First loop is complete
+                completedLoops = 1;
+                // Calculate additional completed loops after the first one
+                const timeAfterFirstLoop = timeSinceStart - sequenceDuration;
+                const subsequentLoopDuration = sequenceDuration + this.config.loopWaitSeconds;
+                if (subsequentLoopDuration > 0) {
+                    completedLoops += Math.floor(timeAfterFirstLoop / subsequentLoopDuration);
+                }
             }
             // Guard against multiple increments due to processing delays
             if (completedLoops > this.playbackState.loopCount) {
