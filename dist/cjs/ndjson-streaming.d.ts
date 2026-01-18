@@ -9,6 +9,21 @@ import type { SequencerNodes } from './sequencer-nodes.js';
  */
 export declare function parseNDJSON(ndjson: string): SequenceEvent[];
 /**
+ * Debug information for a single event
+ */
+export interface DebugEventInfo {
+    eventIndex: number;
+    eventType: string;
+    scheduledTime: number;
+    currentTime: number;
+    timeDelta: number;
+    loopIteration: number;
+}
+/**
+ * Debug callback function type
+ */
+export type DebugCallback = (message: string, data?: any) => void;
+/**
  * Configuration for NDJSON streaming player
  *
  * Note: Timing-related properties (beatsPerMinute, ticksPerQuarter, etc.) are used
@@ -32,6 +47,10 @@ export interface NDJSONStreamingConfig {
     subdivisionsPerBeat?: number;
     /** Buffer time in seconds to add after last event (default: 1) */
     endBufferSeconds?: number;
+    /** Enable debug mode for detailed logging (default: false) */
+    debug?: boolean;
+    /** Callback for debug messages (default: console.log) */
+    onDebug?: DebugCallback;
 }
 /**
  * NDJSON Streaming Player
@@ -49,7 +68,13 @@ export declare class NDJSONStreamingPlayer {
     private loopCount;
     private cachedSequenceDuration;
     private createdNodeIds;
+    private processLoopCount;
+    private lastProcessTime;
     constructor(Tone: typeof ToneTypes, nodes: SequencerNodes, config?: NDJSONStreamingConfig);
+    /**
+     * Log debug message if debug mode is enabled
+     */
+    private debug;
     /**
      * Start or update the streaming playback
      * @param eventsOrNDJSON - Array of events or NDJSON string
