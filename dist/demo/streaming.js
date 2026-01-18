@@ -43,6 +43,21 @@ class StreamingDemo {
                 this.play();
             }
         });
+        // Loop wait radio buttons change
+        document.getElementById('loopWait05')?.addEventListener('change', () => {
+            // If playing, restart with new loop wait setting
+            if (this.player && this.player.playing) {
+                this.stop();
+                this.play();
+            }
+        });
+        document.getElementById('loopWait0')?.addEventListener('change', () => {
+            // If playing, restart with new loop wait setting
+            if (this.player && this.player.playing) {
+                this.stop();
+                this.play();
+            }
+        });
         // Debug checkbox change
         document.getElementById('debugCheckbox')?.addEventListener('change', (e) => {
             const enabled = e.target.checked;
@@ -130,6 +145,9 @@ class StreamingDemo {
             const loop = loopCheckbox.checked;
             const debugCheckbox = document.getElementById('debugCheckbox');
             const debug = debugCheckbox.checked;
+            // Get loop wait setting
+            const loopWait05 = document.getElementById('loopWait05');
+            const loopWaitSeconds = loopWait05.checked ? 0.5 : 0;
             // Create player only if it doesn't exist or isn't playing
             if (!this.player || !this.player.playing) {
                 // Dispose old nodes and create fresh instance
@@ -138,6 +156,7 @@ class StreamingDemo {
                 this.player = new NDJSONStreamingPlayer(Tone, this.nodes, {
                     lookaheadMs: 50,
                     loop: loop,
+                    loopWaitSeconds: loopWaitSeconds,
                     debug: debug,
                     onDebug: (message, data) => this.handleDebugMessage(message, data),
                     onLoopComplete: () => {

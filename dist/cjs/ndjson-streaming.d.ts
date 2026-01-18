@@ -35,6 +35,8 @@ export interface NDJSONStreamingConfig {
     lookaheadMs?: number;
     /** Whether to loop playback (default: false) */
     loop?: boolean;
+    /** Wait time in seconds between loop iterations (default: 0.5) */
+    loopWaitSeconds?: number;
     /** Callback when playback completes a loop iteration */
     onLoopComplete?: () => void;
     /** Ticks per quarter note for timing calculations (default: 480) */
