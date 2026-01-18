@@ -38,11 +38,18 @@ class StreamingDemo {
                 this.play();
             }
         });
+        // Debug checkbox change
+        document.getElementById('debugCheckbox')?.addEventListener('change', (e) => {
+            window.DEBUG_TIMING = e.target.checked;
+        });
         // Textarea change (live editing)
         const textarea = document.getElementById('sequenceEditor');
         textarea.addEventListener('input', () => {
             this.onSequenceEdit();
+            this.visualizeTimeline();
         });
+        // Initial timeline visualization
+        this.visualizeTimeline();
     }
     loadInitialSequence() {
         if (this.sequences.length > 0) {
@@ -57,6 +64,7 @@ class StreamingDemo {
             const ndjson = this.sequenceToNDJSON(sequence.data);
             const textarea = document.getElementById('sequenceEditor');
             textarea.value = ndjson;
+            this.visualizeTimeline();
         }
     }
     sequenceToNDJSON(sequence) {
@@ -131,6 +139,109 @@ class StreamingDemo {
         if (statusElement) {
             statusElement.textContent = `Status: ${status}`;
         }
+    }
+    visualizeTimeline() {
+        try {
+            const ndjson = this.getNDJSONFromTextarea();
+            const lines = ndjson.split('\n').filter(line => line.trim());
+            const events = [];
+            // Parse events
+            for (const line of lines) {
+                try {
+                    events.push(JSON.parse(line));
+                }
+                catch (e) {
+                    // Skip invalid JSON
+                }
+            }
+            // Extract timing information
+            const timelineEvents = [];
+            for (const event of events) {
+                if (event.eventType === 'triggerAttackRelease' && 'args' in event && Array.isArray(event.args) && event.args.length >= 3) {
+                    const note = event.args[0];
+                    const durationStr = event.args[1];
+                    const timeStr = event.args[2];
+                    // Parse duration
+                    const duration = this.parseTimeString(durationStr);
+                    // Parse start time
+                    const startTime = this.parseTimeString(timeStr);
+                    timelineEvents.push({ note, duration, startTime });
+                }
+            }
+            // Draw timeline
+            const canvas = document.getElementById('timeline');
+            if (!canvas)
+                return;
+            const ctx = canvas.getContext('2d');
+            if (!ctx)
+                return;
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (timelineEvents.length === 0) {
+                ctx.fillStyle = '#999';
+                ctx.font = '14px sans-serif';
+                ctx.fillText('No events to visualize', 10, canvas.height / 2);
+                return;
+            }
+            // Calculate max time for scaling
+            const maxTime = Math.max(...timelineEvents.map(e => e.startTime + e.duration));
+            const timeScale = maxTime > 0 ? (canvas.width - 40) / maxTime : 1;
+            // Draw events
+            timelineEvents.forEach((event, index) => {
+                const x = 20 + event.startTime * timeScale;
+                const width = Math.max(event.duration * timeScale, 2);
+                const y = 40 + (index % 5) * 30;
+                const height = 20;
+                // Draw event rectangle
+                ctx.fillStyle = '#4CAF50';
+                ctx.fillRect(x, y, width, height);
+                // Draw event border
+                ctx.strokeStyle = '#2E7D32';
+                ctx.strokeRect(x, y, width, height);
+                // Draw note label
+                ctx.fillStyle = '#fff';
+                ctx.font = '12px sans-serif';
+                ctx.fillText(event.note, x + 2, y + 14);
+            });
+            // Draw time markers
+            ctx.strokeStyle = '#ccc';
+            ctx.fillStyle = '#666';
+            ctx.font = '10px sans-serif';
+            for (let t = 0; t <= maxTime; t += 0.1) {
+                const x = 20 + t * timeScale;
+                if (x > canvas.width - 20)
+                    break;
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+                ctx.fillText(t.toFixed(1) + 's', x + 2, 12);
+            }
+            // Update info text
+            const infoElement = document.getElementById('timelineInfo');
+            if (infoElement) {
+                const infoText = timelineEvents.map((e, i) => `Event ${i + 1}: ${e.note} starts at ${e.startTime.toFixed(3)}s, lasts ${e.duration.toFixed(3)}s`).join('<br>');
+                infoElement.innerHTML = infoText;
+            }
+        }
+        catch (error) {
+            console.error('Error visualizing timeline:', error);
+        }
+    }
+    parseTimeString(timeStr) {
+        // Simple tick notation parser (matches ndjson-streaming.ts logic)
+        const ticksPerQuarter = 480;
+        const beatsPerMinute = 120;
+        const secondsPerBeat = 60 / beatsPerMinute;
+        // Remove '+' prefix if present
+        const cleanStr = timeStr.startsWith('+') ? timeStr.substring(1) : timeStr;
+        // Parse tick notation
+        const match = cleanStr.match(/^(\d+(?:\.\d+)?)(i)?$/);
+        if (match) {
+            const value = parseFloat(match[1]);
+            return (value / ticksPerQuarter) * secondsPerBeat;
+        }
+        return 0;
     }
 }
 // Initialize demo when page loads

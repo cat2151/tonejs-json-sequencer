@@ -2,10 +2,11 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Test Streaming Bug</title>
+  <title>Test Streaming Bug - FIXED</title>
 </head>
 <body>
-  <h1>Test Streaming Bug</h1>
+  <h1>Test Streaming Bug - FIXED</h1>
+  <p>Expected: C5 and D5 should play at equal intervals (48 ticks each = 0.1 seconds each)</p>
   <button id="playButton">Play Test Sequence</button>
   <button id="stopButton">Stop</button>
   <div id="status">Ready</div>
@@ -30,6 +31,9 @@ Events:
       debugElement.textContent += msg + '\n';
     }
 
+    // Enable debug logging
+    window.DEBUG_TIMING = true;
+
     const ndjson = `{"eventType":"createNode","nodeId":0,"nodeType":"Synth"}
 {"eventType":"connect","nodeId":0,"connectTo":"toDestination"}
 {"eventType":"triggerAttackRelease","nodeId":0,"args":["C5","48i","+0i"]}
@@ -53,6 +57,8 @@ Events:
 
         await player.start(ndjson);
         debug('Player started');
+        debug('With the fix, both notes should play for 0.1 seconds each');
+        debug('C5 starts at ~0.05s (lookahead), D5 starts at ~0.15s (0.05 + 0.1)');
         
         document.getElementById('status').textContent = 'Playing...';
       } catch (error) {

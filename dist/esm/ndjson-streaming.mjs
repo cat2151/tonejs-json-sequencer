@@ -206,6 +206,18 @@ export class NDJSONStreamingPlayer {
         try {
             // Create a modified event with adjusted time
             const modifiedEvent = this.adjustEventTime(event, absoluteTime);
+            // Debug logging for timing issues
+            if (typeof window !== 'undefined' && window.DEBUG_TIMING) {
+                console.log('[NDJSONStreaming] Scheduling event:', {
+                    eventType: event.eventType,
+                    originalArgs: 'args' in event ? event.args : undefined,
+                    modifiedArgs: 'args' in modifiedEvent ? modifiedEvent.args : undefined,
+                    absoluteTime,
+                    now: this.Tone.now(),
+                    startTime: this.startTime,
+                    loopCount: this.loopCount
+                });
+            }
             scheduleOrExecuteEvent(this.Tone, this.nodes, modifiedEvent);
         }
         catch (error) {
@@ -219,9 +231,22 @@ export class NDJSONStreamingPlayer {
         const modifiedEvent = { ...event };
         if ('args' in modifiedEvent && Array.isArray(modifiedEvent.args)) {
             const args = [...modifiedEvent.args];
-            // Last argument is typically the time
-            if (args.length > 0) {
-                args[args.length - 1] = absoluteTime.toString();
+            // For triggerAttackRelease, we need to convert both duration and time
+            if (event.eventType === 'triggerAttackRelease' && args.length >= 3) {
+                // Convert duration (second argument) from tick notation to seconds if needed
+                const durationArg = args[1];
+                if (typeof durationArg === 'string') {
+                    const durationSeconds = this.parseTickTime(durationArg);
+                    args[1] = durationSeconds.toString();
+                }
+                // Set absolute time (third argument) in seconds
+                args[2] = absoluteTime.toString();
+            }
+            else {
+                // For other events, just update the last argument (time)
+                if (args.length > 0) {
+                    args[args.length - 1] = absoluteTime.toString();
+                }
             }
             modifiedEvent.args = args;
         }

@@ -95,8 +95,19 @@
 
   <div class="status" id="status">Status: Stopped</div>
 
+  <div style="margin: 20px 0;">
+    <label>
+      <input type="checkbox" id="debugCheckbox">
+      Enable Debug Logging
+    </label>
+  </div>
+
   <h3>Sequence (NDJSON format - one event per line):</h3>
   <textarea id="sequenceEditor" rows="30" cols="80"></textarea>
+
+  <h3>Event Timeline Visualization:</h3>
+  <canvas id="timeline" width="800" height="200" style="border: 1px solid #ccc; display: block; margin: 10px 0;"></canvas>
+  <div id="timelineInfo" style="font-family: monospace; font-size: 12px; margin: 10px 0;"></div>
 
   <div class="info">
     <h3>How to use:</h3>
