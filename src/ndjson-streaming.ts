@@ -202,9 +202,11 @@ export class NDJSONStreamingPlayer {
     );
 
     // Cache sequence duration
+    // When loop mode is enabled, don't add end buffer to avoid unwanted gaps between loops
+    const endBuffer = this.config.loop ? 0 : this.config.endBufferSeconds;
     this.playbackState.cachedSequenceDuration = this.eventProcessor.calculateSequenceDuration(
       events,
-      this.config.endBufferSeconds
+      endBuffer
     );
 
     this.debug('Sequence duration', {
@@ -242,9 +244,11 @@ export class NDJSONStreamingPlayer {
     const previousDuration = this.playbackState.cachedSequenceDuration;
     
     // Recalculate sequence duration with new events
+    // When loop mode is enabled, don't add end buffer to avoid unwanted gaps between loops
+    const endBuffer = this.config.loop ? 0 : this.config.endBufferSeconds;
     this.playbackState.cachedSequenceDuration = this.eventProcessor.calculateSequenceDuration(
       events,
-      this.config.endBufferSeconds
+      endBuffer
     );
 
     this.debug('Updated sequence duration', {
