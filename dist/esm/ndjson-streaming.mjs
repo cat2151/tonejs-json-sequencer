@@ -244,7 +244,7 @@ export class NDJSONStreamingPlayer {
                         timeDelta: timeDelta,
                         loopIteration: this.playbackState.loopCount
                     };
-                    this.debug(`相対時刻: ${relativeTime.toFixed(3)}秒, 行: #${index}, 内容: ${event.eventType}, 実時間: ${absoluteTime.toFixed(3)}秒`, {
+                    this.debug(`Scheduling event #${index} (${event.eventType}): relative=${relativeTime.toFixed(3)}s, scheduled=${absoluteTime.toFixed(3)}s`, {
                         relativeTimeFromStart: relativeTime.toFixed(3),
                         rowIndex: index,
                         eventContent: event,
