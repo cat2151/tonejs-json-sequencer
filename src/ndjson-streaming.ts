@@ -353,6 +353,9 @@ export class NDJSONStreamingPlayer {
         const timeDelta = absoluteTime - currentTime;
         
         if (this.config.debug) {
+          // Calculate relative time from playback start (where start = 0)
+          const relativeTime = currentTime - this.playbackState.startTime;
+          
           const debugInfo: DebugEventInfo = {
             eventIndex: index,
             eventType: event.eventType,
@@ -361,12 +364,12 @@ export class NDJSONStreamingPlayer {
             timeDelta: timeDelta,
             loopIteration: this.playbackState.loopCount
           };
-          this.debug(`Scheduling event #${index} (${event.eventType})`, {
-            ...debugInfo,
-            scheduledAt: absoluteTime.toFixed(3),
-            timeDelta: timeDelta.toFixed(3),
-            eventTime: eventTime.toFixed(3),
-            loopOffset: loopOffset.toFixed(3)
+          this.debug(`Scheduling event #${index} (${event.eventType}): relative=${relativeTime.toFixed(3)}s, scheduled=${absoluteTime.toFixed(3)}s`, {
+            relativeTimeFromStart: relativeTime.toFixed(3),
+            rowIndex: index,
+            eventContent: event,
+            scheduledRealTime: absoluteTime.toFixed(3),
+            ...debugInfo
           });
         }
 
