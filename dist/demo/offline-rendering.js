@@ -8,6 +8,7 @@ class OfflineRenderingDemo {
         this.currentBuffer = null;
         this.currentBlobUrl = null;
         this.initializeUI();
+        this.initializeCollapsibleSections();
         this.loadInitialSequence();
     }
     initializeUI() {
@@ -30,6 +31,20 @@ class OfflineRenderingDemo {
         // Sequence selector change
         selector.addEventListener('change', () => {
             this.loadSelectedSequence();
+        });
+    }
+    initializeCollapsibleSections() {
+        // About button
+        const aboutButton = document.getElementById('aboutButton');
+        const aboutContent = document.getElementById('aboutContent');
+        aboutButton?.addEventListener('click', () => {
+            aboutContent?.classList.toggle('active');
+        });
+        // Usage button
+        const usageButton = document.getElementById('usageButton');
+        const usageContent = document.getElementById('usageContent');
+        usageButton?.addEventListener('click', () => {
+            usageContent?.classList.toggle('active');
         });
     }
     loadInitialSequence() {
