@@ -146,6 +146,34 @@ button:focus {
   border-color: var(--button-bg);
 }
 
+/* リンクのスタイル（ボタン風） */
+a {
+  display: inline-block;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+a:hover {
+  background-color: var(--button-hover);
+  text-decoration: none;
+}
+
+a:focus {
+  outline: 2px solid var(--button-bg);
+  outline-offset: 2px;
+}
+
+a:visited {
+  color: var(--button-text);
+}
+
 /* レスポンシブデザイン */
 @media (max-width: 768px) {
   body {
