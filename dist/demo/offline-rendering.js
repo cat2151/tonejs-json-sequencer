@@ -8,6 +8,7 @@ class OfflineRenderingDemo {
         this.currentBuffer = null;
         this.currentBlobUrl = null;
         this.initializeUI();
+        this.initializeCollapsibleSections();
         this.loadInitialSequence();
     }
     initializeUI() {
@@ -30,6 +31,26 @@ class OfflineRenderingDemo {
         // Sequence selector change
         selector.addEventListener('change', () => {
             this.loadSelectedSequence();
+        });
+    }
+    initializeCollapsibleSections() {
+        // About button
+        const aboutButton = document.getElementById('aboutButton');
+        const aboutContent = document.getElementById('aboutContent');
+        aboutButton?.addEventListener('click', () => {
+            if (aboutContent && aboutButton) {
+                const isExpanded = aboutContent.classList.toggle('active');
+                aboutButton.setAttribute('aria-expanded', String(isExpanded));
+            }
+        });
+        // Usage button
+        const usageButton = document.getElementById('usageButton');
+        const usageContent = document.getElementById('usageContent');
+        usageButton?.addEventListener('click', () => {
+            if (usageContent && usageButton) {
+                const isExpanded = usageContent.classList.toggle('active');
+                usageButton.setAttribute('aria-expanded', String(isExpanded));
+            }
         });
     }
     loadInitialSequence() {

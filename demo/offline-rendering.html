@@ -77,6 +77,41 @@
       border-radius: 4px;
     }
     
+    .hint {
+      margin-top: 10px;
+      padding: 10px;
+      background: var(--warning-bg);
+      border-left: 4px solid var(--warning-border);
+      border-radius: 4px;
+    }
+    
+    .collapsible-section {
+      margin: 20px 0;
+    }
+    
+    .collapsible-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background: var(--button-bg);
+      color: var(--button-text);
+      border: none;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+    
+    .collapsible-button:hover {
+      background: var(--button-hover);
+    }
+    
+    .collapsible-content {
+      display: none;
+    }
+    
+    .collapsible-content.active {
+      display: block;
+    }
+    
     .info h3 {
       margin-top: 0;
       color: var(--text-color);
@@ -178,26 +213,44 @@
     <a href="streaming.html">NDJSONストリーミングデモ →</a>
   </p>
   
-  <div class="info">
-    <h3>このデモについて:</h3>
-    <p><strong>🎯 One-shot（一括レンダリング）方式</strong></p>
-    <ul>
-      <li><strong>バッチ処理:</strong> ボタンを押すと、シーケンス全体を一度に処理してWAVファイルを生成</li>
-      <li><strong>非リアルタイム:</strong> リアルタイム再生ではなく、オフライン処理で高速レンダリング</li>
-      <li><strong>完璧なタイミング:</strong> CPU負荷の影響を受けず、正確なタイミングを保証</li>
-      <li><strong>ファイル出力用途:</strong> WAVファイルのエクスポートや音声素材の生成に最適</li>
-    </ul>
-    <p style="margin-top: 10px; padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
-      <strong>💡 ヒント:</strong> リアルタイム再生やライブ編集が必要な場合は、<a href="streaming.html">ストリーミングデモ</a>をご利用ください（Streaming方式）
-    </p>
+  <div class="collapsible-section">
+    <button class="collapsible-button" id="aboutButton" aria-expanded="false" aria-controls="aboutContent">📖 説明を見る</button>
+    <div class="collapsible-content info" id="aboutContent">
+      <h3>このデモについて:</h3>
+      <p><strong>🎯 One-shot（一括レンダリング）方式</strong></p>
+      <ul>
+        <li><strong>バッチ処理:</strong> ボタンを押すと、シーケンス全体を一度に処理してWAVファイルを生成</li>
+        <li><strong>非リアルタイム:</strong> リアルタイム再生ではなく、オフライン処理で高速レンダリング</li>
+        <li><strong>完璧なタイミング:</strong> CPU負荷の影響を受けず、正確なタイミングを保証</li>
+        <li><strong>ファイル出力用途:</strong> WAVファイルのエクスポートや音声素材の生成に最適</li>
+      </ul>
+      <div class="hint">
+        <strong>💡 ヒント:</strong> リアルタイム再生やライブ編集が必要な場合は、<a href="streaming.html">ストリーミングデモ</a>をご利用ください（Streaming方式）
+      </div>
+    </div>
+  </div>
+
+  <div class="collapsible-section">
+    <button class="collapsible-button" id="usageButton" aria-expanded="false" aria-controls="usageContent">📝 使い方</button>
+    <div class="collapsible-content info" id="usageContent">
+      <h3>使い方:</h3>
+      <ol>
+        <li><strong>準備:</strong> ドロップダウンからシーケンスを選択、またはテキストエリアでNDJSONを編集</li>
+        <li><strong>設定:</strong> サンプルレート、終了バッファ、ファイル名を必要に応じて調整</li>
+        <li><strong>レンダリング:</strong> 「シーケンス全体をレンダリング」ボタンを押して一括処理を開始</li>
+        <li><strong>プレビュー:</strong> 完成した音声をプレーヤーで確認</li>
+        <li><strong>保存:</strong> 「WAVファイルをダウンロード」で音声ファイルを取得</li>
+      </ol>
+      <p><strong>📝 Note:</strong> この方式はストリーミング再生ではなく、全体を一括でレンダリングする<strong>バッチ処理</strong>です。リアルタイムより高速で、正確なタイミングが保証されます。</p>
+    </div>
   </div>
 
   <div class="rendering-controls">
-    <button id="renderButton" autofocus>🎬 シーケンス全体をレンダリング</button>
-    <button id="downloadButton" disabled>💾 WAVファイルをダウンロード</button>
     <select id="sequenceSelector">
       <!-- Options populated by JavaScript -->
     </select>
+    <button id="renderButton" autofocus>🎬 シーケンス全体をレンダリング</button>
+    <button id="downloadButton" disabled>💾 WAVファイルをダウンロード</button>
   </div>
 
   <div class="status" id="status">ステータス: 準備完了</div>
@@ -220,7 +273,7 @@
     <div class="config-row">
       <div class="config-item">
         <label for="sampleRate">サンプルレート:</label>
-        <input type="number" id="sampleRate" value="44100" step="1" min="8000" max="192000">
+        <input type="number" id="sampleRate" value="48000" step="1" min="8000" max="192000">
         <span>Hz</span>
       </div>
       <div class="config-item">
@@ -240,19 +293,8 @@
   <h3>シーケンス（NDJSON形式 - 1行につき1イベント）:</h3>
   <textarea id="sequenceEditor" rows="30" cols="80"></textarea>
 
-  <div class="info">
-    <h3>使い方:</h3>
-    <ol>
-      <li><strong>準備:</strong> ドロップダウンからシーケンスを選択、またはテキストエリアでNDJSONを編集</li>
-      <li><strong>設定:</strong> サンプルレート、終了バッファ、ファイル名を必要に応じて調整</li>
-      <li><strong>レンダリング:</strong> 「シーケンス全体をレンダリング」ボタンを押して一括処理を開始</li>
-      <li><strong>プレビュー:</strong> 完成した音声をプレーヤーで確認</li>
-      <li><strong>保存:</strong> 「WAVファイルをダウンロード」で音声ファイルを取得</li>
-    </ol>
-    <p><strong>📝 Note:</strong> この方式はストリーミング再生ではなく、全体を一括でレンダリングする<strong>バッチ処理</strong>です。リアルタイムより高速で、正確なタイミングが保証されます。</p>
-  </div>
-
   <script src="https://unpkg.com/tone@15.2.7/build/Tone.js"></script>
   <script type="module" src="../dist/demo/offline-rendering.js"></script>
+
 </body>
 </html>

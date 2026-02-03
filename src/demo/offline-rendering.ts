@@ -12,6 +12,7 @@ class OfflineRenderingDemo {
 
   constructor() {
     this.initializeUI();
+    this.initializeCollapsibleSections();
     this.loadInitialSequence();
   }
 
@@ -38,6 +39,28 @@ class OfflineRenderingDemo {
     // Sequence selector change
     selector.addEventListener('change', () => {
       this.loadSelectedSequence();
+    });
+  }
+
+  private initializeCollapsibleSections(): void {
+    // About button
+    const aboutButton = document.getElementById('aboutButton');
+    const aboutContent = document.getElementById('aboutContent');
+    aboutButton?.addEventListener('click', () => {
+      if (aboutContent && aboutButton) {
+        const isExpanded = aboutContent.classList.toggle('active');
+        aboutButton.setAttribute('aria-expanded', String(isExpanded));
+      }
+    });
+
+    // Usage button
+    const usageButton = document.getElementById('usageButton');
+    const usageContent = document.getElementById('usageContent');
+    usageButton?.addEventListener('click', () => {
+      if (usageContent && usageButton) {
+        const isExpanded = usageContent.classList.toggle('active');
+        usageButton.setAttribute('aria-expanded', String(isExpanded));
+      }
     });
   }
 
