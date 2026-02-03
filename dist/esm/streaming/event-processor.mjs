@@ -105,13 +105,21 @@ export class EventProcessor {
             // Calculate the end time of this event (start time + duration)
             let eventEndTime = eventTime;
             // For triggerAttackRelease events, add the note duration to get the actual end time
+            // This is the only event type that has a duration parameter
             if (event.eventType === 'triggerAttackRelease' && 'args' in event && Array.isArray(event.args)) {
                 // args format: [note, duration, time]
                 // duration is the second argument (index 1)
                 if (event.args.length >= 2) {
                     const durationArg = event.args[1];
                     const duration = this.timeParser.parseTimeToSeconds(durationArg);
-                    eventEndTime = eventTime + duration;
+                    if (duration > 0) {
+                        eventEndTime = eventTime + duration;
+                    }
+                    else {
+                        // Duration parsing failed or returned 0
+                        // This could happen with unsupported notation or invalid values
+                        console.warn(`Failed to parse duration '${durationArg}' for event at time ${eventTime}, using event start time only`);
+                    }
                 }
             }
             if (eventEndTime > maxEndTime) {
