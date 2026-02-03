@@ -85,7 +85,7 @@ export class OfflineRenderer {
     calculateSequenceDuration(events) {
         let maxTime = 0;
         events.forEach(event => {
-            if (event.eventType === 'createNode' || event.eventType === 'connect') {
+            if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set') {
                 return;
             }
             const eventTime = this.getEventTime(event);
