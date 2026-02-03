@@ -210,10 +210,10 @@ Last updated: 2026-02-04
 - RELEASE.ja.md
 - RELEASE.md
 - _config.yml
-- demo/index.html
-- demo/offline-rendering.html
-- demo/streaming.html
-- demo/styles.css
+- index.html
+- offline-rendering.html
+- streaming.html
+- styles.css
 - dist/cjs/event-scheduler.d.ts
 - dist/cjs/event-scheduler.js
 - dist/cjs/factories/effect-factory.d.ts
