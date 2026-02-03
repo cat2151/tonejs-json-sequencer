@@ -97,18 +97,32 @@ class EventProcessor {
      * Calculate the total duration of the sequence
      */
     calculateSequenceDuration(events, endBufferSeconds) {
-        let maxTime = 0;
+        let maxEndTime = 0;
         events.forEach(event => {
             if (event.eventType === 'createNode' || event.eventType === 'connect') {
                 return;
             }
             const eventTime = this.getEventTime(event);
-            if (eventTime !== null && eventTime > maxTime) {
-                maxTime = eventTime;
+            if (eventTime === null)
+                return;
+            // Calculate the end time of this event (start time + duration)
+            let eventEndTime = eventTime;
+            // For triggerAttackRelease events, add the note duration to get the actual end time
+            if (event.eventType === 'triggerAttackRelease' && 'args' in event && Array.isArray(event.args)) {
+                // args format: [note, duration, time]
+                // duration is the second argument (index 1)
+                if (event.args.length >= 2) {
+                    const durationArg = event.args[1];
+                    const duration = this.timeParser.parseTimeToSeconds(durationArg);
+                    eventEndTime = eventTime + duration;
+                }
+            }
+            if (eventEndTime > maxEndTime) {
+                maxEndTime = eventEndTime;
             }
         });
-        // Add buffer for the last note's duration
-        return maxTime + endBufferSeconds;
+        // Add buffer after the last event ends
+        return maxEndTime + endBufferSeconds;
     }
 }
 exports.EventProcessor = EventProcessor;
