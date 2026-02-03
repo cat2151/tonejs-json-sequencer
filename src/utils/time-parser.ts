@@ -33,6 +33,9 @@ export class TimeParser {
     } else if (timeStr.includes(':')) {
       // Bar:beat:subdivision format (e.g., "0:0:2")
       return this.parseBarBeatTime(timeStr);
+    } else if (this.isToneNotation(timeStr)) {
+      // Tone.js notation (e.g., "4n", "8n", "2n", "16n")
+      return this.parseToneNotation(timeStr);
     } else {
       // Direct number or tick notation
       return this.parseTickTime(timeStr);
@@ -50,6 +53,31 @@ export class TimeParser {
     const ticksPerQuarter = this.config.ticksPerQuarter;
     const secondsPerBeat = 60 / this.config.beatsPerMinute;
     return (value / ticksPerQuarter) * secondsPerBeat;
+  }
+
+  /**
+   * Check if string is Tone.js notation (e.g., "4n", "8n", "2n")
+   */
+  private isToneNotation(timeStr: string): boolean {
+    return /^\d+n$/.test(timeStr);
+  }
+
+  /**
+   * Parse Tone.js notation to seconds
+   * @param timeStr - Tone.js notation (e.g., "4n" for quarter note, "8n" for eighth note)
+   */
+  private parseToneNotation(timeStr: string): number {
+    const match = timeStr.match(/^(\d+)n$/);
+    if (!match) return 0;
+
+    const value = parseFloat(match[1]);
+    // In Tone.js, "4n" means a quarter note (1/4 of a whole note)
+    // A whole note = 4 beats, so a quarter note = 1 beat
+    // value "n" represents 1/value of a whole note
+    const beatsPerWholeNote = 4; // In 4/4 time
+    const secondsPerBeat = 60 / this.config.beatsPerMinute;
+    const beatsInNote = beatsPerWholeNote / value;
+    return beatsInNote * secondsPerBeat;
   }
 
   /**

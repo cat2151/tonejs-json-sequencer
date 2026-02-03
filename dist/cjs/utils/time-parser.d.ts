@@ -26,6 +26,15 @@ export declare class TimeParser {
      */
     private parseTickTime;
     /**
+     * Check if string is Tone.js notation (e.g., "4n", "8n", "2n")
+     */
+    private isToneNotation;
+    /**
+     * Parse Tone.js notation to seconds
+     * @param timeStr - Tone.js notation (e.g., "4n" for quarter note, "8n" for eighth note)
+     */
+    private parseToneNotation;
+    /**
      * Parse bar:beat:subdivision time
      */
     private parseBarBeatTime;
