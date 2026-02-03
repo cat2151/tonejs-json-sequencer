@@ -267,8 +267,8 @@ export class NDJSONStreamingPlayer {
     this.playbackState.resetProcessedEvents();
     
     events.forEach((event, index) => {
-      // Skip createNode and connect events
-      if (event.eventType === 'createNode' || event.eventType === 'connect') {
+      // Skip createNode, connect, and set events
+      if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set') {
         return;
       }
 
@@ -349,8 +349,8 @@ export class NDJSONStreamingPlayer {
 
     // Process events within lookahead window
     this.playbackState.currentEvents.forEach((event, index) => {
-      // Skip createNode and connect events
-      if (event.eventType === 'createNode' || event.eventType === 'connect') {
+      // Skip createNode, connect, and set events
+      if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set') {
         return;
       }
 

@@ -107,12 +107,12 @@ class NDJSONStreamingPlayer {
             console.warn('No events to play');
             return;
         }
-        this.debug('=== Initializing Playback ===');
-        this.debug('Total events', events.length);
+        this.debug('🎵 === Initializing Playback ===');
+        this.debug('📊 Total events', events.length);
         // Set start time as current time + lookahead
         const startTime = this.Tone.now() + this.config.lookaheadMs / 1000;
         this.playbackState.start(events, startTime);
-        this.debug('Start time', {
+        this.debug('⏰ Start time', {
             startTime: startTime.toFixed(3),
             currentTime: this.Tone.now().toFixed(3),
             lookaheadMs: this.config.lookaheadMs
@@ -123,9 +123,10 @@ class NDJSONStreamingPlayer {
         // When loop mode is enabled, don't add end buffer to avoid unwanted gaps between loops
         const endBuffer = this.config.loop ? 0 : this.config.endBufferSeconds;
         this.playbackState.cachedSequenceDuration = this.eventProcessor.calculateSequenceDuration(events, endBuffer);
-        this.debug('Sequence duration', {
+        this.debug('📏 Sequence duration', {
             duration: this.playbackState.cachedSequenceDuration.toFixed(3),
-            loopEnabled: this.config.loop
+            loopEnabled: this.config.loop,
+            loopWaitSeconds: this.config.loop ? this.config.loopWaitSeconds : 'N/A'
         });
         // Start processing loop
         this.processEvents();
@@ -164,8 +165,8 @@ class NDJSONStreamingPlayer {
         // because that's what was used when events were actually scheduled
         this.playbackState.resetProcessedEvents();
         events.forEach((event, index) => {
-            // Skip createNode and connect events
-            if (event.eventType === 'createNode' || event.eventType === 'connect') {
+            // Skip createNode, connect, and set events
+            if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set') {
                 return;
             }
             const eventTime = this.eventProcessor.getEventTime(event);
@@ -211,21 +212,31 @@ class NDJSONStreamingPlayer {
         // Debug: Log processing loop info periodically (every 60 loops, ~1 second)
         if (this.config.debug && this.playbackState.processLoopCount % 60 === 0) {
             const timeSinceStart = currentTime - this.playbackState.startTime;
-            this.debug('=== Processing Loop Status ===', {
+            // Calculate expected position for timing health check
+            let expectedTime = 0;
+            if (this.playbackState.loopCount > 0) {
+                // For completed loops: loopCount * sequenceDuration + (loopCount - 1) * loopWaitSeconds
+                expectedTime = this.playbackState.loopCount * sequenceDuration +
+                    Math.max(0, this.playbackState.loopCount - 1) * this.config.loopWaitSeconds;
+            }
+            const timingHealth = expectedTime > 0 ?
+                ((timeSinceStart - expectedTime) * 1000).toFixed(1) : 'N/A';
+            this.debug('⚙️ === Processing Loop Status ===', {
                 loopIteration: this.playbackState.loopCount,
                 processLoopCount: this.playbackState.processLoopCount,
                 currentTime: currentTime.toFixed(3),
                 lookaheadTime: lookaheadTime.toFixed(3),
                 timeSinceStart: timeSinceStart.toFixed(3),
                 processedEvents: this.playbackState.processedEventIndices.size,
-                totalEvents: this.playbackState.currentEvents.length
+                totalEvents: this.playbackState.currentEvents.length,
+                timingHealthMs: timingHealth
             });
         }
         let scheduledInThisLoop = 0;
         // Process events within lookahead window
         this.playbackState.currentEvents.forEach((event, index) => {
-            // Skip createNode and connect events
-            if (event.eventType === 'createNode' || event.eventType === 'connect') {
+            // Skip createNode, connect, and set events
+            if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set') {
                 return;
             }
             // Get event time from args (last argument is time)
@@ -244,6 +255,22 @@ class NDJSONStreamingPlayer {
                 if (this.config.debug) {
                     // Calculate relative time from playback start (where start = 0)
                     const relativeTime = currentTime - this.playbackState.startTime;
+                    // Calculate expected time for this event in this loop iteration
+                    const expectedAbsoluteTime = this.playbackState.startTime + eventTime + loopOffset;
+                    // Calculate timing drift: how late/early the scheduling loop is relative to event time
+                    // (positive = late, negative = early)
+                    const timingDrift = currentTime - expectedAbsoluteTime;
+                    // Determine timing accuracy status
+                    const TIMING_THRESHOLD_MS = 1; // Consider timing accurate within 1ms
+                    let timingStatus = '⚪'; // Default: on-time
+                    if (Math.abs(timingDrift * 1000) > TIMING_THRESHOLD_MS) {
+                        timingStatus = timingDrift > 0 ? '🔴 LATE' : '🟢 EARLY';
+                    }
+                    // Visual bar for timing delta (how far ahead we're scheduling)
+                    const timeDeltaMs = timeDelta * 1000;
+                    // Scale the bar to represent the configured lookahead window (0..lookaheadMs maps to 0..10 blocks)
+                    const bars = Math.min(Math.max(Math.round((timeDeltaMs / this.config.lookaheadMs) * 10), 0), 10);
+                    const timingBar = '█'.repeat(bars) + '░'.repeat(10 - bars);
                     const debugInfo = {
                         eventIndex: index,
                         eventType: event.eventType,
@@ -252,11 +279,13 @@ class NDJSONStreamingPlayer {
                         timeDelta: timeDelta,
                         loopIteration: this.playbackState.loopCount
                     };
-                    this.debug(`Scheduling event #${index} (${event.eventType}): relative=${relativeTime.toFixed(3)}s, scheduled=${absoluteTime.toFixed(3)}s`, {
+                    this.debug(`${timingStatus} [${timingBar}] Event #${index} (${event.eventType}) Loop:${this.playbackState.loopCount} Delta:${timeDeltaMs.toFixed(1)}ms`, {
                         relativeTimeFromStart: relativeTime.toFixed(3),
                         rowIndex: index,
-                        eventContent: event,
+                        eventTime: eventTime.toFixed(3),
                         scheduledRealTime: absoluteTime.toFixed(3),
+                        timingDriftMs: (timingDrift * 1000).toFixed(3),
+                        timeDeltaMs: timeDeltaMs.toFixed(1),
                         ...debugInfo
                     });
                 }
@@ -285,12 +314,29 @@ class NDJSONStreamingPlayer {
             if (completedLoops > this.playbackState.loopCount) {
                 const previousLoopCount = this.playbackState.loopCount;
                 this.playbackState.loopCount = completedLoops;
-                this.debug('=== Loop Completed ===', {
+                // Calculate loop timing accuracy:
+                // Expected completion time for loop N (1-based) is:
+                // (N) * sequenceDuration + (N - 1) * loopWaitSeconds
+                const expectedLoopTime = (previousLoopCount + 1) * sequenceDuration +
+                    previousLoopCount * this.config.loopWaitSeconds;
+                const actualLoopTime = timeSinceStart;
+                const loopTimingDrift = (actualLoopTime - expectedLoopTime) * 1000; // in ms
+                // Determine loop timing status
+                const LOOP_TIMING_THRESHOLD_MS = 5; // Consider loop timing accurate within 5ms
+                let loopTimingStatus = '✅ ON-TIME';
+                if (Math.abs(loopTimingDrift) > LOOP_TIMING_THRESHOLD_MS) {
+                    loopTimingStatus = loopTimingDrift > 0 ? '⚠️ DELAYED' : '⏩ EARLY';
+                }
+                this.debug(`🔄 === Loop #${previousLoopCount} → #${this.playbackState.loopCount} ${loopTimingStatus} ===`, {
                     previousLoop: previousLoopCount,
                     currentLoop: this.playbackState.loopCount,
                     timeSinceStart: timeSinceStart.toFixed(3),
                     sequenceDuration: sequenceDuration.toFixed(3),
-                    loopWaitSeconds: this.config.loopWaitSeconds
+                    loopWaitSeconds: this.config.loopWaitSeconds,
+                    expectedLoopTime: expectedLoopTime.toFixed(3),
+                    actualLoopTime: actualLoopTime.toFixed(3),
+                    loopTimingDriftMs: loopTimingDrift.toFixed(2),
+                    timingStatus: loopTimingStatus
                 });
                 this.config.onLoopComplete();
             }

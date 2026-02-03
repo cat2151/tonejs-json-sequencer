@@ -36,6 +36,22 @@ export function scheduleOrExecuteEvent(Tone, nodes, element) {
             }
             break;
         }
+        case 'set': {
+            // Handle Transport settings and other global/node property settings
+            // Note: Transport settings are global and not tied to individual audio graph nodes
+            if (element.nodeType === 'Transport.bpm.value') {
+                if (element.args && element.args.length > 0) {
+                    Tone.Transport.bpm.value = element.args[0];
+                }
+                else {
+                    console.warn('set event for Transport.bpm.value missing value in args');
+                }
+            }
+            else {
+                console.warn(`Unsupported nodeType for set event: ${element.nodeType}`);
+            }
+            break;
+        }
     }
 }
 /**
@@ -47,10 +63,10 @@ export function scheduleOrExecuteEvent(Tone, nodes, element) {
 export async function playSequence(Tone, nodes, sequence) {
     // Dispose existing nodes
     nodes.disposeAll();
-    // First pass: create nodes and connections
+    // First pass: create nodes and connections, and set Transport settings
     sequence.forEach(element => {
         try {
-            if (element.eventType === 'createNode' || element.eventType === 'connect') {
+            if (element.eventType === 'createNode' || element.eventType === 'connect' || element.eventType === 'set') {
                 scheduleOrExecuteEvent(Tone, nodes, element);
             }
         }
@@ -64,7 +80,7 @@ export async function playSequence(Tone, nodes, sequence) {
     // Second pass: schedule playback events
     sequence.forEach(element => {
         try {
-            if (element.eventType !== 'createNode' && element.eventType !== 'connect') {
+            if (element.eventType !== 'createNode' && element.eventType !== 'connect' && element.eventType !== 'set') {
                 scheduleOrExecuteEvent(Tone, nodes, element);
             }
         }
