@@ -38,13 +38,19 @@ class OfflineRenderingDemo {
         const aboutButton = document.getElementById('aboutButton');
         const aboutContent = document.getElementById('aboutContent');
         aboutButton?.addEventListener('click', () => {
-            aboutContent?.classList.toggle('active');
+            const isExpanded = aboutContent?.classList.toggle('active');
+            if (aboutButton) {
+                aboutButton.setAttribute('aria-expanded', String(!!isExpanded));
+            }
         });
         // Usage button
         const usageButton = document.getElementById('usageButton');
         const usageContent = document.getElementById('usageContent');
         usageButton?.addEventListener('click', () => {
-            usageContent?.classList.toggle('active');
+            const isExpanded = usageContent?.classList.toggle('active');
+            if (usageButton) {
+                usageButton.setAttribute('aria-expanded', String(!!isExpanded));
+            }
         });
     }
     loadInitialSequence() {
