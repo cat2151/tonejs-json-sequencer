@@ -827,7 +827,7 @@ player.stop();
 
 ### デモ
 
-ライブ編集とループ再生の完全なインタラクティブデモについては、`demo/streaming.html` を参照してください。
+ライブ編集とループ再生の完全なインタラクティブデモについては、`streaming.html` を参照してください。
 
 # Tone.js コンポーネントのJSON対応
 
@@ -868,7 +868,7 @@ tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記
 - ※順不同
 - ※のち2種類に切り分けて、利用しやすさ優先で1つのtopicに絞ったシンプルなサンプルと、強みがわかりやすいよう複数topicを実用的にまとめたサンプル、がよさげ
 - プログラム
-  - 済 : NDJSON streamingとライブ編集、ループ再生（demo/streaming.htmlを参照）
+  - 済 : NDJSON streamingとライブ編集、ループ再生（streaming.htmlを参照）
 - 構造
   - 済 : マルチティンバー、FM Bassと、Saw Chord
 - 奏法
@@ -912,7 +912,7 @@ tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記
 - tonejs-mml-to-jsonとの連携
   - 後回し。tonejs-json-sequencerの検証dataを整理してから、検討する
 - NDJSON streaming
-  - ステータス: ✅ **実装完了** （`demo/streaming.html` と `src/ndjson-streaming.ts` を参照）
+  - ステータス: ✅ **実装完了** （`streaming.html` と `src/ndjson-streaming.ts` を参照）
   - 実装した機能:
     - ライブ編集: textareaを編集したときは、再演奏ではなく、演奏を継続したまま、編集内容が反映される
     - ループ演奏: 末尾までいったら先頭から演奏
@@ -921,7 +921,7 @@ tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記
     - `NDJSONStreamingPlayer` クラスが先読みタイミングでイベントを処理
     - `requestAnimationFrame` を使用した連続的なイベント処理
     - `parseNDJSON` 関数で配列とNDJSON文字列の両方に対応
-    - `demo/streaming.html` に独立したデモと専用のソースファイルを配置
+    - `streaming.html` に独立したデモと専用のソースファイルを配置
 - Tone.Transport.schedule はまだ使わない
   - 試しにagentにcode生成させたところ、複雑なcodeが生成された割に、発音の不自然さの改善が確認できなかった
   - 時期尚早である、test dataが揃ってからがよい、と判断する
@@ -1206,8 +1206,8 @@ a0a0bee Add issue note for #100 [auto]
 ebb58ba Add issue note for #98 [auto]
 
 ### 変更されたファイル:
-demo/offline-rendering.html
-demo/streaming.html
+offline-rendering.html
+streaming.html
 dist/cjs/offline-renderer.d.ts
 dist/cjs/offline-renderer.js
 dist/cjs/streaming/event-processor.js

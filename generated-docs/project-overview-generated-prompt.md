@@ -1573,10 +1573,10 @@ README.ja.md
 README.md
 RELEASE.ja.md
 RELEASE.md
-demo/index.html
-demo/offline-rendering.html
-demo/streaming.html
-demo/styles.css
+index.html
+offline-rendering.html
+streaming.html
+styles.css
 dist/cjs/event-scheduler.d.ts
 dist/cjs/event-scheduler.js
 dist/cjs/factories/effect-factory.d.ts
