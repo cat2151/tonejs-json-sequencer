@@ -26,12 +26,14 @@ export declare class TimeParser {
      */
     private parseTickTime;
     /**
-     * Check if string is Tone.js notation (e.g., "4n", "8n", "2n")
+     * Check if string is Tone.js notation (e.g., "4n", "8n.", "4t")
      */
     private isToneNotation;
     /**
      * Parse Tone.js notation to seconds
-     * @param timeStr - Tone.js notation (e.g., "4n" for quarter note, "8n" for eighth note)
+     * Supports: 1n, 2n, 4n, 8n, 16n, 32n, 64n (with dots and triplets)
+     * Examples: "4n" = quarter note, "8n." = dotted eighth, "4t" = quarter triplet
+     * @param timeStr - Tone.js notation (e.g., "4n" for quarter note, "8n." for dotted eighth)
      */
     private parseToneNotation;
     /**

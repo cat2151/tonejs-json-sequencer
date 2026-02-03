@@ -136,13 +136,29 @@ export class EventProcessor {
         // duration is the second argument (index 1)
         if (event.args.length >= 2) {
           const durationArg = event.args[1];
-          const duration = this.timeParser.parseTimeToSeconds(durationArg);
+          let duration = this.timeParser.parseTimeToSeconds(durationArg);
+
+          // Fallback: use Tone.js time parsing for notations (e.g. dotted/triplet) that
+          // TimeParser may not fully support (like "8n.", "4t", etc.).
+          if ((duration === 0 || duration < 0) && typeof durationArg === 'string') {
+            try {
+              const fallbackDuration = this.Tone.Time(durationArg).toSeconds();
+              if (fallbackDuration > 0) {
+                duration = fallbackDuration;
+              }
+            } catch {
+              // Ignore errors from Tone.Time and fall through to warning below.
+            }
+          }
+
           if (duration > 0) {
             eventEndTime = eventTime + duration;
           } else {
             // Duration parsing failed or returned 0
             // This could happen with unsupported notation or invalid values
-            console.warn(`Failed to parse duration '${durationArg}' for event at time ${eventTime}, using event start time only`);
+            console.warn(
+              `Failed to parse duration '${durationArg}' for event at time ${eventTime}, using event start time only`
+            );
           }
         }
       }

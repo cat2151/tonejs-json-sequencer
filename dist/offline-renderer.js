@@ -98,7 +98,8 @@ class OfflineRenderer {
                 let eventEndTime = eventTime;
                 // For triggerAttackRelease events, add the note duration
                 if (event.eventType === 'triggerAttackRelease' && event.args && event.args.length >= 2) {
-                    const noteDuration = this.parseDurationToSeconds(event.args[1]);
+                    // Use the centralized TimeParser for duration parsing
+                    const noteDuration = this.timeParser.parseTimeToSeconds(event.args[1]);
                     eventEndTime = eventTime + noteDuration;
                 }
                 if (eventEndTime > maxTime) {
@@ -108,36 +109,6 @@ class OfflineRenderer {
         });
         // Add buffer for the last note's duration
         return maxTime + this.config.endBufferSeconds;
-    }
-    /**
-     * Parse Tone.js duration notation to seconds
-     * Supports: 1n, 2n, 4n, 8n, 16n, 32n, 64n (with dots and triplets)
-     * Examples: "4n" = quarter note, "8n." = dotted eighth, "4t" = quarter triplet
-     */
-    parseDurationToSeconds(durationStr) {
-        const secondsPerBeat = 60 / this.config.beatsPerMinute;
-        // Handle dotted notes (e.g., "4n.")
-        const isDotted = durationStr.endsWith('.');
-        const isTriplet = durationStr.endsWith('t');
-        const cleanStr = isDotted || isTriplet ? durationStr.slice(0, -1) : durationStr;
-        // Extract note value (e.g., "4" from "4n")
-        const match = cleanStr.match(/^(\d+)n$/);
-        if (!match) {
-            console.warn(`Unknown duration format: ${durationStr}, using 0`);
-            return 0;
-        }
-        const noteValue = parseInt(match[1]);
-        // Calculate base duration (4n = 1 beat, 8n = 0.5 beat, etc.)
-        let duration = (4 / noteValue) * secondsPerBeat;
-        // Apply dotted note multiplier (1.5x)
-        if (isDotted) {
-            duration *= 1.5;
-        }
-        // Apply triplet multiplier (2/3x)
-        if (isTriplet) {
-            duration *= 2 / 3;
-        }
-        return duration;
     }
     /**
      * Get event time in seconds
