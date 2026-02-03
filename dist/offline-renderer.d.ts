@@ -54,12 +54,6 @@ export declare class OfflineRenderer {
      */
     private calculateSequenceDuration;
     /**
-     * Parse Tone.js duration notation to seconds
-     * Supports: 1n, 2n, 4n, 8n, 16n, 32n, 64n (with dots and triplets)
-     * Examples: "4n" = quarter note, "8n." = dotted eighth, "4t" = quarter triplet
-     */
-    private parseDurationToSeconds;
-    /**
      * Get event time in seconds
      */
     private getEventTime;

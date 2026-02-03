@@ -116,7 +116,7 @@ export class EventProcessor {
    * Calculate the total duration of the sequence
    */
   calculateSequenceDuration(events: SequenceEvent[], endBufferSeconds: number): number {
-    let maxTime = 0;
+    let maxEndTime = 0;
 
     events.forEach(event => {
       if (event.eventType === 'createNode' || event.eventType === 'connect') {
@@ -124,12 +124,51 @@ export class EventProcessor {
       }
 
       const eventTime = this.getEventTime(event);
-      if (eventTime !== null && eventTime > maxTime) {
-        maxTime = eventTime;
+      if (eventTime === null) return;
+
+      // Calculate the end time of this event (start time + duration)
+      let eventEndTime = eventTime;
+      
+      // For triggerAttackRelease events, add the note duration to get the actual end time
+      // This is the only event type that has a duration parameter
+      if (event.eventType === 'triggerAttackRelease' && 'args' in event && Array.isArray(event.args)) {
+        // args format: [note, duration, time]
+        // duration is the second argument (index 1)
+        if (event.args.length >= 2) {
+          const durationArg = event.args[1];
+          let duration = this.timeParser.parseTimeToSeconds(durationArg);
+
+          // Fallback: use Tone.js time parsing for notations (e.g. dotted/triplet) that
+          // TimeParser may not fully support (like "8n.", "4t", etc.).
+          if ((duration === 0 || duration < 0) && typeof durationArg === 'string') {
+            try {
+              const fallbackDuration = this.Tone.Time(durationArg).toSeconds();
+              if (fallbackDuration > 0) {
+                duration = fallbackDuration;
+              }
+            } catch {
+              // Ignore errors from Tone.Time and fall through to warning below.
+            }
+          }
+
+          if (duration > 0) {
+            eventEndTime = eventTime + duration;
+          } else {
+            // Duration parsing failed or returned 0
+            // This could happen with unsupported notation or invalid values
+            console.warn(
+              `Failed to parse duration '${durationArg}' for event at time ${eventTime}, using event start time only`
+            );
+          }
+        }
+      }
+
+      if (eventEndTime > maxEndTime) {
+        maxEndTime = eventEndTime;
       }
     });
 
-    // Add buffer for the last note's duration
-    return maxTime + endBufferSeconds;
+    // Add buffer after the last event ends
+    return maxEndTime + endBufferSeconds;
   }
 }

@@ -33,6 +33,9 @@ export class TimeParser {
     } else if (timeStr.includes(':')) {
       // Bar:beat:subdivision format (e.g., "0:0:2")
       return this.parseBarBeatTime(timeStr);
+    } else if (this.isToneNotation(timeStr)) {
+      // Tone.js notation (e.g., "4n", "8n", "2n", "16n")
+      return this.parseToneNotation(timeStr);
     } else {
       // Direct number or tick notation
       return this.parseTickTime(timeStr);
@@ -50,6 +53,63 @@ export class TimeParser {
     const ticksPerQuarter = this.config.ticksPerQuarter;
     const secondsPerBeat = 60 / this.config.beatsPerMinute;
     return (value / ticksPerQuarter) * secondsPerBeat;
+  }
+
+  /**
+   * Check if string is Tone.js notation (e.g., "4n", "8n.", "4t")
+   */
+  private isToneNotation(timeStr: string): boolean {
+    return /^\d+(n[.]?|t)$/.test(timeStr);
+  }
+
+  /**
+   * Parse Tone.js notation to seconds
+   * Supports: 1n, 2n, 4n, 8n, 16n, 32n, 64n (with dots and triplets)
+   * Examples: "4n" = quarter note, "8n." = dotted eighth, "4t" = quarter triplet
+   * @param timeStr - Tone.js notation (e.g., "4n" for quarter note, "8n." for dotted eighth)
+   */
+  private parseToneNotation(timeStr: string): number {
+    const secondsPerBeat = 60 / this.config.beatsPerMinute;
+    
+    // Handle triplet notation (e.g., "4t")
+    const isTriplet = timeStr.endsWith('t') && !timeStr.includes('n');
+    
+    // Handle dotted notes (e.g., "4n.")
+    const isDotted = timeStr.endsWith('.');
+    
+    // Extract note value
+    let match;
+    let noteValue;
+    
+    if (isTriplet) {
+      // For triplets like "4t", extract the number directly
+      match = timeStr.match(/^(\d+)t$/);
+      if (!match) return 0;
+      noteValue = parseFloat(match[1]);
+    } else {
+      // For regular notes like "4n" or "8n.", extract from "n" notation
+      const cleanStr = isDotted ? timeStr.slice(0, -1) : timeStr;
+      match = cleanStr.match(/^(\d+)n$/);
+      if (!match) return 0;
+      noteValue = parseFloat(match[1]);
+    }
+    
+    // Calculate base duration (4n = 1 beat, 8n = 0.5 beat, etc.)
+    // In Tone.js, "4n" means a quarter note (1/4 of a whole note)
+    // A whole note = 4 beats in 4/4 time
+    let duration = (4 / noteValue) * secondsPerBeat;
+    
+    // Apply dotted note multiplier (1.5x)
+    if (isDotted) {
+      duration *= 1.5;
+    }
+    
+    // Apply triplet multiplier (2/3x)
+    if (isTriplet) {
+      duration *= 2 / 3;
+    }
+    
+    return duration;
   }
 
   /**
