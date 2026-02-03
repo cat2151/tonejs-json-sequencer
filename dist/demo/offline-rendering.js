@@ -38,18 +38,18 @@ class OfflineRenderingDemo {
         const aboutButton = document.getElementById('aboutButton');
         const aboutContent = document.getElementById('aboutContent');
         aboutButton?.addEventListener('click', () => {
-            const isExpanded = aboutContent?.classList.toggle('active');
-            if (aboutButton) {
-                aboutButton.setAttribute('aria-expanded', String(!!isExpanded));
+            if (aboutContent && aboutButton) {
+                const isExpanded = aboutContent.classList.toggle('active');
+                aboutButton.setAttribute('aria-expanded', String(isExpanded));
             }
         });
         // Usage button
         const usageButton = document.getElementById('usageButton');
         const usageContent = document.getElementById('usageContent');
         usageButton?.addEventListener('click', () => {
-            const isExpanded = usageContent?.classList.toggle('active');
-            if (usageButton) {
-                usageButton.setAttribute('aria-expanded', String(!!isExpanded));
+            if (usageContent && usageButton) {
+                const isExpanded = usageContent.classList.toggle('active');
+                usageButton.setAttribute('aria-expanded', String(isExpanded));
             }
         });
     }
