@@ -11,7 +11,7 @@ class StreamingDemo {
   private debugMessages: string[] = [];
   private maxDebugMessages = 100;
   private debounceTimer: number | null = null;
-  private updateMode: 'manual' | 'debounce' = 'manual';
+  private updateMode: 'manual' | 'debounce' = 'debounce';
   private readonly DEBOUNCE_DELAY_MS = 1000;
 
   constructor() {
@@ -57,23 +57,6 @@ class StreamingDemo {
     // Loop checkbox change
     document.getElementById('loopCheckbox')?.addEventListener('change', () => {
       // If playing, restart with new loop setting
-      if (this.player && this.player.playing) {
-        this.stop();
-        this.play();
-      }
-    });
-
-    // Loop wait radio buttons change
-    document.getElementById('loopWait05')?.addEventListener('change', () => {
-      // If playing, restart with new loop wait setting
-      if (this.player && this.player.playing) {
-        this.stop();
-        this.play();
-      }
-    });
-
-    document.getElementById('loopWait0')?.addEventListener('change', () => {
-      // If playing, restart with new loop wait setting
       if (this.player && this.player.playing) {
         this.stop();
         this.play();
@@ -182,9 +165,8 @@ class StreamingDemo {
       const debugCheckbox = document.getElementById('debugCheckbox') as HTMLInputElement;
       const debug = debugCheckbox.checked;
 
-      // Get loop wait setting
-      const loopWait05 = document.getElementById('loopWait05') as HTMLInputElement;
-      const loopWaitSeconds = loopWait05.checked ? 0.5 : 0;
+      // Loop wait is fixed to 0 seconds
+      const loopWaitSeconds = 0;
 
       // Create player only if it doesn't exist or isn't playing
       if (!this.player || !this.player.playing) {
