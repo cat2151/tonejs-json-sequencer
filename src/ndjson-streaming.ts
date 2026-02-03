@@ -182,14 +182,14 @@ export class NDJSONStreamingPlayer {
       return;
     }
 
-    this.debug('=== Initializing Playback ===');
-    this.debug('Total events', events.length);
+    this.debug('🎵 === Initializing Playback ===');
+    this.debug('📊 Total events', events.length);
 
     // Set start time as current time + lookahead
     const startTime = this.Tone.now() + this.config.lookaheadMs / 1000;
     this.playbackState.start(events, startTime);
 
-    this.debug('Start time', { 
+    this.debug('⏰ Start time', { 
       startTime: startTime.toFixed(3),
       currentTime: this.Tone.now().toFixed(3),
       lookaheadMs: this.config.lookaheadMs
@@ -209,9 +209,10 @@ export class NDJSONStreamingPlayer {
       endBuffer
     );
 
-    this.debug('Sequence duration', {
+    this.debug('📏 Sequence duration', {
       duration: this.playbackState.cachedSequenceDuration.toFixed(3),
-      loopEnabled: this.config.loop
+      loopEnabled: this.config.loop,
+      loopWaitSeconds: this.config.loop ? this.config.loopWaitSeconds : 'N/A'
     });
 
     // Start processing loop
@@ -321,14 +322,25 @@ export class NDJSONStreamingPlayer {
     // Debug: Log processing loop info periodically (every 60 loops, ~1 second)
     if (this.config.debug && this.playbackState.processLoopCount % 60 === 0) {
       const timeSinceStart = currentTime - this.playbackState.startTime;
-      this.debug('=== Processing Loop Status ===', {
+      
+      // Calculate expected position for timing health check
+      let expectedTime = 0;
+      if (this.playbackState.loopCount > 0) {
+        expectedTime = this.playbackState.loopCount * sequenceDuration +
+          (this.playbackState.loopCount > 0 ? this.playbackState.loopCount * this.config.loopWaitSeconds : 0);
+      }
+      const timingHealth = expectedTime > 0 ? 
+        ((timeSinceStart - expectedTime) * 1000).toFixed(1) : 'N/A';
+      
+      this.debug('⚙️ === Processing Loop Status ===', {
         loopIteration: this.playbackState.loopCount,
         processLoopCount: this.playbackState.processLoopCount,
         currentTime: currentTime.toFixed(3),
         lookaheadTime: lookaheadTime.toFixed(3),
         timeSinceStart: timeSinceStart.toFixed(3),
         processedEvents: this.playbackState.processedEventIndices.size,
-        totalEvents: this.playbackState.currentEvents.length
+        totalEvents: this.playbackState.currentEvents.length,
+        timingHealthMs: timingHealth
       });
     }
 
@@ -360,6 +372,24 @@ export class NDJSONStreamingPlayer {
           // Calculate relative time from playback start (where start = 0)
           const relativeTime = currentTime - this.playbackState.startTime;
           
+          // Calculate expected time for this event in this loop iteration
+          const expectedAbsoluteTime = this.playbackState.startTime + eventTime + loopOffset;
+          
+          // Calculate timing drift (positive = late, negative = early)
+          const timingDrift = absoluteTime - expectedAbsoluteTime;
+          
+          // Determine timing accuracy status
+          const TIMING_THRESHOLD_MS = 1; // Consider timing accurate within 1ms
+          let timingStatus = '⚪'; // Default: on-time
+          if (Math.abs(timingDrift * 1000) > TIMING_THRESHOLD_MS) {
+            timingStatus = timingDrift > 0 ? '🔴 LATE' : '🟢 EARLY';
+          }
+          
+          // Visual bar for timing delta (how far ahead we're scheduling)
+          const timeDeltaMs = timeDelta * 1000;
+          const bars = Math.min(Math.max(Math.round(timeDeltaMs / 10), 0), 10);
+          const timingBar = '█'.repeat(bars) + '░'.repeat(10 - bars);
+          
           const debugInfo: DebugEventInfo = {
             eventIndex: index,
             eventType: event.eventType,
@@ -368,11 +398,14 @@ export class NDJSONStreamingPlayer {
             timeDelta: timeDelta,
             loopIteration: this.playbackState.loopCount
           };
-          this.debug(`Scheduling event #${index} (${event.eventType}): relative=${relativeTime.toFixed(3)}s, scheduled=${absoluteTime.toFixed(3)}s`, {
+          
+          this.debug(`${timingStatus} [${timingBar}] Event #${index} (${event.eventType}) Loop:${this.playbackState.loopCount} Delta:${timeDeltaMs.toFixed(1)}ms`, {
             relativeTimeFromStart: relativeTime.toFixed(3),
             rowIndex: index,
-            eventContent: event,
+            eventTime: eventTime.toFixed(3),
             scheduledRealTime: absoluteTime.toFixed(3),
+            timingDriftMs: (timingDrift * 1000).toFixed(3),
+            timeDeltaMs: timeDeltaMs.toFixed(1),
             ...debugInfo
           });
         }
@@ -409,12 +442,29 @@ export class NDJSONStreamingPlayer {
         const previousLoopCount = this.playbackState.loopCount;
         this.playbackState.loopCount = completedLoops;
         
-        this.debug('=== Loop Completed ===', {
+        // Calculate loop timing accuracy
+        const expectedLoopTime = previousLoopCount * sequenceDuration + 
+          (previousLoopCount > 0 ? previousLoopCount * this.config.loopWaitSeconds : 0);
+        const actualLoopTime = timeSinceStart;
+        const loopTimingDrift = (actualLoopTime - expectedLoopTime) * 1000; // in ms
+        
+        // Determine loop timing status
+        const LOOP_TIMING_THRESHOLD_MS = 5; // Consider loop timing accurate within 5ms
+        let loopTimingStatus = '✅ ON-TIME';
+        if (Math.abs(loopTimingDrift) > LOOP_TIMING_THRESHOLD_MS) {
+          loopTimingStatus = loopTimingDrift > 0 ? '⚠️ DELAYED' : '⏩ EARLY';
+        }
+        
+        this.debug(`🔄 === Loop #${previousLoopCount} → #${this.playbackState.loopCount} ${loopTimingStatus} ===`, {
           previousLoop: previousLoopCount,
           currentLoop: this.playbackState.loopCount,
           timeSinceStart: timeSinceStart.toFixed(3),
           sequenceDuration: sequenceDuration.toFixed(3),
-          loopWaitSeconds: this.config.loopWaitSeconds
+          loopWaitSeconds: this.config.loopWaitSeconds,
+          expectedLoopTime: expectedLoopTime.toFixed(3),
+          actualLoopTime: actualLoopTime.toFixed(3),
+          loopTimingDriftMs: loopTimingDrift.toFixed(2),
+          timingStatus: loopTimingStatus
         });
         
         this.config.onLoopComplete();

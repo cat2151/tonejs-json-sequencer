@@ -13,6 +13,15 @@ class StreamingDemo {
   private debounceTimer: number | null = null;
   private updateMode: 'manual' | 'debounce' = 'debounce';
   private readonly DEBOUNCE_DELAY_MS = 1000;
+  private timingStats = {
+    totalEvents: 0,
+    onTimeEvents: 0,
+    lateEvents: 0,
+    earlyEvents: 0,
+    loopCount: 0,
+    lastLoopStatus: 'N/A',
+    lastLoopDriftMs: 0
+  };
 
   constructor() {
     this.initializeUI();
@@ -67,8 +76,12 @@ class StreamingDemo {
     document.getElementById('debugCheckbox')?.addEventListener('change', (e) => {
       const enabled = (e.target as HTMLInputElement).checked;
       const debugOutput = document.getElementById('debugOutput');
+      const timingVisualization = document.getElementById('timingVisualization');
       if (debugOutput) {
         debugOutput.style.display = enabled ? 'block' : 'none';
+      }
+      if (timingVisualization) {
+        timingVisualization.style.display = enabled ? 'block' : 'none';
       }
       if (!enabled) {
         this.clearDebugOutput();
@@ -274,6 +287,41 @@ class StreamingDemo {
       }
     }
 
+    // Parse timing information from debug messages
+    if (message.includes('⚪') || message.includes('🔴') || message.includes('🟢')) {
+      // Event scheduling message
+      this.timingStats.totalEvents++;
+      if (message.includes('⚪')) {
+        this.timingStats.onTimeEvents++;
+      } else if (message.includes('🔴')) {
+        this.timingStats.lateEvents++;
+      } else if (message.includes('🟢')) {
+        this.timingStats.earlyEvents++;
+      }
+    } else if (message.includes('🔄') && message.includes('Loop')) {
+      // Loop completion message
+      if (data && typeof data === 'object') {
+        this.timingStats.loopCount = data.currentLoop || 0;
+        if (data.timingStatus) {
+          this.timingStats.lastLoopStatus = data.timingStatus;
+        }
+        if (data.loopTimingDriftMs !== undefined) {
+          this.timingStats.lastLoopDriftMs = parseFloat(data.loopTimingDriftMs);
+        }
+      }
+    } else if (message.includes('🎵') && message.includes('Initializing')) {
+      // Reset stats on playback initialization
+      this.timingStats = {
+        totalEvents: 0,
+        onTimeEvents: 0,
+        lateEvents: 0,
+        earlyEvents: 0,
+        loopCount: 0,
+        lastLoopStatus: 'N/A',
+        lastLoopDriftMs: 0
+      };
+    }
+
     this.debugMessages.push(debugLine);
     
     // Keep only the last N messages
@@ -282,6 +330,7 @@ class StreamingDemo {
     }
 
     this.updateDebugOutput();
+    this.updateTimingVisualization();
   }
 
   private updateDebugOutput(): void {
@@ -293,9 +342,58 @@ class StreamingDemo {
     }
   }
 
+  private updateTimingVisualization(): void {
+    const eventSchedulingStats = document.getElementById('eventSchedulingStats');
+    const loopTimingStats = document.getElementById('loopTimingStats');
+    
+    if (eventSchedulingStats) {
+      const total = this.timingStats.totalEvents;
+      const onTime = this.timingStats.onTimeEvents;
+      const late = this.timingStats.lateEvents;
+      const early = this.timingStats.earlyEvents;
+      
+      const onTimePercent = total > 0 ? ((onTime / total) * 100).toFixed(1) : '0.0';
+      const latePercent = total > 0 ? ((late / total) * 100).toFixed(1) : '0.0';
+      const earlyPercent = total > 0 ? ((early / total) * 100).toFixed(1) : '0.0';
+      
+      eventSchedulingStats.innerHTML = `
+        <div>総イベント数: ${total}</div>
+        <div style="margin-top: 5px;">
+          <div>⚪ 正常: ${onTime} (${onTimePercent}%)</div>
+          <div>🔴 遅延: ${late} (${latePercent}%)</div>
+          <div>🟢 早い: ${early} (${earlyPercent}%)</div>
+        </div>
+      `;
+    }
+    
+    if (loopTimingStats) {
+      const driftDisplay = this.timingStats.lastLoopDriftMs !== 0 
+        ? `${this.timingStats.lastLoopDriftMs > 0 ? '+' : ''}${this.timingStats.lastLoopDriftMs}ms`
+        : '-';
+      
+      loopTimingStats.innerHTML = `
+        <div>ループ回数: ${this.timingStats.loopCount}</div>
+        <div style="margin-top: 5px;">
+          <div>ステータス: ${this.timingStats.lastLoopStatus}</div>
+          <div>タイミングずれ: ${driftDisplay}</div>
+        </div>
+      `;
+    }
+  }
+
   private clearDebugOutput(): void {
     this.debugMessages = [];
+    this.timingStats = {
+      totalEvents: 0,
+      onTimeEvents: 0,
+      lateEvents: 0,
+      earlyEvents: 0,
+      loopCount: 0,
+      lastLoopStatus: 'N/A',
+      lastLoopDriftMs: 0
+    };
     this.updateDebugOutput();
+    this.updateTimingVisualization();
   }
 }
 
