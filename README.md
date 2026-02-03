@@ -4,9 +4,9 @@
   <a href="https://deepwiki.com/cat2151/tonejs-json-sequencer"><img src="https://img.shields.io/badge/DeepWiki-Documentation-blue?logo=book" alt="DeepWiki"></a>
   <a href="README.ja.md"><img src="https://img.shields.io/badge/🇯🇵-Japanese-red.svg" alt="Japanese"></a>
   <a href="README.md"><img src="https://img.shields.io/badge/🇺🇸-English-blue.svg" alt="English"></a>
-  <a href="https://cat2151.github.io/tonejs-json-sequencer/demo/index.html"><img src="https://img.shields.io/badge/🚀-Live%20Demo-brightgreen.svg" alt="Demo"></a>
-  <a href="https://cat2151.github.io/tonejs-json-sequencer/demo/streaming.html"><img src="https://img.shields.io/badge/🎵-Streaming%20Demo-orange.svg" alt="Streaming Demo"></a>
-  <a href="https://cat2151.github.io/tonejs-json-sequencer/demo/offline-rendering.html"><img src="https://img.shields.io/badge/🎙️-Offline%20Rendering-purple.svg" alt="Offline Rendering Demo"></a>
+  <a href="https://cat2151.github.io/tonejs-json-sequencer/index.html"><img src="https://img.shields.io/badge/🚀-Live%20Demo-brightgreen.svg" alt="Demo"></a>
+  <a href="https://cat2151.github.io/tonejs-json-sequencer/streaming.html"><img src="https://img.shields.io/badge/🎵-Streaming%20Demo-orange.svg" alt="Streaming Demo"></a>
+  <a href="https://cat2151.github.io/tonejs-json-sequencer/offline-rendering.html"><img src="https://img.shields.io/badge/🎙️-Offline%20Rendering-purple.svg" alt="Offline Rendering Demo"></a>
 </p>
 
 # Status
@@ -277,7 +277,7 @@ player.stop();
 
 ### Demo
 
-See `demo/streaming.html` for a complete interactive demo with live editing and loop playback.
+See `streaming.html` for a complete interactive demo with live editing and loop playback.
 
 ## Offline Rendering
 
@@ -324,7 +324,7 @@ downloadWav(result.buffer, 'output.wav');
 
 ### Demo
 
-See `demo/offline-rendering.html` for a complete interactive demo with rendering, preview, and WAV export.
+See `offline-rendering.html` for a complete interactive demo with rendering, preview, and WAV export.
 
 # JSON Support for Tone.js Components
 
@@ -365,8 +365,8 @@ This document includes the following information:
 - * Order is not fixed.
 - * Later, it might be good to split into two types of samples: a simple one focused on a single topic for ease of use, and a practical one combining multiple topics to clearly showcase strengths.
 - Programming
-  - Done : NDJSON streaming with live editing and loop playback (see demo/streaming.html)
-  - Done : Offline rendering with WAV export (see demo/offline-rendering.html)
+  - Done : NDJSON streaming with live editing and loop playback (see streaming.html)
+  - Done : Offline rendering with WAV export (see offline-rendering.html)
 - Structure
   - Done : Multitimbral, FM Bass, and Saw Chord
 - Performance Techniques
@@ -410,7 +410,7 @@ This document includes the following information:
 - Integration with tonejs-mml-to-json
   - Postponed. Will consider after organizing verification data for tonejs-json-sequencer.
 - NDJSON streaming
-  - Status: ✅ **Implemented** (see `demo/streaming.html` and `src/ndjson-streaming.ts`)
+  - Status: ✅ **Implemented** (see `streaming.html` and `src/ndjson-streaming.ts`)
   - Features implemented:
     - Live editing: When a textarea is edited, the changes are reflected without restarting playback, continuing the performance.
     - Loop playback: When the end is reached, playback resumes from the beginning.
@@ -419,9 +419,9 @@ This document includes the following information:
     - `NDJSONStreamingPlayer` class processes events with lookahead timing.
     - Uses `requestAnimationFrame` for continuous event processing.
     - Supports both array and NDJSON string input via `parseNDJSON` function.
-    - Separate demo at `demo/streaming.html` with its own source file.
+    - Separate demo at `streaming.html` with its own source file.
 - Offline rendering
-  - Status: ✅ **Implemented** (see `demo/offline-rendering.html` and `src/offline-renderer.ts`)
+  - Status: ✅ **Implemented** (see `offline-rendering.html` and `src/offline-renderer.ts`)
   - Features implemented:
     - Offline audio rendering using `Tone.Offline` for perfect timing
     - WAV file export with configurable sample rate
@@ -432,7 +432,7 @@ This document includes the following information:
     - `OfflineRenderer` class handles offline rendering using Tone.js offline context
     - Includes `audioBufferToWav` utility for converting AudioBuffer to WAV format
     - Includes `downloadWav` helper for triggering browser downloads
-    - Separate demo at `demo/offline-rendering.html` with its own source file
+    - Separate demo at `offline-rendering.html` with its own source file
     - Implemented as a layer on top of the core sequencer, similar to streaming
 - Will not use Tone.Transport.schedule yet.
   - When I tried having an agent generate code, complex code was produced, but no improvement in the unnaturalness of sound generation was observed.
