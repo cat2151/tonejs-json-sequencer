@@ -11,17 +11,20 @@ class StreamingDemo {
         this.debounceTimer = null;
         this.updateMode = 'debounce';
         this.DEBOUNCE_DELAY_MS = 1000;
-        this.timingStats = {
+        this.timingStats = this.createInitialTimingStats();
+        this.initializeUI();
+        this.loadInitialSequence();
+    }
+    createInitialTimingStats() {
+        return {
             totalEvents: 0,
             onTimeEvents: 0,
             lateEvents: 0,
             earlyEvents: 0,
             loopCount: 0,
             lastLoopStatus: 'N/A',
-            lastLoopDriftMs: 0
+            lastLoopDriftMs: null
         };
-        this.initializeUI();
-        this.loadInitialSequence();
     }
     initializeUI() {
         // Populate sequence selector
@@ -275,15 +278,7 @@ class StreamingDemo {
         }
         else if (message.includes('🎵') && message.includes('Initializing')) {
             // Reset stats on playback initialization
-            this.timingStats = {
-                totalEvents: 0,
-                onTimeEvents: 0,
-                lateEvents: 0,
-                earlyEvents: 0,
-                loopCount: 0,
-                lastLoopStatus: 'N/A',
-                lastLoopDriftMs: 0
-            };
+            this.timingStats = this.createInitialTimingStats();
         }
         this.debugMessages.push(debugLine);
         // Keep only the last N messages
@@ -322,8 +317,8 @@ class StreamingDemo {
       `;
         }
         if (loopTimingStats) {
-            const driftDisplay = this.timingStats.lastLoopDriftMs !== 0
-                ? `${this.timingStats.lastLoopDriftMs > 0 ? '+' : ''}${this.timingStats.lastLoopDriftMs}ms`
+            const driftDisplay = this.timingStats.lastLoopDriftMs !== null
+                ? `${this.timingStats.lastLoopDriftMs > 0 ? '+' : ''}${this.timingStats.lastLoopDriftMs.toFixed(2)}ms`
                 : '-';
             loopTimingStats.innerHTML = `
         <div>ループ回数: ${this.timingStats.loopCount}</div>
@@ -336,15 +331,7 @@ class StreamingDemo {
     }
     clearDebugOutput() {
         this.debugMessages = [];
-        this.timingStats = {
-            totalEvents: 0,
-            onTimeEvents: 0,
-            lateEvents: 0,
-            earlyEvents: 0,
-            loopCount: 0,
-            lastLoopStatus: 'N/A',
-            lastLoopDriftMs: 0
-        };
+        this.timingStats = this.createInitialTimingStats();
         this.updateDebugOutput();
         this.updateTimingVisualization();
     }

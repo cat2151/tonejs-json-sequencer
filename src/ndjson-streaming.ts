@@ -326,8 +326,9 @@ export class NDJSONStreamingPlayer {
       // Calculate expected position for timing health check
       let expectedTime = 0;
       if (this.playbackState.loopCount > 0) {
+        // For completed loops: loopCount * sequenceDuration + (loopCount - 1) * loopWaitSeconds
         expectedTime = this.playbackState.loopCount * sequenceDuration +
-          (this.playbackState.loopCount > 0 ? this.playbackState.loopCount * this.config.loopWaitSeconds : 0);
+          Math.max(0, this.playbackState.loopCount - 1) * this.config.loopWaitSeconds;
       }
       const timingHealth = expectedTime > 0 ? 
         ((timeSinceStart - expectedTime) * 1000).toFixed(1) : 'N/A';
@@ -375,8 +376,9 @@ export class NDJSONStreamingPlayer {
           // Calculate expected time for this event in this loop iteration
           const expectedAbsoluteTime = this.playbackState.startTime + eventTime + loopOffset;
           
-          // Calculate timing drift (positive = late, negative = early)
-          const timingDrift = absoluteTime - expectedAbsoluteTime;
+          // Calculate timing drift: how late/early the scheduling loop is relative to event time
+          // (positive = late, negative = early)
+          const timingDrift = currentTime - expectedAbsoluteTime;
           
           // Determine timing accuracy status
           const TIMING_THRESHOLD_MS = 1; // Consider timing accurate within 1ms
@@ -387,7 +389,11 @@ export class NDJSONStreamingPlayer {
           
           // Visual bar for timing delta (how far ahead we're scheduling)
           const timeDeltaMs = timeDelta * 1000;
-          const bars = Math.min(Math.max(Math.round(timeDeltaMs / 10), 0), 10);
+          // Scale the bar to represent the configured lookahead window (0..lookaheadMs maps to 0..10 blocks)
+          const bars = Math.min(
+            Math.max(Math.round((timeDeltaMs / this.config.lookaheadMs) * 10), 0),
+            10
+          );
           const timingBar = '█'.repeat(bars) + '░'.repeat(10 - bars);
           
           const debugInfo: DebugEventInfo = {
@@ -442,9 +448,12 @@ export class NDJSONStreamingPlayer {
         const previousLoopCount = this.playbackState.loopCount;
         this.playbackState.loopCount = completedLoops;
         
-        // Calculate loop timing accuracy
-        const expectedLoopTime = previousLoopCount * sequenceDuration + 
-          (previousLoopCount > 0 ? previousLoopCount * this.config.loopWaitSeconds : 0);
+        // Calculate loop timing accuracy:
+        // Expected completion time for loop N (1-based) is:
+        // (N) * sequenceDuration + (N - 1) * loopWaitSeconds
+        const expectedLoopTime =
+          (previousLoopCount + 1) * sequenceDuration +
+          previousLoopCount * this.config.loopWaitSeconds;
         const actualLoopTime = timeSinceStart;
         const loopTimingDrift = (actualLoopTime - expectedLoopTime) * 1000; // in ms
         

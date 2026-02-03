@@ -13,19 +13,23 @@ class StreamingDemo {
   private debounceTimer: number | null = null;
   private updateMode: 'manual' | 'debounce' = 'debounce';
   private readonly DEBOUNCE_DELAY_MS = 1000;
-  private timingStats = {
-    totalEvents: 0,
-    onTimeEvents: 0,
-    lateEvents: 0,
-    earlyEvents: 0,
-    loopCount: 0,
-    lastLoopStatus: 'N/A',
-    lastLoopDriftMs: 0
-  };
+  private timingStats = this.createInitialTimingStats();
 
   constructor() {
     this.initializeUI();
     this.loadInitialSequence();
+  }
+
+  private createInitialTimingStats() {
+    return {
+      totalEvents: 0,
+      onTimeEvents: 0,
+      lateEvents: 0,
+      earlyEvents: 0,
+      loopCount: 0,
+      lastLoopStatus: 'N/A',
+      lastLoopDriftMs: null as number | null
+    };
   }
 
   private initializeUI(): void {
@@ -311,15 +315,7 @@ class StreamingDemo {
       }
     } else if (message.includes('🎵') && message.includes('Initializing')) {
       // Reset stats on playback initialization
-      this.timingStats = {
-        totalEvents: 0,
-        onTimeEvents: 0,
-        lateEvents: 0,
-        earlyEvents: 0,
-        loopCount: 0,
-        lastLoopStatus: 'N/A',
-        lastLoopDriftMs: 0
-      };
+      this.timingStats = this.createInitialTimingStats();
     }
 
     this.debugMessages.push(debugLine);
@@ -367,8 +363,8 @@ class StreamingDemo {
     }
     
     if (loopTimingStats) {
-      const driftDisplay = this.timingStats.lastLoopDriftMs !== 0 
-        ? `${this.timingStats.lastLoopDriftMs > 0 ? '+' : ''}${this.timingStats.lastLoopDriftMs}ms`
+      const driftDisplay = this.timingStats.lastLoopDriftMs !== null
+        ? `${this.timingStats.lastLoopDriftMs > 0 ? '+' : ''}${this.timingStats.lastLoopDriftMs.toFixed(2)}ms`
         : '-';
       
       loopTimingStats.innerHTML = `
@@ -383,15 +379,7 @@ class StreamingDemo {
 
   private clearDebugOutput(): void {
     this.debugMessages = [];
-    this.timingStats = {
-      totalEvents: 0,
-      onTimeEvents: 0,
-      lateEvents: 0,
-      earlyEvents: 0,
-      loopCount: 0,
-      lastLoopStatus: 'N/A',
-      lastLoopDriftMs: 0
-    };
+    this.timingStats = this.createInitialTimingStats();
     this.updateDebugOutput();
     this.updateTimingVisualization();
   }
