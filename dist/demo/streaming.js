@@ -9,7 +9,7 @@ class StreamingDemo {
         this.debugMessages = [];
         this.maxDebugMessages = 100;
         this.debounceTimer = null;
-        this.updateMode = 'manual';
+        this.updateMode = 'debounce';
         this.DEBOUNCE_DELAY_MS = 1000;
         this.initializeUI();
         this.loadInitialSequence();
@@ -49,21 +49,6 @@ class StreamingDemo {
         // Loop checkbox change
         document.getElementById('loopCheckbox')?.addEventListener('change', () => {
             // If playing, restart with new loop setting
-            if (this.player && this.player.playing) {
-                this.stop();
-                this.play();
-            }
-        });
-        // Loop wait radio buttons change
-        document.getElementById('loopWait05')?.addEventListener('change', () => {
-            // If playing, restart with new loop wait setting
-            if (this.player && this.player.playing) {
-                this.stop();
-                this.play();
-            }
-        });
-        document.getElementById('loopWait0')?.addEventListener('change', () => {
-            // If playing, restart with new loop wait setting
             if (this.player && this.player.playing) {
                 this.stop();
                 this.play();
@@ -156,9 +141,8 @@ class StreamingDemo {
             const loop = loopCheckbox.checked;
             const debugCheckbox = document.getElementById('debugCheckbox');
             const debug = debugCheckbox.checked;
-            // Get loop wait setting
-            const loopWait05 = document.getElementById('loopWait05');
-            const loopWaitSeconds = loopWait05.checked ? 0.5 : 0;
+            // Loop wait is fixed to 0 seconds
+            const loopWaitSeconds = 0;
             // Create player only if it doesn't exist or isn't playing
             if (!this.player || !this.player.playing) {
                 // Dispose old nodes and create fresh instance
