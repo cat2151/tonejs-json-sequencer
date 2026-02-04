@@ -5,95 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tone.js JSON Sequencer - NDJSONストリーミングデモ</title>
   <link rel="stylesheet" href="styles.css">
-  <style>
-    /* Additional CSS variables for streaming demo elements */
-    :root {
-      --status-bg: #f0f0f0;
-      --info-bg: #e8f4f8;
-      --info-border: #2196F3;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --status-bg: #2d2d30;
-        --info-bg: #2d2d30;
-        --info-border: #0078d4;
-      }
-    }
-    
-    .streaming-controls {
-      margin: 20px 0;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    
-    .streaming-controls button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    
-    .streaming-controls label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    
-    .status {
-      margin: 10px 0;
-      padding: 10px;
-      background: var(--status-bg);
-      color: var(--text-color);
-      border-radius: 4px;
-      font-family: monospace;
-    }
-    
-    .info {
-      margin: 20px 0;
-      padding: 15px;
-      background: var(--info-bg);
-      color: var(--text-color);
-      border-left: 4px solid var(--info-border);
-      border-radius: 4px;
-    }
-    
-    .info h3 {
-      margin-top: 0;
-      color: var(--text-color);
-    }
-    
-    .info ul {
-      margin: 10px 0;
-      padding-left: 20px;
-    }
-    
-    .debug-section {
-      margin: 20px 0;
-    }
-    
-    .debug-controls {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    
-    #debugOutput {
-      display: none;
-      background: var(--status-bg);
-      color: var(--text-color);
-      border: 1px solid #444;
-      border-radius: 4px;
-      padding: 10px;
-      font-family: monospace;
-      font-size: 12px;
-      height: 300px;
-      overflow-y: auto;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
-  </style>
+  <link rel="stylesheet" href="streaming-demo.css">
 </head>
 <body>
   <h1>NDJSONストリーミングデモ</h1>
@@ -103,18 +15,34 @@
     <a href="offline-rendering.html">オフラインレンダリングデモ →</a>
   </p>
   
-  <div class="info">
-    <h3>このデモについて:</h3>
-    <p><strong>🎵 Streaming（ストリーミング再生）方式</strong></p>
-    <ul>
-      <li><strong>ライブ編集:</strong> 再生中にテキストエリアでシーケンスを編集 - 変更はリアルタイムに反映されます</li>
-      <li><strong>ループ再生:</strong> ループモードを有効にすると、シーケンスを連続再生できます</li>
-      <li><strong>50ms先読み:</strong> スムーズな再生のため、イベントは50msの先読みでスケジュールされます</li>
-      <li><strong>デバッグモード:</strong> 詳細なタイミングとスケジューリング情報を確認できます</li>
-    </ul>
-    <p style="margin-top: 10px; padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
-      <strong>💡 ヒント:</strong> シーケンス全体を一括でレンダリングする場合は、<a href="offline-rendering.html">オフラインレンダリングデモ</a>をご利用ください（One-shot方式）
-    </p>
+  <div class="collapsible-section">
+    <button class="collapsible-button" id="aboutButton" aria-expanded="false" aria-controls="aboutContent">📖 このデモについて</button>
+    <div class="collapsible-content" id="aboutContent">
+      <p><strong>🎵 Streaming（ストリーミング再生）方式</strong></p>
+      <ul>
+        <li><strong>ライブ編集:</strong> 再生中にテキストエリアでシーケンスを編集 - 変更はリアルタイムに反映されます</li>
+        <li><strong>ループ再生:</strong> ループモードを有効にすると、シーケンスを連続再生できます</li>
+        <li><strong>50ms先読み:</strong> スムーズな再生のため、イベントは50msの先読みでスケジュールされます</li>
+        <li><strong>デバッグモード:</strong> 詳細なタイミングとスケジューリング情報を確認できます</li>
+      </ul>
+      <div class="hint-box">
+        <strong>💡 ヒント:</strong> シーケンス全体を一括でレンダリングする場合は、<a href="offline-rendering.html">オフラインレンダリングデモ</a>をご利用ください（One-shot方式）
+      </div>
+    </div>
+  </div>
+
+  <div class="collapsible-section">
+    <button class="collapsible-button" id="usageButton" aria-expanded="false" aria-controls="usageContent">📝 使い方</button>
+    <div class="collapsible-content" id="usageContent">
+      <ol>
+        <li><strong>再生:</strong> 「再生」ボタンをクリックすると、50msの先読みスケジューリングで再生が開始されます</li>
+        <li><strong>ライブ編集:</strong> 再生中にテキストエリアでシーケンスを編集 - 変更は即座に反映されます</li>
+        <li><strong>ループ:</strong> 「ループ再生」を有効にすると、シーケンスを連続的に繰り返し再生できます</li>
+        <li><strong>デバッグ:</strong> 「デバッグモード」を有効にすると、イベントのスケジューリングとタイミングの詳細情報が表示されます</li>
+        <li><strong>停止:</strong> 「停止」ボタンをクリックすると、再生が停止してリセットされます</li>
+      </ol>
+      <p><strong>📝 Note:</strong> この方式は<strong>リアルタイムストリーミング再生</strong>です。ライブ編集や連続再生が可能で、対話的な音楽制作に最適です。</p>
+    </div>
   </div>
 
   <div class="streaming-controls">
@@ -183,19 +111,7 @@
   <h3>シーケンス（NDJSON形式 - 1行につき1イベント）:</h3>
   <textarea id="sequenceEditor" rows="30" cols="80"></textarea>
 
-  <div class="info">
-    <h3>使い方:</h3>
-    <ol>
-      <li><strong>再生:</strong> 「再生」ボタンをクリックすると、50msの先読みスケジューリングで再生が開始されます</li>
-      <li><strong>ライブ編集:</strong> 再生中にテキストエリアでシーケンスを編集 - 変更は即座に反映されます</li>
-      <li><strong>ループ:</strong> 「ループ再生」を有効にすると、シーケンスを連続的に繰り返し再生できます</li>
-      <li><strong>デバッグ:</strong> 「デバッグモード」を有効にすると、イベントのスケジューリングとタイミングの詳細情報が表示されます</li>
-      <li><strong>停止:</strong> 「停止」ボタンをクリックすると、再生が停止してリセットされます</li>
-    </ol>
-    <p><strong>📝 Note:</strong> この方式は<strong>リアルタイムストリーミング再生</strong>です。ライブ編集や連続再生が可能で、対話的な音楽制作に最適です。</p>
-  </div>
-
   <script src="https://unpkg.com/tone@15.2.7/build/Tone.js"></script>
-  <script type="module" src="./dist/demo/streaming.js"></script>
+  <script type="module" src="../dist/demo/streaming.js"></script>
 </body>
 </html>
