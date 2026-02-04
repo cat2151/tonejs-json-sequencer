@@ -260,14 +260,33 @@ class NDJSONStreamingPlayer {
                     // Calculate timing drift: how late/early the scheduling loop is relative to event time
                     // (positive = late, negative = early)
                     const timingDrift = currentTime - expectedAbsoluteTime;
-                    // Determine timing accuracy status
-                    const TIMING_THRESHOLD_MS = 1; // Consider timing accurate within 1ms
+                    // Determine timing accuracy status based on whether the event is being scheduled
+                    // within an acceptable timeframe relative to when it should ideally be scheduled.
+                    // 
+                    // User expectation: With a 50ms lookahead buffer, events scheduled within that
+                    // buffer window should all be considered "正常" (on-time), even if slightly delayed.
+                    // This is because the lookahead buffer exists to handle such timing variations.
+                    //
+                    // timeDelta = absoluteTime - currentTime
+                    //   - Positive: event will play in the future (scheduled ahead of time)
+                    //   - Negative: event should have played already (scheduled late)
+                    //
+                    // We consider an event "正常" if:
+                    //   -lookaheadMs <= timeDelta <= +lookaheadMs
+                    // This means the event is within the scheduling window, either slightly early or slightly late.
                     let timingStatus = '⚪'; // Default: on-time
-                    if (Math.abs(timingDrift * 1000) > TIMING_THRESHOLD_MS) {
-                        timingStatus = timingDrift > 0 ? '🔴 LATE' : '🟢 EARLY';
-                    }
-                    // Visual bar for timing delta (how far ahead we're scheduling)
                     const timeDeltaMs = timeDelta * 1000;
+                    const lookaheadMs = this.config.lookaheadMs;
+                    // Event is too late: scheduled more than lookahead buffer in the past
+                    if (timeDeltaMs < -lookaheadMs) {
+                        timingStatus = '🔴 LATE';
+                    }
+                    // Event is too early: scheduled more than lookahead buffer in the future
+                    else if (timeDeltaMs > lookaheadMs) {
+                        timingStatus = '🟢 EARLY';
+                    }
+                    // Otherwise, event is within the acceptable scheduling window (on-time)
+                    // Visual bar for timing delta (how far ahead we're scheduling)
                     // Scale the bar to represent the configured lookahead window (0..lookaheadMs maps to 0..10 blocks)
                     const bars = Math.min(Math.max(Math.round((timeDeltaMs / this.config.lookaheadMs) * 10), 0), 10);
                     const timingBar = '█'.repeat(bars) + '░'.repeat(10 - bars);

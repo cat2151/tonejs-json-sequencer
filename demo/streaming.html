@@ -93,7 +93,7 @@
       <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #444;">
         <div style="font-weight: bold; margin-bottom: 5px;">凡例:</div>
         <div style="font-size: 12px;">
-          ⚪ = タイミング正常 (±1ms以内) | 🔴 = 遅延 | 🟢 = 早い | 
+          ⚪ = タイミング正常 (予約バッファ内) | 🔴 = 遅延 | 🟢 = 早い | 
           ✅ = ループ正常 (±5ms以内) | ⚠️ = ループ遅延 | ⏩ = ループ早い
         </div>
       </div>
@@ -111,7 +111,7 @@
   <h3>シーケンス（NDJSON形式 - 1行につき1イベント）:</h3>
   <textarea id="sequenceEditor" rows="30" cols="80"></textarea>
 
-  <script src="https://unpkg.com/tone@15.2.7/build/Tone.js"></script>
+  <script src="vendor/Tone.js"></script>
   <script type="module" src="../dist/demo/streaming.js"></script>
 </body>
 </html>
