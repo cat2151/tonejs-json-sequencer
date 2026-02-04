@@ -128,6 +128,11 @@
       opacity: 0.9;
     }
 
+    .collapsible-header:focus {
+      outline: 2px solid var(--info-border);
+      outline-offset: 2px;
+    }
+
     .collapsible-header h3 {
       margin: 0;
       color: var(--text-color);
@@ -167,7 +172,7 @@
   </p>
   
   <div class="collapsible-section">
-    <div class="collapsible-header" onclick="toggleSection('aboutSection')">
+    <div class="collapsible-header" id="aboutHeader" tabindex="0" role="button" aria-expanded="false" aria-controls="aboutSection">
       <span class="collapsible-indicator collapsed" id="aboutIndicator">▼</span>
       <h3>このデモについて</h3>
     </div>
@@ -186,7 +191,7 @@
   </div>
 
   <div class="collapsible-section">
-    <div class="collapsible-header" onclick="toggleSection('usageSection')">
+    <div class="collapsible-header" id="usageHeader" tabindex="0" role="button" aria-expanded="false" aria-controls="usageSection">
       <span class="collapsible-indicator collapsed" id="usageIndicator">▼</span>
       <h3>使い方</h3>
     </div>
@@ -273,16 +278,51 @@
   <script>
     function toggleSection(sectionId) {
       const section = document.getElementById(sectionId);
+      const header = document.getElementById(sectionId.replace('Section', 'Header'));
       const indicator = document.getElementById(sectionId.replace('Section', 'Indicator'));
       
-      if (section.classList.contains('expanded')) {
+      const isExpanded = section.classList.contains('expanded');
+      
+      if (isExpanded) {
         section.classList.remove('expanded');
         indicator.classList.add('collapsed');
+        header.setAttribute('aria-expanded', 'false');
       } else {
         section.classList.add('expanded');
         indicator.classList.remove('collapsed');
+        header.setAttribute('aria-expanded', 'true');
       }
     }
+
+    // Add event listeners for collapsible sections
+    document.addEventListener('DOMContentLoaded', function() {
+      const aboutHeader = document.getElementById('aboutHeader');
+      const usageHeader = document.getElementById('usageHeader');
+
+      // Click event listeners
+      aboutHeader.addEventListener('click', function() {
+        toggleSection('aboutSection');
+      });
+
+      usageHeader.addEventListener('click', function() {
+        toggleSection('usageSection');
+      });
+
+      // Keyboard event listeners
+      aboutHeader.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleSection('aboutSection');
+        }
+      });
+
+      usageHeader.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleSection('usageSection');
+        }
+      });
+    });
   </script>
 </body>
 </html>
