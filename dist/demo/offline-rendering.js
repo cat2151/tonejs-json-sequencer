@@ -170,7 +170,7 @@ class OfflineRenderingDemo {
                 audioPlayer.classList.add('active');
             // Auto-play preview (only if user is not actively editing the textarea)
             const textarea = document.getElementById('sequenceEditor');
-            const isEditing = textarea !== null && document.activeElement === textarea;
+            const isEditing = document.activeElement === textarea;
             if (!isEditing && this.lastRenderTrigger === 'selector') {
                 const audioElement = document.getElementById('audioElement');
                 if (audioElement) {
@@ -178,7 +178,7 @@ class OfflineRenderingDemo {
                         await audioElement.play();
                     }
                     catch (e) {
-                        console.log('Auto-play was prevented by browser policy');
+                        console.log('Auto-play was prevented by browser policy', e);
                     }
                 }
             }

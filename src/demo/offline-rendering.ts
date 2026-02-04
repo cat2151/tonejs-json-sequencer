@@ -202,8 +202,8 @@ class OfflineRenderingDemo {
       if (audioPlayer) audioPlayer.classList.add('active');
 
       // Auto-play preview (only if user is not actively editing the textarea)
-      const textarea = document.getElementById('sequenceEditor') as HTMLTextAreaElement | null;
-      const isEditing = textarea !== null && document.activeElement === textarea;
+      const textarea = document.getElementById('sequenceEditor') as HTMLTextAreaElement;
+      const isEditing = document.activeElement === textarea;
 
       if (!isEditing && this.lastRenderTrigger === 'selector') {
         const audioElement = document.getElementById('audioElement') as HTMLAudioElement | null;
@@ -211,7 +211,7 @@ class OfflineRenderingDemo {
           try {
             await audioElement.play();
           } catch (e) {
-            console.log('Auto-play was prevented by browser policy');
+            console.log('Auto-play was prevented by browser policy', e);
           }
         }
       } else if (isEditing) {
