@@ -173,7 +173,7 @@ export class NDJSONStreamingPlayer {
                 // Use previous duration for loop offset calculation
                 // because that's what was used when events were originally scheduled
                 // Wait time is only added between loops (not for the first iteration)
-                const loopWaitOffset = loop > 0 ? loop * this.config.loopWaitSeconds : 0;
+                const loopWaitOffset = Math.max(0, loop - 1) * this.config.loopWaitSeconds;
                 const loopOffset = loop * previousDuration + loopWaitOffset;
                 const absoluteTime = this.playbackState.startTime + eventTime + loopOffset;
                 // If this event's scheduled time has passed, mark it as processed
@@ -243,7 +243,7 @@ export class NDJSONStreamingPlayer {
                 return;
             // Calculate absolute time with loop offset
             // Wait time is only added between loops (not for the first iteration)
-            const loopWaitOffset = this.playbackState.loopCount > 0 ? this.playbackState.loopCount * this.config.loopWaitSeconds : 0;
+            const loopWaitOffset = Math.max(0, this.playbackState.loopCount - 1) * this.config.loopWaitSeconds;
             const loopOffset = this.playbackState.loopCount * sequenceDuration + loopWaitOffset;
             const absoluteTime = this.playbackState.startTime + eventTime + loopOffset;
             // Check if event should be scheduled
