@@ -28,6 +28,12 @@ export interface DepthRampToEvent {
   args: string[]; // [value, rampTime, time]
 }
 
+export interface VolumeRampToEvent {
+  eventType: 'volume.rampTo';
+  nodeId: number;
+  args: string[]; // [value, rampTime, time]
+}
+
 export interface SetEvent {
   eventType: 'set';
   nodeId: number;
@@ -40,4 +46,5 @@ export type SequenceEvent =
   | ConnectEvent
   | TriggerAttackReleaseEvent
   | DepthRampToEvent
+  | VolumeRampToEvent
   | SetEvent;

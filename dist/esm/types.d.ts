@@ -19,10 +19,15 @@ export interface DepthRampToEvent {
     nodeId: number;
     args: string[];
 }
+export interface VolumeRampToEvent {
+    eventType: 'volume.rampTo';
+    nodeId: number;
+    args: string[];
+}
 export interface SetEvent {
     eventType: 'set';
     nodeId: number;
     nodeType: string;
     args: number[];
 }
-export type SequenceEvent = CreateNodeEvent | ConnectEvent | TriggerAttackReleaseEvent | DepthRampToEvent | SetEvent;
+export type SequenceEvent = CreateNodeEvent | ConnectEvent | TriggerAttackReleaseEvent | DepthRampToEvent | VolumeRampToEvent | SetEvent;

@@ -15,6 +15,7 @@ import * as membranesynth from './instrument/membranesynth.js';
 import * as plucksynth from './instrument/plucksynth.js';
 import * as noisesynth from './instrument/noisesynth.js';
 import * as portamento from './instrument/portamento.js';
+import * as volumeControl from './instrument/volume-control.js';
 // Import all effect demos
 import * as reverb from './effect/reverb.js';
 import * as freeverb from './effect/freeverb.js';
@@ -53,6 +54,7 @@ const allSequenceModules = [
     plucksynth,
     noisesynth,
     portamento,
+    volumeControl,
     // Effect demos
     reverb,
     freeverb,
