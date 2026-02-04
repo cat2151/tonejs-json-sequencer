@@ -11,6 +11,9 @@
       --status-bg: #f0f0f0;
       --info-bg: #e8f4f8;
       --info-border: #2196F3;
+      --hint-bg: #fff3cd;
+      --hint-border: #ffc107;
+      --hint-text: #333333;
     }
     
     @media (prefers-color-scheme: dark) {
@@ -18,6 +21,9 @@
         --status-bg: #2d2d30;
         --info-bg: #2d2d30;
         --info-border: #0078d4;
+        --hint-bg: #3d3420;
+        --hint-border: #8b7033;
+        --hint-text: #ffffff;
       }
     }
     
@@ -93,6 +99,63 @@
       white-space: pre-wrap;
       word-wrap: break-word;
     }
+
+    .hint-box {
+      margin-top: 10px;
+      padding: 10px;
+      background: var(--hint-bg);
+      color: var(--hint-text);
+      border-left: 4px solid var(--hint-border);
+      border-radius: 4px;
+    }
+
+    .collapsible-section {
+      margin: 20px 0;
+    }
+
+    .collapsible-header {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      padding: 10px;
+      background: var(--info-bg);
+      border-left: 4px solid var(--info-border);
+      border-radius: 4px;
+      user-select: none;
+    }
+
+    .collapsible-header:hover {
+      opacity: 0.9;
+    }
+
+    .collapsible-header h3 {
+      margin: 0;
+      color: var(--text-color);
+    }
+
+    .collapsible-indicator {
+      margin-right: 10px;
+      font-size: 18px;
+      transition: transform 0.3s ease;
+    }
+
+    .collapsible-indicator.collapsed {
+      transform: rotate(-90deg);
+    }
+
+    .collapsible-content {
+      display: none;
+      padding: 15px;
+      background: var(--info-bg);
+      color: var(--text-color);
+      border-left: 4px solid var(--info-border);
+      border-radius: 0 0 4px 4px;
+      margin-top: -4px;
+    }
+
+    .collapsible-content.expanded {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -103,18 +166,40 @@
     <a href="offline-rendering.html">オフラインレンダリングデモ →</a>
   </p>
   
-  <div class="info">
-    <h3>このデモについて:</h3>
-    <p><strong>🎵 Streaming（ストリーミング再生）方式</strong></p>
-    <ul>
-      <li><strong>ライブ編集:</strong> 再生中にテキストエリアでシーケンスを編集 - 変更はリアルタイムに反映されます</li>
-      <li><strong>ループ再生:</strong> ループモードを有効にすると、シーケンスを連続再生できます</li>
-      <li><strong>50ms先読み:</strong> スムーズな再生のため、イベントは50msの先読みでスケジュールされます</li>
-      <li><strong>デバッグモード:</strong> 詳細なタイミングとスケジューリング情報を確認できます</li>
-    </ul>
-    <p style="margin-top: 10px; padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
-      <strong>💡 ヒント:</strong> シーケンス全体を一括でレンダリングする場合は、<a href="offline-rendering.html">オフラインレンダリングデモ</a>をご利用ください（One-shot方式）
-    </p>
+  <div class="collapsible-section">
+    <div class="collapsible-header" onclick="toggleSection('aboutSection')">
+      <span class="collapsible-indicator collapsed" id="aboutIndicator">▼</span>
+      <h3>このデモについて</h3>
+    </div>
+    <div class="collapsible-content" id="aboutSection">
+      <p><strong>🎵 Streaming（ストリーミング再生）方式</strong></p>
+      <ul>
+        <li><strong>ライブ編集:</strong> 再生中にテキストエリアでシーケンスを編集 - 変更はリアルタイムに反映されます</li>
+        <li><strong>ループ再生:</strong> ループモードを有効にすると、シーケンスを連続再生できます</li>
+        <li><strong>50ms先読み:</strong> スムーズな再生のため、イベントは50msの先読みでスケジュールされます</li>
+        <li><strong>デバッグモード:</strong> 詳細なタイミングとスケジューリング情報を確認できます</li>
+      </ul>
+      <div class="hint-box">
+        <strong>💡 ヒント:</strong> シーケンス全体を一括でレンダリングする場合は、<a href="offline-rendering.html">オフラインレンダリングデモ</a>をご利用ください（One-shot方式）
+      </div>
+    </div>
+  </div>
+
+  <div class="collapsible-section">
+    <div class="collapsible-header" onclick="toggleSection('usageSection')">
+      <span class="collapsible-indicator collapsed" id="usageIndicator">▼</span>
+      <h3>使い方</h3>
+    </div>
+    <div class="collapsible-content" id="usageSection">
+      <ol>
+        <li><strong>再生:</strong> 「再生」ボタンをクリックすると、50msの先読みスケジューリングで再生が開始されます</li>
+        <li><strong>ライブ編集:</strong> 再生中にテキストエリアでシーケンスを編集 - 変更は即座に反映されます</li>
+        <li><strong>ループ:</strong> 「ループ再生」を有効にすると、シーケンスを連続的に繰り返し再生できます</li>
+        <li><strong>デバッグ:</strong> 「デバッグモード」を有効にすると、イベントのスケジューリングとタイミングの詳細情報が表示されます</li>
+        <li><strong>停止:</strong> 「停止」ボタンをクリックすると、再生が停止してリセットされます</li>
+      </ol>
+      <p><strong>📝 Note:</strong> この方式は<strong>リアルタイムストリーミング再生</strong>です。ライブ編集や連続再生が可能で、対話的な音楽制作に最適です。</p>
+    </div>
   </div>
 
   <div class="streaming-controls">
@@ -183,19 +268,21 @@
   <h3>シーケンス（NDJSON形式 - 1行につき1イベント）:</h3>
   <textarea id="sequenceEditor" rows="30" cols="80"></textarea>
 
-  <div class="info">
-    <h3>使い方:</h3>
-    <ol>
-      <li><strong>再生:</strong> 「再生」ボタンをクリックすると、50msの先読みスケジューリングで再生が開始されます</li>
-      <li><strong>ライブ編集:</strong> 再生中にテキストエリアでシーケンスを編集 - 変更は即座に反映されます</li>
-      <li><strong>ループ:</strong> 「ループ再生」を有効にすると、シーケンスを連続的に繰り返し再生できます</li>
-      <li><strong>デバッグ:</strong> 「デバッグモード」を有効にすると、イベントのスケジューリングとタイミングの詳細情報が表示されます</li>
-      <li><strong>停止:</strong> 「停止」ボタンをクリックすると、再生が停止してリセットされます</li>
-    </ol>
-    <p><strong>📝 Note:</strong> この方式は<strong>リアルタイムストリーミング再生</strong>です。ライブ編集や連続再生が可能で、対話的な音楽制作に最適です。</p>
-  </div>
-
   <script src="https://unpkg.com/tone@15.2.7/build/Tone.js"></script>
   <script type="module" src="./dist/demo/streaming.js"></script>
+  <script>
+    function toggleSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      const indicator = document.getElementById(sectionId.replace('Section', 'Indicator'));
+      
+      if (section.classList.contains('expanded')) {
+        section.classList.remove('expanded');
+        indicator.classList.add('collapsed');
+      } else {
+        section.classList.add('expanded');
+        indicator.classList.remove('collapsed');
+      }
+    }
+  </script>
 </body>
 </html>
