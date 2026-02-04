@@ -80,6 +80,10 @@ export async function playSequence(
   nodes: SequencerNodes,
   sequence: SequenceEvent[]
 ): Promise<void> {
+  // Stop and clear Transport to remove any scheduled events from previous sequences
+  Tone.Transport.stop();
+  Tone.Transport.cancel();
+  
   // Dispose existing nodes
   nodes.disposeAll();
 
