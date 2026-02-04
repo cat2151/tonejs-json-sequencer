@@ -71,6 +71,9 @@ export function scheduleOrExecuteEvent(Tone, nodes, element) {
  * @param sequence - Array of sequence events
  */
 export async function playSequence(Tone, nodes, sequence) {
+    // Stop and clear Transport to remove any scheduled events from previous sequences
+    Tone.Transport.stop();
+    Tone.Transport.cancel();
     // Dispose existing nodes
     nodes.disposeAll();
     // First pass: create nodes and connections, and set Transport settings

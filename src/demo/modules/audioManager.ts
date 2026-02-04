@@ -9,6 +9,10 @@ export class AudioManager {
 
   async playSequence(sequence: SequenceEvent[]): Promise<void> {
     try {
+      // Stop and clear Transport to remove any scheduled events from previous sequences
+      Tone.Transport.stop();
+      Tone.Transport.cancel();
+      
       // Dispose all existing nodes
       this.nodes.disposeAll();
       
