@@ -337,7 +337,7 @@ tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記
 - **必要なJSON Event**:
   - `pan.rampTo` - パンの滑らかな変更
   - `pan.value` - パンの即座の変更
-- **Tone.jsでの実現**: すべてのノードが `.pan` プロパティを持ち、Param APIをサポート
+- **Tone.jsでの実現**: `PanVol` / `Panner` など `.pan` パラメータを持つ対応ノードを経由し、Param APIで制御
 - **用途例**: シーケンスフレーズでL/Rを動的に変化させる
 
 #### LPFカットオフ周波数とレゾナンス制御 ⏳
@@ -361,8 +361,13 @@ tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記
 #### Expression（表現力）制御 ⏳
 - **概要**: ボリュームやその他のパラメータを動的に制御
 - **必要なJSON Event**:
-  - 汎用的なパラメータアクセス機構
-  - 例: `<nodeId>.<paramPath>.rampTo` 形式
+  - （短期）ボリューム等、主要パラメータごとの個別イベントを追加
+  - （中長期）汎用的なパラメータアクセス機構
+  - 例: `<nodeId>.<paramPath>.rampTo` 形式（※ `paramPath` 自体をホワイトリスト化し、対応パスを列挙する前提）
+- **設計方針 / ロードマップ**:
+  - switch-case による **ノードIDのホワイトリスト方式は継続** する
+  - `<nodeId>.<paramPath>.rampTo` を導入する場合も、`paramPath` は任意文字列ではなく **事前定義されたパスのみ許可** する
+  - まずは個別イベントを増やし、必要なパターンを洗い出したうえで、対応パスを列挙した汎用機構を検討する
 - **Tone.jsでの実現**: すべてのParamオブジェクトがrampToをサポート
 - **用途例**: フレーズ中でExpressionを増減、ダイナミクスの変化
 
