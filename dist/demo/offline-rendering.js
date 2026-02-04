@@ -7,6 +7,8 @@ class OfflineRenderingDemo {
         this.sequences = loadAllSequences();
         this.currentBuffer = null;
         this.currentBlobUrl = null;
+        this.debounceTimer = null;
+        this.renderStartTime = 0;
         this.initializeUI();
         this.initializeCollapsibleSections();
         this.loadInitialSequence();
@@ -20,17 +22,19 @@ class OfflineRenderingDemo {
             option.textContent = seq.name;
             selector.appendChild(option);
         });
-        // Render button
-        document.getElementById('renderButton')?.addEventListener('click', () => {
-            this.render();
-        });
         // Download button
         document.getElementById('downloadButton')?.addEventListener('click', () => {
             this.download();
         });
-        // Sequence selector change
+        // Sequence selector change - auto-render
         selector.addEventListener('change', () => {
             this.loadSelectedSequence();
+            this.render();
+        });
+        // Textarea change - debounced auto-render
+        const textarea = document.getElementById('sequenceEditor');
+        textarea?.addEventListener('input', () => {
+            this.debouncedRender();
         });
     }
     initializeCollapsibleSections() {
@@ -75,26 +79,41 @@ class OfflineRenderingDemo {
         const textarea = document.getElementById('sequenceEditor');
         return textarea.value;
     }
+    debouncedRender() {
+        if (this.debounceTimer !== null) {
+            window.clearTimeout(this.debounceTimer);
+        }
+        this.debounceTimer = window.setTimeout(() => {
+            this.render();
+        }, 1000); // 1 second debounce
+    }
+    formatTimestamp() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        return `${year}${month}${day}_${hours}${minutes}${seconds}`;
+    }
     async render() {
         try {
             // Ensure audio context is started (required for Tone.js initialization)
             // Even though offline rendering doesn't use the main audio context,
             // Tone.js requires context initialization before creating offline contexts
             await Tone.start();
-            // Disable render button during rendering
-            const renderButton = document.getElementById('renderButton');
-            renderButton.disabled = true;
+            // Record start time
+            this.renderStartTime = performance.now();
             // Hide audio player and download button
             const audioPlayer = document.getElementById('audioPlayer');
             const downloadButton = document.getElementById('downloadButton');
             if (audioPlayer)
                 audioPlayer.classList.remove('active');
             downloadButton.disabled = true;
-            // Get configuration
-            const sampleRateInput = document.getElementById('sampleRate');
-            const endBufferInput = document.getElementById('endBuffer');
-            const sampleRate = parseInt(sampleRateInput.value);
-            const endBufferSeconds = parseFloat(endBufferInput.value);
+            // Fixed configuration
+            const sampleRate = 48000;
+            const endBufferSeconds = 0;
             // Show progress container
             const progressContainer = document.getElementById('progressContainer');
             if (progressContainer)
@@ -117,8 +136,12 @@ class OfflineRenderingDemo {
             // Render offline
             const result = await this.renderer.render(ndjson);
             this.currentBuffer = result.buffer;
-            // Update status
-            this.updateStatus(`レンダリング完了！ 長さ: ${result.duration.toFixed(2)}秒`);
+            // Calculate rendering time and speed
+            const renderEndTime = performance.now();
+            const renderTimeSeconds = (renderEndTime - this.renderStartTime) / 1000;
+            const renderSpeed = result.duration / renderTimeSeconds;
+            // Update status with rendering info
+            this.updateStatus(`レンダリング完了！ 長さ: ${result.duration.toFixed(2)}秒 | レンダリング時間: ${renderTimeSeconds.toFixed(2)}秒、レンダリングスピード: x${renderSpeed.toFixed(1)}`);
             // Create audio URL for preview
             this.createAudioPreview(result.buffer);
             // Enable download button
@@ -126,16 +149,22 @@ class OfflineRenderingDemo {
             // Show audio player
             if (audioPlayer)
                 audioPlayer.classList.add('active');
-            // Re-enable render button
-            renderButton.disabled = false;
+            // Auto-play preview
+            const audioElement = document.getElementById('audioElement');
+            if (audioElement) {
+                try {
+                    await audioElement.play();
+                }
+                catch (e) {
+                    console.log('Auto-play was prevented by browser policy');
+                }
+            }
+            // Draw waveform overlay on progress bar
+            this.drawWaveformOverlay(result.buffer);
         }
         catch (error) {
             console.error('Error during rendering:', error);
             this.updateStatus('エラー: ' + error.message);
-            alert('音声のレンダリングに失敗しました。詳細はコンソールを確認してください。');
-            // Re-enable render button
-            const renderButton = document.getElementById('renderButton');
-            renderButton.disabled = false;
             // Hide progress container
             const progressContainer = document.getElementById('progressContainer');
             if (progressContainer)
@@ -163,12 +192,11 @@ class OfflineRenderingDemo {
     }
     download() {
         if (!this.currentBuffer) {
-            alert('ダウンロードする音声がありません。先にレンダリングしてください。');
+            alert('ダウンロードする音声がありません。');
             return;
         }
         try {
-            const filenameInput = document.getElementById('filename');
-            const filename = filenameInput.value || 'output.wav';
+            const filename = `output_${this.formatTimestamp()}.wav`;
             downloadWav(this.currentBuffer, filename);
             this.updateStatus('ダウンロード開始: ' + filename);
         }
@@ -176,6 +204,51 @@ class OfflineRenderingDemo {
             console.error('Error downloading WAV:', error);
             alert('WAVのダウンロードに失敗しました。詳細はコンソールを確認してください。');
         }
+    }
+    drawWaveformOverlay(buffer) {
+        const progressBar = document.querySelector('.progress-bar');
+        if (!progressBar)
+            return;
+        // Remove existing canvas if any
+        const existingCanvas = progressBar.querySelector('canvas');
+        if (existingCanvas) {
+            existingCanvas.remove();
+        }
+        // Create canvas for waveform
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'absolute';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.pointerEvents = 'none';
+        const rect = progressBar.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        progressBar.style.position = 'relative';
+        progressBar.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+        if (!ctx)
+            return;
+        // Get audio data from first channel
+        const channelData = buffer.getChannelData(0);
+        const step = Math.ceil(channelData.length / canvas.width);
+        const amp = canvas.height / 2;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let i = 0; i < canvas.width; i++) {
+            const min = Math.min(...Array.from(channelData.slice(i * step, (i + 1) * step)));
+            const max = Math.max(...Array.from(channelData.slice(i * step, (i + 1) * step)));
+            const y1 = (1 + min) * amp;
+            const y2 = (1 + max) * amp;
+            if (i === 0) {
+                ctx.moveTo(i, y1);
+            }
+            ctx.lineTo(i, y1);
+            ctx.lineTo(i, y2);
+        }
+        ctx.stroke();
     }
     updateStatus(status) {
         const statusElement = document.getElementById('status');
