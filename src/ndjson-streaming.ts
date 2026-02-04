@@ -346,6 +346,9 @@ export class NDJSONStreamingPlayer {
     }
 
     let scheduledInThisLoop = 0;
+    
+    // Cache lookahead value for performance (used in debug timing status calculation)
+    const lookaheadMs = this.config.lookaheadMs;
 
     // Process events within lookahead window
     this.playbackState.currentEvents.forEach((event, index) => {
@@ -373,22 +376,39 @@ export class NDJSONStreamingPlayer {
           // Calculate relative time from playback start (where start = 0)
           const relativeTime = currentTime - this.playbackState.startTime;
           
-          // Calculate expected time for this event in this loop iteration
-          const expectedAbsoluteTime = this.playbackState.startTime + eventTime + loopOffset;
+          // Convert to milliseconds for comparison (used for both timing status and visual bar)
+          const timeDeltaMs = timeDelta * 1000;
           
-          // Calculate timing drift: how late/early the scheduling loop is relative to event time
-          // (positive = late, negative = early)
-          const timingDrift = currentTime - expectedAbsoluteTime;
+          // Derive timing drift from timeDelta (timingDrift = -timeDelta)
+          // Positive drift = scheduling loop is late, negative drift = scheduling loop is early
+          const timingDriftMs = -timeDeltaMs;
           
-          // Determine timing accuracy status
-          const TIMING_THRESHOLD_MS = 1; // Consider timing accurate within 1ms
+          // Determine timing accuracy status based on the reservation buffer window.
+          // 
+          // User expectation (per issue-notes/108.md): With a 50ms lookahead buffer,
+          // events scheduled within the window [currentTime, currentTime + lookahead]
+          // should be considered "正常" (on-time).
+          //
+          // timeDelta = absoluteTime - currentTime
+          //   - Positive: event will play in the future (scheduled ahead of time)
+          //   - Negative: event should have played already (scheduled late)
+          //
+          // We consider an event "正常" if: 0 <= timeDeltaMs <= lookaheadMs
+          // This represents the reservation buffer window.
+          
           let timingStatus = '⚪'; // Default: on-time
-          if (Math.abs(timingDrift * 1000) > TIMING_THRESHOLD_MS) {
-            timingStatus = timingDrift > 0 ? '🔴 LATE' : '🟢 EARLY';
+          
+          // Event is too late: scheduled in the past (already should have played)
+          if (timeDeltaMs < 0) {
+            timingStatus = '🔴 LATE';
           }
+          // Event is too early: scheduled beyond the lookahead buffer
+          else if (timeDeltaMs > lookaheadMs) {
+            timingStatus = '🟢 EARLY';
+          }
+          // Otherwise, event is within the reservation buffer (on-time)
           
           // Visual bar for timing delta (how far ahead we're scheduling)
-          const timeDeltaMs = timeDelta * 1000;
           // Scale the bar to represent the configured lookahead window (0..lookaheadMs maps to 0..10 blocks)
           const bars = Math.min(
             Math.max(Math.round((timeDeltaMs / this.config.lookaheadMs) * 10), 0),
@@ -410,7 +430,7 @@ export class NDJSONStreamingPlayer {
             rowIndex: index,
             eventTime: eventTime.toFixed(3),
             scheduledRealTime: absoluteTime.toFixed(3),
-            timingDriftMs: (timingDrift * 1000).toFixed(3),
+            timingDriftMs: timingDriftMs.toFixed(3),
             timeDeltaMs: timeDeltaMs.toFixed(1),
             ...debugInfo
           });

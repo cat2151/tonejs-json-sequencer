@@ -24,3 +24,4 @@ dist/cjs/**/*.js
 /streaming.html
 /styles.css
 /_site/
+demo/vendor/
