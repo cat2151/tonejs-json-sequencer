@@ -1,4 +1,4 @@
-Last updated: 2026-02-04
+Last updated: 2026-02-05
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -201,6 +201,7 @@ Last updated: 2026-02-04
 - .github/workflows/call-daily-project-summary.yml
 - .github/workflows/call-issue-note.yml
 - .github/workflows/call-translate-readme.yml
+- .github/workflows/deploy-pages.yml
 - .github/workflows/release.yml
 - .gitignore
 - LICENSE
@@ -210,10 +211,12 @@ Last updated: 2026-02-04
 - RELEASE.ja.md
 - RELEASE.md
 - _config.yml
-- index.html
-- offline-rendering.html
-- streaming.html
-- styles.css
+- demo/README.md
+- demo/index.html
+- demo/offline-rendering.html
+- demo/streaming-demo.css
+- demo/streaming.html
+- demo/styles.css
 - dist/cjs/event-scheduler.d.ts
 - dist/cjs/event-scheduler.js
 - dist/cjs/factories/effect-factory.d.ts
@@ -272,6 +275,8 @@ Last updated: 2026-02-04
 - dist/demo/instrument/sampler-piano.js
 - dist/demo/instrument/streaming-test-doremi.js
 - dist/demo/instrument/supersaw.js
+- dist/demo/instrument/tempo-test.js
+- dist/demo/instrument/volume-control.js
 - dist/demo/main.js
 - dist/demo/modules/audioManager.js
 - dist/demo/modules/uiManager.js
@@ -282,40 +287,28 @@ Last updated: 2026-02-04
 - dist/demo/sequences/synthSequences.js
 - dist/demo/streaming.js
 - dist/esm/event-scheduler.d.ts
-- dist/esm/event-scheduler.js
 - dist/esm/event-scheduler.mjs
 - dist/esm/factories/effect-factory.d.ts
-- dist/esm/factories/effect-factory.js
 - dist/esm/factories/effect-factory.mjs
 - dist/esm/factories/instrument-factory.d.ts
-- dist/esm/factories/instrument-factory.js
 - dist/esm/factories/instrument-factory.mjs
 - dist/esm/index.d.ts
-- dist/esm/index.js
 - dist/esm/index.mjs
 - dist/esm/ndjson-streaming.d.ts
-- dist/esm/ndjson-streaming.js
 - dist/esm/ndjson-streaming.mjs
 - dist/esm/node-factory.d.ts
-- dist/esm/node-factory.js
 - dist/esm/node-factory.mjs
 - dist/esm/offline-renderer.d.ts
-- dist/esm/offline-renderer.js
 - dist/esm/offline-renderer.mjs
 - dist/esm/sequencer-nodes.d.ts
-- dist/esm/sequencer-nodes.js
 - dist/esm/sequencer-nodes.mjs
 - dist/esm/streaming/event-processor.d.ts
-- dist/esm/streaming/event-processor.js
 - dist/esm/streaming/event-processor.mjs
 - dist/esm/streaming/playback-state.d.ts
-- dist/esm/streaming/playback-state.js
 - dist/esm/streaming/playback-state.mjs
 - dist/esm/types.d.ts
-- dist/esm/types.js
 - dist/esm/types.mjs
 - dist/esm/utils/time-parser.d.ts
-- dist/esm/utils/time-parser.js
 - dist/esm/utils/time-parser.mjs
 - dist/event-scheduler.d.ts
 - dist/event-scheduler.js
@@ -349,8 +342,13 @@ Last updated: 2026-02-04
 - examples/offline-rendering-example.html
 - generated-docs/project-overview-generated-prompt.md
 - googled947dc864c270e07.html
-- index.html
 - issue-notes/100.md
+- issue-notes/106.md
+- issue-notes/108.md
+- issue-notes/109.md
+- issue-notes/110.md
+- issue-notes/111.md
+- issue-notes/112.md
 - issue-notes/62.md
 - issue-notes/64.md
 - issue-notes/67.md
@@ -410,6 +408,8 @@ Last updated: 2026-02-04
 - src/demo/instrument/sampler-piano.ts
 - src/demo/instrument/streaming-test-doremi.ts
 - src/demo/instrument/supersaw.ts
+- src/demo/instrument/tempo-test.ts
+- src/demo/instrument/volume-control.ts
 - src/demo/main.ts
 - src/demo/modules/audioManager.ts
 - src/demo/modules/uiManager.ts
@@ -437,32 +437,46 @@ Last updated: 2026-02-04
 - tsconfig.json
 
 ## 現在のオープンIssues
-## [Issue #97](../issue-notes/97.md): demoが、demo/ にdeployされてしまっておりuserが混乱した。ほかのcat2151のリポジトリ同様、プロジェクトルートにdeployとする
-[issue-notes/97.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/97.md)
+## [Issue #117](../issue-notes/117.md): Improve offline rendering demo UX with auto-rendering and performance metrics
+## Offline Rendering Demo Improvements (Issue #112) ✅
 
-...
-ラベル: good first issue
---- issue-notes/97.md の内容 ---
+### All changes implemented and code review feedback addressed!
+
+**Implemented Features:**
+- [x] Remove "Render Entire Sequence" button - implement auto-rendering
+- [x] Add auto-rendering on sequence selection
+- [x] Add debounced auto-rendering ...
+ラベル: 
+--- issue-notes/117.md の内容 ---
 
 ```markdown
-# issue demoが、demo/ にdeployされてしまっておりuserが混乱した。ほかのcat2151のリポジトリ同様、プロジェクトルートにdeployとする #97
-[issues #97](https://github.com/cat2151/tonejs-json-sequencer/issues/97)
-
-
 
 ```
 
-## [Issue #90](../issue-notes/90.md): 直近でtempo（BPM）等が未実装だったように、未実装な要素を洗い出して、README.ja.mdにロードマップとして反映する
-[issue-notes/90.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/90.md)
+## [Issue #112](../issue-notes/112.md): オフラインレンダリングデモ を改善する
+[issue-notes/112.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/112.md)
 
 ...
-ラベル: 
---- issue-notes/90.md の内容 ---
+ラベル: good first issue
+--- issue-notes/112.md の内容 ---
 
 ```markdown
-# issue 直近でtempo（BPM）等が未実装だったように、未実装な要素を洗い出して、README.ja.mdにロードマップとして反映する #90
-[issues #90](https://github.com/cat2151/tonejs-json-sequencer/issues/90)
+# issue オフラインレンダリングデモ を改善する #112
+[issues #112](https://github.com/cat2151/tonejs-json-sequencer/issues/112)
 
+# 詳細
+- 機能追加 : 自動レンダリング
+    - 「最小構成」などを選んだら即座にレンダリングする。「シーケンス全体をレンダリング」ボタンを削除する（シンプルな見た目を優先する）
+    - シーケンスNDJSON欄のtextareaも、編集したらデバウンスのち自動でレンダリングする。
+- 機能追加 : レンダリング完了直後に、以下を自動で実施する。
+    - レンダリング結果波形を、レンダリング進行状況グラフにオーバーレイ表示する。
+    - プレビュー再生する。
+        - （プレビューシステムは削除しない。あくまで自動再生を追加するだけ）
+    - レンダリング時間とスピードを表示する。
+        - 例えば2.70秒のwavのレンダリングを、0.27秒でレンダリング完了したら、
+        - 「レンダリング時間：0.27秒、レンダリングスピード：x10」のように表示する
+- 削除 : レンダリング設定欄を削除する。48000Hz固定（どこかにそれは表示すること）、終了バッファは0秒固定、ファイル名はoutput_YYYYMMDD_HHMISS.wav固定。シンプルな見た目を優先する
+- 削除 : 「レンダリング進行状況」「レンダリングされた音声のプレビュー」「音声をプレビューできます」という3つの文言は、シンプルな見た目を優先し、削除とする
 
 
 ```
@@ -482,548 +496,251 @@ Last updated: 2026-02-04
 
 ```
 
-## [Issue #88](../issue-notes/88.md): JSONで、指定したnodeの音量を変更できるようにする
-[issue-notes/88.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/88.md)
-
-...
-ラベル: good first issue
---- issue-notes/88.md の内容 ---
-
-```markdown
-# issue JSONで、指定したnodeの音量を変更できるようにする #88
-[issues #88](https://github.com/cat2151/tonejs-json-sequencer/issues/88)
-
-
-
-```
-
-## [Issue #87](../issue-notes/87.md): tempo（BPM）をJSONで指定できるようにする
-[issue-notes/87.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/87.md)
-
-...
-ラベル: good first issue
---- issue-notes/87.md の内容 ---
-
-```markdown
-# issue tempo（BPM）をJSONで指定できるようにする #87
-[issues #87](https://github.com/cat2151/tonejs-json-sequencer/issues/87)
-
-
-
-```
-
 ## ドキュメントで言及されているファイルの内容
-### .github/actions-tmp/README.ja.md
+### .github/actions-tmp/issue-notes/12.md
 ```md
 {% raw %}
-# GitHub Actions 共通ワークフロー集
+# issue project-summary を他projectから使いやすくする #12
+[issues #12](https://github.com/cat2151/github-actions/issues/12)
 
-このリポジトリは、**複数プロジェクトで使い回せるGitHub Actions共通ワークフロー集**です
+# 保留、別projectでの検証待ちのもの
+- promptsをcall側ymlで指定可能にする
+  - 保留の理由
+    - YAGNI原則
+      - 現状の共通workflow側のpromptsで問題ないうちは、保留とする
+        - そのままで使える可能性が高い見込み
+      - 検証が必要
+      - 別promptsを実際に書く必要が出たときに、追加実装をする
+# 課題、 docs/ をメンテする
+- 対象は、 daily-summary-setup.md
+- call-daily-project-summary.yml の導入手順を書く
+- どうする？
+  - 次の日次バッチでagent用promptを生成させる
+- 結果
+  - 生成させた
+  - 導入手順をメンテさせた
+  - 人力でさらにメンテした
+  - これでOKと判断する。
+  - あとは必要に応じてissue起票すればよい、今すぐのissue起票は不要（YAGNI原則）、と判断する
 
-<p align="left">
-  <a href="README.ja.md"><img src="https://img.shields.io/badge/🇯🇵-Japanese-red.svg" alt="Japanese"></a>
-  <a href="README.md"><img src="https://img.shields.io/badge/🇺🇸-English-blue.svg" alt="English"></a>
-</p>
-
-# 3行で説明
-- 🚀 プロジェクトごとのGitHub Actions管理をもっと楽に
-- 🔗 共通化されたワークフローで、どのプロジェクトからも呼ぶだけでOK
-- ✅ メンテは一括、プロジェクト開発に集中できます
-
-## Quick Links
-| 項目 | リンク |
-|------|--------|
-| 📖 プロジェクト概要 | [generated-docs/project-overview.md](generated-docs/project-overview.md) |
-| 📖 コールグラフ | [generated-docs/callgraph.html](https://cat2151.github.io/github-actions/generated-docs/callgraph.html) |
-| 📊 開発状況 | [generated-docs/development-status.md](generated-docs/development-status.md) |
-
-# notes
-- まだ共通化の作業中です
-- まだワークフロー内容を改善中です
-
-※README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生成しています
+# closeとする
 
 {% endraw %}
 ```
 
-### README.ja.md
+### .github/actions-tmp/issue-notes/17.md
 ```md
 {% raw %}
-# tonejs-json-sequencer
+# issue development-status が生成したmdに誤りがある。issue-note へのlinkがURL誤りで、404となってしまう #17
+[issues #17](https://github.com/cat2151/github-actions/issues/17)
 
-<p align="left">
-  <a href="https://deepwiki.com/cat2151/tonejs-json-sequencer"><img src="https://img.shields.io/badge/DeepWiki-Documentation-blue?logo=book" alt="DeepWiki"></a>
-  <a href="README.ja.md"><img src="https://img.shields.io/badge/🇯🇵-Japanese-red.svg" alt="Japanese"></a>
-  <a href="README.md"><img src="https://img.shields.io/badge/🇺🇸-English-blue.svg" alt="English"></a>
-  <a href="https://cat2151.github.io/tonejs-json-sequencer/index.html"><img src="https://img.shields.io/badge/🚀-Live%20Demo-brightgreen.svg" alt="Demo"></a>
-  <a href="https://cat2151.github.io/tonejs-json-sequencer/streaming.html"><img src="https://img.shields.io/badge/🎵-Streaming%20Demo-orange.svg" alt="Streaming Demo"></a>
-</p>
+# 事例
+- 生成したmdのURL：
+    - https://github.com/cat2151/github-actions/blob/main/generated-docs/development-status.md
+- そのmdをGitHub上でdecodeして閲覧したときのURL、404である：
+    - https://github.com/cat2151/github-actions/blob/main/generated-docs/issue-notes/16.md
+- そのmdに実際に含まれるURL：
+    - issue-notes/16.md
+- あるべきURL：
+    - https://github.com/cat2151/github-actions/blob/main/issue-notes/16.md
+- あるべきURLがmdにどう含まれているべきか：
+    - ../issue-notes/16.md
 
-# 状況
-- 頻繁に破壊的変更をする予定です
-- このドキュメントと関連ドキュメントには、AI生成が含まれており、計画などは間違っている（cat2151の構想とは異なる）可能性があります
+# どうする？
+- 案
+    - promptを修正する
+    - promptの場所は：
+        - .github_automation/project_summary/scripts/development/DevelopmentStatusGenerator.cjs
+    - 備考、cjs内にpromptがハードコーディングされており、promptをメンテしづらいので別途対処する : [issues #18](https://github.com/cat2151/github-actions/issues/18)
 
-# 3行で説明
-- Tone.jsの音色・エフェクト・演奏をJSONで記述できる軽量ライブラリ
-- コードを書かず、音をデータで制御できるため、UIやストリーミングと自然に連携
-- 時間順のイベントをデータとして扱い、緻密な演奏表現が可能に
+# 結果
+- agentにpromptを投げた
+    - ※promptは、development-statusで生成したもの
+- レビューした
+    - agentがフルパスで実装した、ことがわかった
+- userが分析し、 ../ のほうが適切と判断した
+    - ※「事例」コーナーを、あわせて修正した
+- そのように指示してagentに修正させた
+- testする
 
-# Why
-- ※応急でChatGPTに生成させたものです。今後、書き直す可能性があります。
-- ※実際には大部分が「今後実装予定です」
+# 結果
+- test green
+- closeする
 
-Tone.js は、Web 上で豊かな音楽表現を可能にするライブラリです。シンセの構築、エフェクトチェーン、トリガーのスケジューリングなど、高度な音響設計が JavaScript で自由に行えます。
-
-ただその柔軟さゆえに、音色やパターンの構造がプログラムに深く埋め込まれやすく、再利用や連携がしづらくなることもあります。
-
-tonejs-json-sequencer は、Tone.js をそのまま活かしながらも、音色定義・演奏内容・タイミング情報などを JSON として外部化し、データドリブンな音楽再生を可能にする小さな仕組みです。
-
-シーケンスは SMF のように、「時間順にすべてのイベントを明示的に並べた構造」
-
-音色は Tone.js の synth/chain/params を柔軟に JSON で定義可能
-
-演奏中にも音色パラメータを動的に変更できるため、ディレイビブラートやフィルターの開閉などの奏法表現も可能
-
-外部ツールやライブ生成エンジンからの NDJSON ストリームをそのまま受け取り、リアルタイム再生が可能
-
-これにより、構造を持った音楽データを UI やネットワーク越しに操作・再生・交換するという流れを、Tone.js 上でシンプルに実現できます。
-
-# Design Philosophy
-- ※応急でChatGPTに生成させたものです。今後、書き直す可能性があります。
-
-tonejs-json-sequencer では、Tone.js の構成要素（シンセ、エフェクトチェーン、パラメータ変更など）を、そのまま JSON に記述するというアプローチを取っています。
-
-独自の音楽記述言語や抽象レイヤーは導入せず、そうした高度なロジックは、より上位のプログラム層に委ねる設計です。
-
-音色定義は、Tone.Synth や Tone.FMSynth などのコンストラクタ名と引数オブジェクトを指定する形式
-
-イベント定義も、triggerAttackRelease などの Tone.js の呼び出し内容に近い構造
-
-演奏中のパラメータ変更も、関数名と引数をイベントのタイムスタンプとともに列挙する形式
-
-これにより、Tone.js の持つ音響表現力を損なうことなく、再生ロジックをデータに移し、外部から構成可能にするという目標を実現しています。
-
-コアとなる scheduleOrExecuteEvent は単一elementを受け取るだけのシンプルなソースファイルとし、上位レイヤーでシーケンスやNDJSON ストリーミングを扱う
-
-これにより、Tone.jsとつながる低レイヤーと、シーケンスやストリーミングなどの高レイヤーを、切り分けて柔軟に開発できます。
-
-# ライブラリとして利用する
-
-tonejs-json-sequencerは、他のプロジェクトからライブラリとして利用できます。
-
-## インストール
-
-### npm を使用する場合
-
-```bash
-npm install tonejs-json-sequencer tone
+{% endraw %}
 ```
 
-### dist/ ディレクトリを直接参照する場合
+### .github/actions-tmp/issue-notes/2.md
+```md
+{% raw %}
+# issue GitHub Actions「関数コールグラフhtmlビジュアライズ生成」を共通ワークフロー化する #2
+[issues #2](https://github.com/cat2151/github-actions/issues/2)
 
-このリポジトリをクローンまたはダウンロードして、`dist/` ディレクトリ内のファイルを直接参照できます。
 
-#### ES Modules（推奨）
-
-```javascript
-import { SequencerNodes, playSequence } from './path/to/tonejs-json-sequencer/dist/index.mjs';
+# prompt
+```
+あなたはGitHub Actionsと共通ワークフローのスペシャリストです。
+このymlファイルを、以下の2つのファイルに分割してください。
+1. 共通ワークフロー       cat2151/github-actions/.github/workflows/callgraph_enhanced.yml
+2. 呼び出し元ワークフロー cat2151/github-actions/.github/workflows/call-callgraph_enhanced.yml
+まずplanしてください
 ```
 
-#### CommonJS
+# 結果
+- indent
+    - linter？がindentのエラーを出しているがyml内容は見た感じOK
+    - テキストエディタとagentの相性問題と判断する
+    - 別のテキストエディタでsaveしなおし、テキストエディタをreload
+    - indentのエラーは解消した
+- LLMレビュー
+    - agent以外の複数のLLMにレビューさせる
+    - prompt
+```
+あなたはGitHub Actionsと共通ワークフローのスペシャリストです。
+以下の2つのファイルをレビューしてください。最優先で、エラーが発生するかどうかだけレビューしてください。エラー以外の改善事項のチェックをするかわりに、エラー発生有無チェックに最大限注力してください。
 
-```javascript
-const { SequencerNodes, playSequence } = require('./path/to/tonejs-json-sequencer/dist/cjs/index.js');
+--- 共通ワークフロー
+
+# GitHub Actions Reusable Workflow for Call Graph Generation
+name: Generate Call Graph
+
+# TODO Windowsネイティブでのtestをしていた名残が残っているので、今後整理していく。今はWSL act でtestしており、Windowsネイティブ環境依存問題が解決した
+#  ChatGPTにレビューさせるとそこそこ有用そうな提案が得られたので、今後それをやる予定
+#  agentに自己チェックさせる手も、セカンドオピニオンとして選択肢に入れておく
+
+on:
+  workflow_call:
+
+jobs:
+  check-commits:
+    runs-on: ubuntu-latest
+    outputs:
+      should-run: ${{ steps.check.outputs.should-run }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 50 # 過去のコミットを取得
+
+      - name: Check for user commits in last 24 hours
+        id: check
+        run: |
+          node .github/scripts/callgraph_enhanced/check-commits.cjs
+
+  generate-callgraph:
+    needs: check-commits
+    if: needs.check-commits.outputs.should-run == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      security-events: write
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Remove old CodeQL packages cache
+        run: rm -rf ~/.codeql/packages
+
+      - name: Check Node.js version
+        run: |
+          node .github/scripts/callgraph_enhanced/check-node-version.cjs
+
+      - name: Install CodeQL CLI
+        run: |
+          wget https://github.com/github/codeql-cli-binaries/releases/download/v2.22.1/codeql-linux64.zip
+          unzip codeql-linux64.zip
+          sudo mv codeql /opt/codeql
+          echo "/opt/codeql" >> $GITHUB_PATH
+
+      - name: Install CodeQL query packs
+        run: |
+          /opt/codeql/codeql pack install .github/codeql-queries
+
+      - name: Check CodeQL exists
+        run: |
+          node .github/scripts/callgraph_enhanced/check-codeql-exists.cjs
+
+      - name: Verify CodeQL Configuration
+        run: |
+          node .github/scripts/callgraph_enhanced/analyze-codeql.cjs verify-config
+
+      - name: Remove existing CodeQL DB (if any)
+        run: |
+          rm -rf codeql-db
+
+      - name: Perform CodeQL Analysis
+        run: |
+          node .github/scripts/callgraph_enhanced/analyze-codeql.cjs analyze
+
+      - name: Check CodeQL Analysis Results
+        run: |
+          node .github/scripts/callgraph_enhanced/analyze-codeql.cjs check-results
+
+      - name: Debug CodeQL execution
+        run: |
+          node .github/scripts/callgraph_enhanced/analyze-codeql.cjs debug
+
+      - name: Wait for CodeQL results
+        run: |
+          node -e "setTimeout(()=>{}, 10000)"
+
+      - name: Find and process CodeQL results
+        run: |
+          node .github/scripts/callgraph_enhanced/find-process-results.cjs
+
+      - name: Generate HTML graph
+        run: |
+          node .github/scripts/callgraph_enhanced/generate-html-graph.cjs
+
+      - name: Copy files to generated-docs and commit results
+        run: |
+          node .github/scripts/callgraph_enhanced/copy-commit-results.cjs
+
+--- 呼び出し元
+# 呼び出し元ワークフロー: call-callgraph_enhanced.yml
+name: Call Call Graph Enhanced
+
+on:
+  schedule:
+    # 毎日午前5時(JST) = UTC 20:00前日
+    - cron: '0 20 * * *'
+  workflow_dispatch:
+
+jobs:
+  call-callgraph-enhanced:
+    # uses: cat2151/github-actions/.github/workflows/callgraph_enhanced.yml
+    uses: ./.github/workflows/callgraph_enhanced.yml # ローカルでのテスト用
 ```
 
-#### TypeScript
+# レビュー結果OKと判断する
+- レビュー結果を人力でレビューした形になった
 
-TypeScript を使用する場合、型定義ファイルも `dist/` ディレクトリに含まれています：
-
-```typescript
-import { SequencerNodes, playSequence, SequenceEvent } from './path/to/tonejs-json-sequencer/dist/index.mjs';
-```
-
-型定義ファイル: `dist/index.d.ts`
-
-### CDN を使用する場合
-
-```html
-<script type="module">
-  import { SequencerNodes, playSequence } from 'https://cdn.jsdelivr.net/npm/tonejs-json-sequencer@1.0.0/dist/index.mjs';
-</script>
-```
-
-または unpkg を使用：
-
-```html
-<script type="module">
-  import { SequencerNodes, playSequence } from 'https://unpkg.com/tonejs-json-sequencer@1.0.0/dist/index.mjs';
-</script>
-```
-
-## 基本的な使用例
-
-```typescript
-import * as Tone from 'tone';
-import { SequencerNodes, playSequence } from 'tonejs-json-sequencer';
-
-// JSONでシーケンスを定義
-const sequence = [
-  {
-    eventType: 'createNode',
-    nodeId: 0,
-    nodeType: 'Synth',
-    args: { oscillator: { type: 'sine' } }
-  },
-  {
-    eventType: 'connect',
-    nodeId: 0,
-    connectTo: 'toDestination'
-  },
-  {
-    eventType: 'triggerAttackRelease',
-    nodeId: 0,
-    args: ['C4', '8n', '0']
-  },
-  {
-    eventType: 'triggerAttackRelease',
-    nodeId: 0,
-    args: ['E4', '8n', '0:0:2']
-  },
-  {
-    eventType: 'triggerAttackRelease',
-    nodeId: 0,
-    args: ['G4', '8n', '0:1:0']
-  }
-];
-
-// ノードマネージャを作成
-const nodes = new SequencerNodes();
-
-// シーケンスを再生
-async function play() {
-  await Tone.start();
-  await playSequence(Tone, nodes, sequence);
-}
-
-// ボタンクリックに紐付け
-document.getElementById('playButton').addEventListener('click', play);
-```
-
-## ブラウザでの使用例（CDN使用）
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Tonejs JSON Sequencer Example</title>
-  <script src="https://cdn.jsdelivr.net/npm/tone@15.0.4/build/Tone.js"></script>
-</head>
-<body>
-  <button id="playButton">Play</button>
-  
-  <script type="module">
-    import { SequencerNodes, playSequence } from 'https://cdn.jsdelivr.net/npm/tonejs-json-sequencer@1.0.0/dist/index.mjs';
-
-    const sequence = [
-      {
-        eventType: 'createNode',
-        nodeId: 0,
-        nodeType: 'Synth',
-        args: { oscillator: { type: 'sine' } }
-      },
-      {
-        eventType: 'connect',
-        nodeId: 0,
-        connectTo: 'toDestination'
-      },
-      {
-        eventType: 'triggerAttackRelease',
-        nodeId: 0,
-        args: ['C4', '4n', '0']
-      }
-    ];
-
-    const nodes = new SequencerNodes();
-
-    document.getElementById('playButton').addEventListener('click', async () => {
-      await Tone.start();
-      await playSequence(Tone, nodes, sequence);
-    });
-  </script>
-</body>
-</html>
-```
-
-## dist/ ディレクトリの構造
-
-`dist/` ディレクトリには以下のファイルが含まれています：
-
-- `index.mjs` - ES Modules形式のエントリポイント
-- `index.js` - CommonJS形式のエントリポイント
-- `index.d.ts` - TypeScript型定義ファイル
-- `esm/` - ES Modules形式のコンパイル済みファイル
-- `cjs/` - CommonJS形式のコンパイル済みファイル
-
-プロジェクトの要件に応じて、適切な形式のファイルを選択できます。
-
-## サンプル
-
-より詳細な使用例については、`examples/` ディレクトリを参照してください：
-
-- `examples/cdn-example.html` - CDNを使用したブラウザでの使用例
-- `examples/npm-example.mjs` - npmパッケージとしての使用例
-
-## NDJSON ストリーミング
-
-tonejs-json-sequencerは、リアルタイム再生、ライブ編集、ループ再生をサポートするNDJSON（改行区切りJSON）ストリーミングに対応しています。
-
-### 機能
-
-- **ライブ編集**: 再生中にシーケンスを編集可能 - 再起動なしでリアルタイムに変更が反映されます
-- **ループ再生**: シーケンスが終了すると自動的にループします
-- **50ms先読み**: イベントは50ms先にスケジュールされ、スムーズで正確な再生を実現します
-
-### 基本的な使い方
-
-```typescript
-import * as Tone from 'tone';
-import { SequencerNodes, NDJSONStreamingPlayer } from 'tonejs-json-sequencer';
-
-// ノードマネージャーを作成
-const nodes = new SequencerNodes();
-
-// 設定付きでストリーミングプレーヤーを作成
-const player = new NDJSONStreamingPlayer(Tone, nodes, {
-  lookaheadMs: 50,    // 先読み時間（ミリ秒）
-  loop: true,         // ループ再生を有効化
-  onLoopComplete: () => {
-    console.log('ループ完了！');
-  }
-});
-
-// NDJSON文字列またはイベント配列で再生開始
-const ndjson = `
-{"eventType":"createNode","nodeId":0,"nodeType":"Synth"}
-{"eventType":"connect","nodeId":0,"connectTo":"toDestination"}
-{"eventType":"triggerAttackRelease","nodeId":0,"args":["C4","8n","0"]}
-{"eventType":"triggerAttackRelease","nodeId":0,"args":["E4","8n","0:0:2"]}
-`;
-
-await Tone.start();
-await player.start(ndjson);
-
-// 再生中にシーケンスを更新（ライブ編集）
-const updatedNdjson = `
-{"eventType":"createNode","nodeId":0,"nodeType":"Synth"}
-{"eventType":"connect","nodeId":0,"connectTo":"toDestination"}
-{"eventType":"triggerAttackRelease","nodeId":0,"args":["G4","8n","0"]}
-`;
-await player.start(updatedNdjson);  // 停止せずに更新
-
-// 再生を停止
-player.stop();
-```
-
-### デモ
-
-ライブ編集とループ再生の完全なインタラクティブデモについては、`streaming.html` を参照してください。
-
-# Tone.js コンポーネントのJSON対応
-
-tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記述できるようにします。
-
-## 対応状況の概要
-
-### 現在対応済み（✅）
-
-- **Instrument**: Synth, MonoSynth, FMSynth, AMSynth, DuoSynth, MetalSynth, MembraneSynth, PluckSynth, NoiseSynth, PolySynth, Sampler
-- **Effect**: Reverb, Freeverb, JCReverb, Chorus, Phaser, Tremolo, Vibrato, AutoFilter, AutoPanner, AutoWah, FeedbackDelay, PingPongDelay, Distortion, BitCrusher, Chebyshev, PitchShift, FrequencyShifter, StereoWidener
-
-### 計画中（🚧）
-
-- **Source**: FatOscillator, PulseOscillator
-- **Effect**: EQ3（イコライザー）, Compressor（コンプレッサー）
-- **奏法メソッド**: Panpot変更, Expression変更, LPF変更, Portamento
-
-### 今後検討予定（⏳）
-
-- **Source**: Oscillator, OmniOscillator, Noise, Player, GrainPlayer 他
-- **Effect**: Filter系, Dynamics系（Limiter, Gate）, Spatial系（Convolver）他
-- **Component**: Envelope系, LFO, Signal系, Analysis系（Meter, Analyser, FFT）他
-
-## 詳細ドキュメント
-
-全コンポーネントの詳細な対応状況、実装優先順位、実装方針については、以下のドキュメントを参照してください：
-
-📄 [Tone.js コンポーネント JSON対応ロードマップ（詳細版）](docs/tonejs-components-roadmap.ja.md)
-
-このドキュメントには以下の情報が含まれています：
-- 全コンポーネントの分類と実装状況（Instrument / Source / Effect / Component）
-- 実装の優先順位と計画
-- 実装方針と進め方
-- 参考資料へのリンク
-
-# ロードマップ
-- ※順不同
-- ※のち2種類に切り分けて、利用しやすさ優先で1つのtopicに絞ったシンプルなサンプルと、強みがわかりやすいよう複数topicを実用的にまとめたサンプル、がよさげ
-- プログラム
-  - 済 : NDJSON streamingとライブ編集、ループ再生（streaming.htmlを参照）
-- 構造
-  - 済 : マルチティンバー、FM Bassと、Saw Chord
-- 奏法
-  - 済 : ディレイビブラート
-  - ピッチエンベロープで、attack時が-200cent、のち0centまで変化 ※attack連動ではなく、ディレイビブラートのように独立しているもの
-  - Panpotをその場でLR変更するsequenceフレーズ
-  - Expressionをその場で増減するフレーズ
-  - LPFをその場で増減するフレーズ
-- Effect
-  - リバーブ
-  - コーラス
-  - ディレイ
-  - フェイザー、シンセパッドに長いsweepをかける、無理なら無理な旨をtitle等に可視化する
-  - EQ
-  - コンプレッサー
-- Lead
-  - 済 : SuperSaw音色（FatOscillator）
-  - Distortion、できればPluckでギター
-  - Overdrive風のWaveShaper設定、できればPluckでギター
-  - Chebyshevを使った過激なシンセリード
-  - long decayで倍音変化のあるFMリード、ギラギラした典型的なFMリード、modulatorにpulse、carrierにもpulseを試す、無理なら無理な旨をtitle等に可視化する
-  - アンビエント用lead、pulse音色、ランダムにかすかに揺らぐピッチ変化
-  - クセのあるlead、attack連動ピッチエンベロープで、attack時が-200cent、のち0centまで変化
-  - ポルタメントを常時かけたlead
-- シーケンス音色
-  - PulseOscillator音色で、12.5% pulse
-  - PluckSynth音色で、アコースティックギターやharp
-  - NoiseSynthにフィルターをかけて音程感のあるフレーズを鳴らす
-- Drum
-  - Tone.js内蔵のKick, Snare, Tom, Hi-Hat、909Kickが無理ならその旨title等に可視化する
-- Pad
-  - 済 : FatOscillatorで分厚いシンセパッド
-  - FMエレピ
-- Bass
-  - 硬いFMベース
-  - attack連動フィルタエンベロープを常時かけたシンセベース
-  - Overdrive風のSawシンセベース、フィルタエンベロープつき、さらにフィルタがlong sweepで変化
-- ほかTone.jsで音がわかりやすいサンプルでめぼしいのが見つかり次第追記する。現在みた限りでは上記で一段落。
-
-# 開発メモ、随時更新
-- tonejs-mml-to-jsonとの連携
-  - 後回し。tonejs-json-sequencerの検証dataを整理してから、検討する
-- NDJSON streaming
-  - ステータス: ✅ **実装完了** （`streaming.html` と `src/ndjson-streaming.ts` を参照）
-  - 実装した機能:
-    - ライブ編集: textareaを編集したときは、再演奏ではなく、演奏を継続したまま、編集内容が反映される
-    - ループ演奏: 末尾までいったら先頭から演奏
-    - 50ms先読み: イベントは50ms先にスケジュールされ、スムーズに再生される
-  - 実装の詳細:
-    - `NDJSONStreamingPlayer` クラスが先読みタイミングでイベントを処理
-    - `requestAnimationFrame` を使用した連続的なイベント処理
-    - `parseNDJSON` 関数で配列とNDJSON文字列の両方に対応
-    - `streaming.html` に独立したデモと専用のソースファイルを配置
-- Tone.Transport.schedule はまだ使わない
-  - 試しにagentにcode生成させたところ、複雑なcodeが生成された割に、発音の不自然さの改善が確認できなかった
-  - 時期尚早である、test dataが揃ってからがよい、と判断する
-  - 今後の展望
-    - 上位レイヤー(tonejs-mml-to-json)を実装する
-    - test dataを作成する
-      - 明らかにリズムがヨレることがわかるJSON
-        - 例、アルペジオ、chord、bassによるハイテンポなフレーズ
-    - 以下を実施する
-      - そのJSONをtonejs-json-sequencerで演奏し、ヨレることを確認する
-      - Tone.Transport.schedule を実装し、ヨレ改善をtestする
-      - 実績のある、postmate-midiで成功している方法を実装してtestする：
-        - JSONの時刻記述を上位レイヤーで加工して実時間指定にし、NDJSON streamingで演奏する
-        - 前述のとおり+50msec未来を指定する
-
-# 検討中の課題
-- 課題、手でswitch caseを書いていくのが手間
-  - 方針、switch caseで実際に関数呼び出しを書く、のが安全でシンプルなので、基本的にこれでいくつもり
-    - 懸念、ただし今後switch caseが大きくなったとき、軽量ライブラリというコンセプトなのに通信速度がかかりすぎる懸念はある
-      - 想定、なのでホワイトリストにある関数名だけを使う仕組みも選択肢に入れておく、ただし複雑になりセキュリティのミスのリスクは増える
-        - 後回し、これは非機能要件なので、ドッグフーディングして「遅すぎる」となってからの検討のほうがよい
-  - 分析、生成でswitch caseをagentに書かせるにはcontext不足
-    - 例、生成で depth.rampTo などが網羅できるか不明
-    - 例、depth.rampTo は現状でよいか、ほかの奏法や音色でのメソッドチェーンはどういったものがあるかは、ドッグフーディングが必要
-    - 想定、仮に生成ですべて網羅が書けたとして、test red時に調査が手間（ソースコードが膨大になるので）
-  - 対策、実装方針はこのままとし、ドッグフーディングを進める
-- 音色ライブラリの検討
-  - ※そのうち、tonejs-mml-to-json同様に、別projectの案として切り出すかも
-  - これまでの課題
-    - Tone.jsは、実際に使いこなすとどれくらいの音まで出せるか？の潜在能力がよくわからない
-      - 使いこなす、とは、ここでは、外付け波形（サウンドフォント等）や外付けAudioWorkletなし、ローコストな実装の範囲で、としておく
-      - 例えばSawやSquareは、実際に出せる音色キャラクター、高音域のエリアシングノイズ有無、FM接続にどれくらい有用か、などが未調査でまだわからない
-        - 参考までにChatGPTにきいたところ（裏は取ってないので注意）、Tone.jsはnode生成時に波形テーブルを1loopぶん生成する方式で、高周波でナイキスト周波数まわりでエリアシングノイズは出るらしい
-      - 例えばFMは、
-        - 位相変調方式ではなく周波数変調方式でfeedbackもないので、
-        - 位相変調系の音色やFeedback系の音色が出せないが、
-        - モジュレータとキャリアにどんな波形を使えてどんな音色が出せるか？の潜在能力は、未調査なのでまだわからない
-      - 例えばSuperSawは、
-        - どれくらいエフェクトなどの追加の作り込みをすると、
-        - どれくらい実用的な典型的なSuperSawになるか？
-        - のロードマップやワークフローがもっと見えたほうがよさげ
-      - 例えば1loopが64サンプル、8bitの波形、を作ろうにも、Tone.jsやWeb Audioの仕組み上そのインターフェイスがなく、おそらくフーリエ変換してpartialsパラメータを生成するくらいしか方法がない（それ以上がほしいなら外付け波形や外付けAudioWorkletしかない）、ようだが、
-        - 実際そうなのかは、未調査なのでまだわからない
-      - 例えばリバーブ / コーラス / フランジャー / フェイザーは、例えば最低限SC-88Proくらいのレベルが実現できるのか？が、調査不足でまだわからない
-      - 例えばDistortion系は、Overdrive系も含め最低限SC-88Proくらいのレベルが実現できるのか？が、調査不足でまだわからない
-      - 用途が「割り切って使う。教育用、実験用」なので、豪華な音が出せないのはそれほど致命的ではない。
-        - 重要なのは、「どこまで出せるか？スイートスポットはどこか？」が見えたほうが、よりスムーズに音楽活動ができる、という点
-        - 補足すると、Tone.jsやWebAudioの立ち位置は楽器寄りではなく簡易的な信号処理寄りで、それを把握した上で、では割り切ってローコストに楽器的なことをやるならどれくらいできるか？という観点もある
-        - ここでいうローコストは「tonejs-json-sequencerのような技術スタックやエコシステムの土壌が豊かになっていけば、今後、巨人の肩の上に立ち、ローコストに開発ができるか？」といった意味
-        - なお選択肢としてはTone.jsが総合力で優れている認識
-        - つまり、無料OSSマルチプラットフォームな音楽活動の場としてブラウザを選んだとき、総合力でTone.jsが優れている認識
+# test
+- #4 同様にローカル WSL + act でtestする
+- エラー。userのtest設計ミス。
+  - scriptの挙動 : src/ がある前提
+  - 今回の共通ワークフローのリポジトリ : src/ がない
+  - 今回testで実現したいこと
+    - 仮のソースでよいので、関数コールグラフを生成させる
   - 対策
-    - 音色ライブラリ共有がeasyにできるようになれば、
-      - ローコストな手法で発揮できる潜在能力はこれくらい
-      - が可視化しやすくなる
-  - イメージ
-    - こんな音色が作れます、こんなエフェクトがかけられます、組み合わせると、これくらい実用的なサウンドができます、などの事例を共有する
-  - 音色ライブラリのメリット
-    - Tone.jsのエコシステムの土壌になることが期待できる
-        - これまでの課題として、userそれぞれのアウトプットの再利用性がない、という点がある
-        - userそれぞれのアウトプットを、共有・連携する土壌ができれば、それが蓄積されることで、次世代のuserが巨人の肩の上に立てることが期待できる
-          - 音色に限らず、Web Audio全般の話でもある
-  - 音色ライブラリの位置するレイヤーの検討
-    - tonejs-json-sequencerには組み込まず、
-    - その上位レイヤー、別project、で用意する
-  - 音色ライブラリにどれくらい注力するか？
-    - 検討中
-    - 音色ライブラリと音色エディタそれぞれ充実していると、エコシステムが育ちやすそう
-    - tonejs-json-sequencerに最低限の機能を作っていく優先度は高い
-      - tonejs-json-sequencerに機能があること、が上位レイヤーの前提なので
-- whyに関連、DAWとの棲み分け
-  - DAW
-    - 楽曲の完成度を優先するとき用
-    - 作編曲の効率を最大化するとき用
-    - ハイクオリティな曲が素早く作れる！実用性最強！
-    - 求められるアプリ非機能要件は、低遅延、音途切れなし。高性能マシンを使うことも前提。
-  - tonejs-json-sequencer
-    - ※あるいはブラウザ、WebAudio、Tone.js、マルチプラットフォームの非DAW的な音楽アプリ全般
-    - 実験用
-      - 新たなUI
-      - 新たなサウンド、音色、楽曲を、新たな手法で
-    - 新規体験
-      - 作曲のヒントになるインスピレーション
-    - インタラクティブな体験
-      - 例、教育用の音楽おもちゃ
-    - 求められる非機能要件は、なし。
-      - 機能の実現が素早いとよい
-      - マルチプラットフォームであるとよい
+    - src/ にダミーを配置する
+- test green
+  - ただしcommit pushはしてないので、html内容が0件NG、といったケースの検知はできない
+  - もしそうなったら別issueとしよう
 
-# 優先すること
-- 効果のわかりやすいものの実装。例えばディレイビブラート、マルチティンバー。
-- 安全。セキュリティ。インジェクション対策。eval等を使わない。
+# test green
 
-# スコープ外
-- nodeIdの採番 → 上位レイヤー側で担当します、例えばtonejs-mml-to-jsonか、それより低いレイヤーのjsonポストプロセッサで担当します
-- ディレイビブラートのonとoffを全noteに生成 → nodeIdの採番と同様です
-- ほか、json内のデータの加工 → nodeIdの採番と同様です
-- 網羅。Tone.jsの全てのclassとmethodとメソッドチェーンの組み合わせを完全に網羅し、Tone.jsで実現できる全てのパターンの関数呼び出しをJSON経由で完全に網羅すること
-- 高性能。処理時間やソースファイルのサイズを最小化するため、メンテしづらいロジックを選ぶこと
+# commit用に、yml 呼び出し元 uses をlocal用から本番用に書き換える
 
-# 自動英訳
-README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生成しています。
+# closeとする
+- もしhtml内容が0件NG、などになったら、別issueとするつもり
 
 {% endraw %}
 ```
@@ -1036,85 +753,6 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
 
 - 生成できた
 - closeとする
-
-{% endraw %}
-```
-
-### .github/actions-tmp/issue-notes/8.md
-```md
-{% raw %}
-# issue 関数コールグラフhtmlビジュアライズ生成の対象ソースファイルを、呼び出し元ymlで指定できるようにする #8
-[issues #8](https://github.com/cat2151/github-actions/issues/8)
-
-# これまでの課題
-- 以下が決め打ちになっていた
-```
-  const allowedFiles = [
-    'src/main.js',
-    'src/mml2json.js',
-    'src/play.js'
-  ];
-```
-
-# 対策
-- 呼び出し元ymlで指定できるようにする
-
-# agent
-- agentにやらせることができれば楽なので、初手agentを試した
-- 失敗
-    - ハルシネーションしてscriptを大量破壊した
-- 分析
-    - 修正対象scriptはagentが生成したもの
-    - 低品質な生成結果でありソースが巨大
-    - ハルシネーションで破壊されやすいソース
-    - AIの生成したソースは、必ずしもAIフレンドリーではない
-
-# 人力リファクタリング
-- 低品質コードを、最低限agentが扱えて、ハルシネーションによる大量破壊を防止できる内容、にする
-- 手短にやる
-    - そもそもビジュアライズは、agentに雑に指示してやらせたもので、
-    - 今後別のビジュアライザを選ぶ可能性も高い
-    - 今ここで手間をかけすぎてコンコルド効果（サンクコストバイアス）を増やすのは、project群をトータルで俯瞰して見たとき、損
-- 対象
-    - allowedFiles のあるソース
-        - callgraph-utils.cjs
-            - たかだか300行未満のソースである
-            - この程度でハルシネーションされるのは予想外
-            - やむなし、リファクタリングでソース分割を進める
-
-# agentに修正させる
-## prompt
-```
-allowedFilesを引数で受け取るようにしたいです。
-ないならエラー。
-最終的に呼び出し元すべてに波及して修正したいです。
-
-呼び出し元をたどってエントリポイントも見つけて、
-エントリポイントにおいては、
-引数で受け取ったjsonファイル名 allowedFiles.js から
-jsonファイル allowedFiles.jsonの内容をreadして
-変数 allowedFilesに格納、
-後続処理に引き渡す、としたいです。
-
-まずplanしてください。
-planにおいては、修正対象のソースファイル名と関数名を、呼び出し元を遡ってすべて特定し、listしてください。
-```
-
-# 修正が順調にできた
-- コマンドライン引数から受け取る作りになっていなかったので、そこだけ指示して修正させた
-- yml側は人力で修正した
-
-# 他のリポジトリから呼び出した場合にバグらないよう修正する
-- 気付いた
-    - 共通ワークフローとして他のリポジトリから使った場合はバグるはず。
-        - ymlから、共通ワークフロー側リポジトリのcheckoutが漏れているので。
-- 他のyml同様に修正する
-- あわせて全体にymlをリファクタリングし、修正しやすくし、今後のyml読み書きの学びにしやすくする
-
-# local WSL + act : test green
-
-# closeとする
-- もし生成されたhtmlがNGの場合は、別issueとするつもり
 
 {% endraw %}
 ```
@@ -1137,23 +775,25 @@ planにおいては、修正対象のソースファイル名と関数名を、�
 {% endraw %}
 ```
 
-### issue-notes/87.md
+### issue-notes/112.md
 ```md
 {% raw %}
-# issue tempo（BPM）をJSONで指定できるようにする #87
-[issues #87](https://github.com/cat2151/tonejs-json-sequencer/issues/87)
+# issue オフラインレンダリングデモ を改善する #112
+[issues #112](https://github.com/cat2151/tonejs-json-sequencer/issues/112)
 
-
-
-{% endraw %}
-```
-
-### issue-notes/88.md
-```md
-{% raw %}
-# issue JSONで、指定したnodeの音量を変更できるようにする #88
-[issues #88](https://github.com/cat2151/tonejs-json-sequencer/issues/88)
-
+# 詳細
+- 機能追加 : 自動レンダリング
+    - 「最小構成」などを選んだら即座にレンダリングする。「シーケンス全体をレンダリング」ボタンを削除する（シンプルな見た目を優先する）
+    - シーケンスNDJSON欄のtextareaも、編集したらデバウンスのち自動でレンダリングする。
+- 機能追加 : レンダリング完了直後に、以下を自動で実施する。
+    - レンダリング結果波形を、レンダリング進行状況グラフにオーバーレイ表示する。
+    - プレビュー再生する。
+        - （プレビューシステムは削除しない。あくまで自動再生を追加するだけ）
+    - レンダリング時間とスピードを表示する。
+        - 例えば2.70秒のwavのレンダリングを、0.27秒でレンダリング完了したら、
+        - 「レンダリング時間：0.27秒、レンダリングスピード：x10」のように表示する
+- 削除 : レンダリング設定欄を削除する。48000Hz固定（どこかにそれは表示すること）、終了バッファは0秒固定、ファイル名はoutput_YYYYMMDD_HHMISS.wav固定。シンプルな見た目を優先する
+- 削除 : 「レンダリング進行状況」「レンダリングされた音声のプレビュー」「音声をプレビューできます」という3つの文言は、シンプルな見た目を優先し、削除とする
 
 
 {% endraw %}
@@ -1170,83 +810,43 @@ planにおいては、修正対象のソースファイル名と関数名を、�
 {% endraw %}
 ```
 
-### issue-notes/90.md
-```md
-{% raw %}
-# issue 直近でtempo（BPM）等が未実装だったように、未実装な要素を洗い出して、README.ja.mdにロードマップとして反映する #90
-[issues #90](https://github.com/cat2151/tonejs-json-sequencer/issues/90)
-
-
-
-{% endraw %}
-```
-
-### issue-notes/97.md
-```md
-{% raw %}
-# issue demoが、demo/ にdeployされてしまっておりuserが混乱した。ほかのcat2151のリポジトリ同様、プロジェクトルートにdeployとする #97
-[issues #97](https://github.com/cat2151/tonejs-json-sequencer/issues/97)
-
-
-
-{% endraw %}
-```
-
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-832d29f Merge pull request #101 from cat2151/copilot/debug-loop-timing-visualization
-680ea06 Fix timing drift calculation and improve timing visualization accuracy
-87163dd Add documentation for timing visualization feature in issue notes
-8db500c Add enhanced timing visualization to streaming demo for モタり (timing delay) detection
-1569b8a Initial plan
-139d793 Merge pull request #99 from cat2151/copilot/remove-streaming-demo-loop
-a0a0bee Add issue note for #100 [auto]
-49a8a0b Set streaming demo defaults: loop on, 0s wait, debounce mode
-99c9cf0 Initial plan
-ebb58ba Add issue note for #98 [auto]
+2ff346f Merge pull request #116 from cat2151/copilot/fix-volume-control-issue
+028db20 Remove unnecessary Tone existence check for consistency
+8e71fc6 Add Transport cleanup to main library event-scheduler
+cf1297d Fix volume control demo by clearing Transport before playing
+4d936a4 Initial plan
+e92076a Merge pull request #115 from cat2151/copilot/fix-demo-streaming-loop-bug
+a8cf071 Fix loop timing bug - correct wait offset calculation
+f96d284 Initial plan
+a4b9b81 Merge pull request #114 from cat2151/copilot/fix-streaming-timing-bug
+aeaf356 Apply PR review feedback: fix timing window to match reservation buffer (0..lookaheadMs) and remove redundant calculations
 
 ### 変更されたファイル:
-offline-rendering.html
-streaming.html
-dist/cjs/offline-renderer.d.ts
-dist/cjs/offline-renderer.js
-dist/cjs/streaming/event-processor.js
-dist/cjs/utils/time-parser.d.ts
-dist/cjs/utils/time-parser.js
-dist/demo/offline-rendering.js
+.github/workflows/deploy-pages.yml
+.gitignore
+demo/README.md
+demo/index.html
+demo/offline-rendering.html
+demo/streaming-demo.css
+demo/streaming.html
+demo/styles.css
+dist/cjs/event-scheduler.js
+dist/cjs/ndjson-streaming.js
+dist/demo/modules/audioManager.js
 dist/demo/streaming.js
-dist/esm/event-scheduler.js
-dist/esm/factories/effect-factory.js
-dist/esm/factories/instrument-factory.js
-dist/esm/index.js
-dist/esm/ndjson-streaming.js
-dist/esm/node-factory.js
-dist/esm/offline-renderer.d.ts
-dist/esm/offline-renderer.js
-dist/esm/offline-renderer.mjs
-dist/esm/sequencer-nodes.js
-dist/esm/streaming/event-processor.js
-dist/esm/streaming/event-processor.mjs
-dist/esm/streaming/playback-state.js
-dist/esm/types.js
-dist/esm/utils/time-parser.d.ts
-dist/esm/utils/time-parser.js
-dist/esm/utils/time-parser.mjs
-dist/offline-renderer.d.ts
-dist/offline-renderer.js
-dist/streaming/event-processor.js
-dist/utils/time-parser.d.ts
-dist/utils/time-parser.js
-issue-notes/100.md
-issue-notes/97.md
-issue-notes/98.md
-src/demo/offline-rendering.ts
+dist/esm/event-scheduler.mjs
+dist/esm/ndjson-streaming.mjs
+dist/event-scheduler.js
+dist/ndjson-streaming.js
+issue-notes/112.md
+src/demo/modules/audioManager.ts
 src/demo/streaming.ts
+src/event-scheduler.ts
 src/ndjson-streaming.ts
-src/offline-renderer.ts
-src/streaming/event-processor.ts
-src/utils/time-parser.ts
+streaming.html
 
 
 ---
-Generated at: 2026-02-04 07:13:44 JST
+Generated at: 2026-02-05 07:11:05 JST
