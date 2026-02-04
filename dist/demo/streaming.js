@@ -13,6 +13,7 @@ class StreamingDemo {
         this.DEBOUNCE_DELAY_MS = 1000;
         this.timingStats = this.createInitialTimingStats();
         this.initializeUI();
+        this.initializeCollapsibleSections();
         this.loadInitialSequence();
     }
     createInitialTimingStats() {
@@ -124,6 +125,26 @@ class StreamingDemo {
                     e.preventDefault();
                     this.onSequenceEdit();
                 }
+            }
+        });
+    }
+    initializeCollapsibleSections() {
+        // About button
+        const aboutButton = document.getElementById('aboutButton');
+        const aboutContent = document.getElementById('aboutContent');
+        aboutButton?.addEventListener('click', () => {
+            if (aboutContent && aboutButton) {
+                const isExpanded = aboutContent.classList.toggle('active');
+                aboutButton.setAttribute('aria-expanded', String(isExpanded));
+            }
+        });
+        // Usage button
+        const usageButton = document.getElementById('usageButton');
+        const usageContent = document.getElementById('usageContent');
+        usageButton?.addEventListener('click', () => {
+            if (usageContent && usageButton) {
+                const isExpanded = usageContent.classList.toggle('active');
+                usageButton.setAttribute('aria-expanded', String(isExpanded));
             }
         });
     }

@@ -109,43 +109,47 @@
       border-radius: 4px;
     }
 
+    .hint-box a {
+      background-color: transparent;
+      color: var(--info-border);
+      text-decoration: underline;
+      padding: 0;
+      border-radius: 0;
+      font-weight: bold;
+    }
+
+    .hint-box a:hover {
+      background-color: transparent;
+      color: var(--button-hover);
+    }
+
     .collapsible-section {
       margin: 20px 0;
     }
 
-    .collapsible-header {
-      display: flex;
-      align-items: center;
+    .collapsible-button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background-color: var(--button-bg);
+      color: var(--button-text);
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 6px;
       cursor: pointer;
-      padding: 10px;
-      background: var(--info-bg);
-      border-left: 4px solid var(--info-border);
-      border-radius: 4px;
-      user-select: none;
+      transition: background-color 0.3s ease;
+      margin-bottom: 10px;
+      font-weight: bold;
     }
 
-    .collapsible-header:hover {
-      opacity: 0.9;
+    .collapsible-button:hover {
+      background-color: var(--button-hover);
     }
 
-    .collapsible-header:focus {
-      outline: 2px solid var(--info-border);
+    .collapsible-button:focus {
+      outline: 2px solid var(--button-bg);
       outline-offset: 2px;
-    }
-
-    .collapsible-header h3 {
-      margin: 0;
-      color: var(--text-color);
-    }
-
-    .collapsible-indicator {
-      margin-right: 10px;
-      font-size: 18px;
-      transition: transform 0.3s ease;
-    }
-
-    .collapsible-indicator.collapsed {
-      transform: rotate(-90deg);
     }
 
     .collapsible-content {
@@ -154,12 +158,21 @@
       background: var(--info-bg);
       color: var(--text-color);
       border-left: 4px solid var(--info-border);
-      border-radius: 0 0 4px 4px;
-      margin-top: -4px;
+      border-radius: 4px;
     }
 
-    .collapsible-content.expanded {
+    .collapsible-content.active {
       display: block;
+    }
+
+    .collapsible-content h3 {
+      margin-top: 0;
+      color: var(--text-color);
+    }
+
+    .collapsible-content ul {
+      margin: 10px 0;
+      padding-left: 20px;
     }
   </style>
 </head>
@@ -172,11 +185,8 @@
   </p>
   
   <div class="collapsible-section">
-    <div class="collapsible-header" id="aboutHeader" tabindex="0" role="button" aria-expanded="false" aria-controls="aboutSection">
-      <span class="collapsible-indicator collapsed" id="aboutIndicator">▼</span>
-      <h3>このデモについて</h3>
-    </div>
-    <div class="collapsible-content" id="aboutSection">
+    <button class="collapsible-button" id="aboutButton" aria-expanded="false" aria-controls="aboutContent">📖 このデモについて</button>
+    <div class="collapsible-content" id="aboutContent">
       <p><strong>🎵 Streaming（ストリーミング再生）方式</strong></p>
       <ul>
         <li><strong>ライブ編集:</strong> 再生中にテキストエリアでシーケンスを編集 - 変更はリアルタイムに反映されます</li>
@@ -191,11 +201,8 @@
   </div>
 
   <div class="collapsible-section">
-    <div class="collapsible-header" id="usageHeader" tabindex="0" role="button" aria-expanded="false" aria-controls="usageSection">
-      <span class="collapsible-indicator collapsed" id="usageIndicator">▼</span>
-      <h3>使い方</h3>
-    </div>
-    <div class="collapsible-content" id="usageSection">
+    <button class="collapsible-button" id="usageButton" aria-expanded="false" aria-controls="usageContent">📝 使い方</button>
+    <div class="collapsible-content" id="usageContent">
       <ol>
         <li><strong>再生:</strong> 「再生」ボタンをクリックすると、50msの先読みスケジューリングで再生が開始されます</li>
         <li><strong>ライブ編集:</strong> 再生中にテキストエリアでシーケンスを編集 - 変更は即座に反映されます</li>
@@ -274,55 +281,6 @@
   <textarea id="sequenceEditor" rows="30" cols="80"></textarea>
 
   <script src="https://unpkg.com/tone@15.2.7/build/Tone.js"></script>
-  <script type="module" src="./dist/demo/streaming.js"></script>
-  <script>
-    function toggleSection(sectionId) {
-      const section = document.getElementById(sectionId);
-      const header = document.getElementById(sectionId.replace('Section', 'Header'));
-      const indicator = document.getElementById(sectionId.replace('Section', 'Indicator'));
-      
-      const isExpanded = section.classList.contains('expanded');
-      
-      if (isExpanded) {
-        section.classList.remove('expanded');
-        indicator.classList.add('collapsed');
-        header.setAttribute('aria-expanded', 'false');
-      } else {
-        section.classList.add('expanded');
-        indicator.classList.remove('collapsed');
-        header.setAttribute('aria-expanded', 'true');
-      }
-    }
-
-    // Add event listeners for collapsible sections
-    document.addEventListener('DOMContentLoaded', function() {
-      const aboutHeader = document.getElementById('aboutHeader');
-      const usageHeader = document.getElementById('usageHeader');
-
-      // Click event listeners
-      aboutHeader.addEventListener('click', function() {
-        toggleSection('aboutSection');
-      });
-
-      usageHeader.addEventListener('click', function() {
-        toggleSection('usageSection');
-      });
-
-      // Keyboard event listeners
-      aboutHeader.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          toggleSection('aboutSection');
-        }
-      });
-
-      usageHeader.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          toggleSection('usageSection');
-        }
-      });
-    });
-  </script>
+  <script type="module" src="../dist/demo/streaming.js"></script>
 </body>
 </html>
