@@ -11,6 +11,8 @@ class OfflineRenderingDemo {
   private currentBlobUrl: string | null = null;
   private debounceTimer: number | null = null;
   private renderStartTime: number = 0;
+  private isRendering: boolean = false;
+  private lastRenderTrigger: 'selector' | 'textarea' | null = null;
 
   constructor() {
     this.initializeUI();
@@ -35,7 +37,13 @@ class OfflineRenderingDemo {
 
     // Sequence selector change - auto-render
     selector.addEventListener('change', () => {
+      // Cancel any pending debounced render to avoid race conditions
+      if (this.debounceTimer !== null) {
+        window.clearTimeout(this.debounceTimer);
+        this.debounceTimer = null;
+      }
       this.loadSelectedSequence();
+      this.lastRenderTrigger = 'selector';
       this.render();
     });
 
@@ -100,6 +108,7 @@ class OfflineRenderingDemo {
       window.clearTimeout(this.debounceTimer);
     }
     this.debounceTimer = window.setTimeout(() => {
+      this.lastRenderTrigger = 'textarea';
       this.render();
     }, 1000); // 1 second debounce
   }
@@ -116,7 +125,15 @@ class OfflineRenderingDemo {
   }
 
   private async render(): Promise<void> {
+    // Prevent concurrent render operations
+    if (this.isRendering) {
+      console.log('Render already in progress, ignoring request');
+      return;
+    }
+
     try {
+      this.isRendering = true;
+
       // Ensure audio context is started (required for Tone.js initialization)
       // Even though offline rendering doesn't use the main audio context,
       // Tone.js requires context initialization before creating offline contexts
@@ -124,6 +141,9 @@ class OfflineRenderingDemo {
 
       // Record start time
       this.renderStartTime = performance.now();
+      
+      // Clear any existing waveform overlay
+      this.clearWaveformOverlay();
       
       // Hide audio player and download button
       const audioPlayer = document.getElementById('audioPlayer');
@@ -165,10 +185,12 @@ class OfflineRenderingDemo {
       // Calculate rendering time and speed
       const renderEndTime = performance.now();
       const renderTimeSeconds = (renderEndTime - this.renderStartTime) / 1000;
-      const renderSpeed = result.duration / renderTimeSeconds;
+      const renderSpeed = renderTimeSeconds > 0 ? result.duration / renderTimeSeconds : null;
 
       // Update status with rendering info
-      this.updateStatus(`レンダリング完了！ 長さ: ${result.duration.toFixed(2)}秒 | レンダリング時間: ${renderTimeSeconds.toFixed(2)}秒、レンダリングスピード: x${renderSpeed.toFixed(1)}`);
+      const renderTimeText = renderTimeSeconds > 0 ? `${renderTimeSeconds.toFixed(2)}秒` : '瞬時';
+      const renderSpeedText = renderSpeed !== null ? `、レンダリングスピード: x${renderSpeed.toFixed(1)}` : '';
+      this.updateStatus(`レンダリング完了！ 長さ: ${result.duration.toFixed(2)}秒 | レンダリング時間: ${renderTimeText}${renderSpeedText}`);
 
       // Create audio URL for preview
       this.createAudioPreview(result.buffer);
@@ -179,26 +201,39 @@ class OfflineRenderingDemo {
       // Show audio player
       if (audioPlayer) audioPlayer.classList.add('active');
 
-      // Auto-play preview
-      const audioElement = document.getElementById('audioElement') as HTMLAudioElement;
-      if (audioElement) {
-        try {
-          await audioElement.play();
-        } catch (e) {
-          console.log('Auto-play was prevented by browser policy');
+      // Auto-play preview (only if user is not actively editing the textarea)
+      const textarea = document.getElementById('sequenceEditor') as HTMLTextAreaElement | null;
+      const isEditing = textarea !== null && document.activeElement === textarea;
+
+      if (!isEditing && this.lastRenderTrigger === 'selector') {
+        const audioElement = document.getElementById('audioElement') as HTMLAudioElement | null;
+        if (audioElement) {
+          try {
+            await audioElement.play();
+          } catch (e) {
+            console.log('Auto-play was prevented by browser policy');
+          }
         }
+      } else if (isEditing) {
+        console.log('Skipping auto-play because the user is actively editing the sequence.');
       }
 
       // Draw waveform overlay on progress bar
       this.drawWaveformOverlay(result.buffer);
 
+      this.isRendering = false;
     } catch (error) {
       console.error('Error during rendering:', error);
       this.updateStatus('エラー: ' + (error as Error).message);
       
+      // Clear waveform overlay on error to avoid showing stale data
+      this.clearWaveformOverlay();
+      
       // Hide progress container
       const progressContainer = document.getElementById('progressContainer');
       if (progressContainer) progressContainer.classList.remove('active');
+      
+      this.isRendering = false;
     }
   }
 
@@ -241,15 +276,22 @@ class OfflineRenderingDemo {
     }
   }
 
+  private clearWaveformOverlay(): void {
+    const progressBar = document.querySelector('.progress-bar') as HTMLElement;
+    if (!progressBar) return;
+
+    const existingCanvas = progressBar.querySelector('canvas');
+    if (existingCanvas) {
+      existingCanvas.remove();
+    }
+  }
+
   private drawWaveformOverlay(buffer: AudioBuffer): void {
     const progressBar = document.querySelector('.progress-bar') as HTMLElement;
     if (!progressBar) return;
 
     // Remove existing canvas if any
-    const existingCanvas = progressBar.querySelector('canvas');
-    if (existingCanvas) {
-      existingCanvas.remove();
-    }
+    this.clearWaveformOverlay();
 
     // Create canvas for waveform
     const canvas = document.createElement('canvas');
@@ -261,8 +303,11 @@ class OfflineRenderingDemo {
     canvas.style.pointerEvents = 'none';
     
     const rect = progressBar.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
+    const dpr = window.devicePixelRatio || 1;
+    
+    // Set canvas size accounting for device pixel ratio
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
     
     progressBar.style.position = 'relative';
     progressBar.appendChild(canvas);
@@ -270,16 +315,18 @@ class OfflineRenderingDemo {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Scale context for device pixel ratio
+    ctx.scale(dpr, dpr);
+
     // Get audio data from first channel
     const channelData = buffer.getChannelData(0);
-    const step = Math.ceil(channelData.length / canvas.width);
-    const amp = canvas.height / 2;
+    const step = Math.ceil(channelData.length / rect.width);
+    const amp = rect.height / 2;
 
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
     ctx.lineWidth = 1;
-    ctx.beginPath();
 
-    for (let i = 0; i < canvas.width; i++) {
+    for (let i = 0; i < rect.width; i++) {
       const start = i * step;
       const end = Math.min((i + 1) * step, channelData.length);
       
@@ -296,14 +343,12 @@ class OfflineRenderingDemo {
       const y1 = (1 + min) * amp;
       const y2 = (1 + max) * amp;
       
-      if (i === 0) {
-        ctx.moveTo(i, y1);
-      }
-      ctx.lineTo(i, y1);
+      // Draw a vertical line segment for this pixel's min/max range
+      ctx.beginPath();
+      ctx.moveTo(i, y1);
       ctx.lineTo(i, y2);
+      ctx.stroke();
     }
-
-    ctx.stroke();
   }
 
   private updateStatus(status: string): void {
