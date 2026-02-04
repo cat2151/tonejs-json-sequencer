@@ -1,0 +1,168 @@
+/* Additional CSS variables for streaming demo elements */
+:root {
+  --status-bg: #f0f0f0;
+  --info-bg: #e8f4f8;
+  --info-border: #2196F3;
+  --hint-bg: #fff3cd;
+  --hint-border: #ffc107;
+  --hint-text: #333333;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --status-bg: #2d2d30;
+    --info-bg: #2d2d30;
+    --info-border: #0078d4;
+    --hint-bg: #3d3420;
+    --hint-border: #8b7033;
+    --hint-text: #ffffff;
+  }
+}
+
+.streaming-controls {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.streaming-controls button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.streaming-controls label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status {
+  margin: 10px 0;
+  padding: 10px;
+  background: var(--status-bg);
+  color: var(--text-color);
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.info {
+  margin: 20px 0;
+  padding: 15px;
+  background: var(--info-bg);
+  color: var(--text-color);
+  border-left: 4px solid var(--info-border);
+  border-radius: 4px;
+}
+
+.info h3 {
+  margin-top: 0;
+  color: var(--text-color);
+}
+
+.info ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.debug-section {
+  margin: 20px 0;
+}
+
+.debug-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#debugOutput {
+  display: none;
+  background: var(--status-bg);
+  color: var(--text-color);
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 10px;
+  font-family: monospace;
+  font-size: 12px;
+  height: 300px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.hint-box {
+  margin-top: 10px;
+  padding: 10px;
+  background: var(--hint-bg);
+  color: var(--hint-text);
+  border-left: 4px solid var(--hint-border);
+  border-radius: 4px;
+}
+
+.hint-box a {
+  background-color: transparent;
+  color: var(--info-border);
+  text-decoration: underline;
+  padding: 0;
+  border-radius: 0;
+  font-weight: bold;
+}
+
+.hint-box a:hover {
+  background-color: transparent;
+  color: var(--button-hover);
+}
+
+.collapsible-section {
+  margin: 20px 0;
+}
+
+.collapsible-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.collapsible-button:hover {
+  background-color: var(--button-hover);
+}
+
+.collapsible-button:focus {
+  outline: 2px solid var(--button-bg);
+  outline-offset: 2px;
+}
+
+.collapsible-content {
+  display: none;
+  padding: 15px;
+  background: var(--info-bg);
+  color: var(--text-color);
+  border-left: 4px solid var(--info-border);
+  border-radius: 4px;
+}
+
+.collapsible-content.active {
+  display: block;
+}
+
+.collapsible-content h3 {
+  margin-top: 0;
+  color: var(--text-color);
+}
+
+.collapsible-content ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
