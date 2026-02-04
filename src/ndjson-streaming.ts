@@ -400,6 +400,7 @@ export class NDJSONStreamingPlayer {
           
           let timingStatus = '⚪'; // Default: on-time
           
+          // Convert to milliseconds for comparison (used for both timing status and visual bar)
           const timeDeltaMs = timeDelta * 1000;
           
           // Event is too late: scheduled more than lookahead buffer in the past

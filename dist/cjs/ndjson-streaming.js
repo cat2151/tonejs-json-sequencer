@@ -277,6 +277,7 @@ class NDJSONStreamingPlayer {
                     //   -lookaheadMs <= timeDelta <= +lookaheadMs
                     // This means the event is within the scheduling window, either slightly early or slightly late.
                     let timingStatus = '⚪'; // Default: on-time
+                    // Convert to milliseconds for comparison (used for both timing status and visual bar)
                     const timeDeltaMs = timeDelta * 1000;
                     // Event is too late: scheduled more than lookahead buffer in the past
                     if (timeDeltaMs < -lookaheadMs) {
