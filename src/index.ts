@@ -8,6 +8,7 @@ export type {
   ConnectEvent,
   TriggerAttackReleaseEvent,
   DepthRampToEvent,
+  VolumeRampToEvent,
   SequenceEvent
 } from './types.js';
 
