@@ -8,10 +8,8 @@ export class AudioManager {
     async playSequence(sequence) {
         try {
             // Stop and clear Transport to remove any scheduled events from previous sequences
-            if (typeof Tone !== 'undefined') {
-                Tone.Transport.stop();
-                Tone.Transport.cancel();
-            }
+            Tone.Transport.stop();
+            Tone.Transport.cancel();
             // Dispose all existing nodes
             this.nodes.disposeAll();
             // First pass: create nodes and connections
