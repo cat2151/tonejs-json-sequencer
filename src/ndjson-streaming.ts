@@ -346,6 +346,9 @@ export class NDJSONStreamingPlayer {
     }
 
     let scheduledInThisLoop = 0;
+    
+    // Cache lookahead value for performance (used in debug timing status calculation)
+    const lookaheadMs = this.config.lookaheadMs;
 
     // Process events within lookahead window
     this.playbackState.currentEvents.forEach((event, index) => {
@@ -398,7 +401,6 @@ export class NDJSONStreamingPlayer {
           let timingStatus = '⚪'; // Default: on-time
           
           const timeDeltaMs = timeDelta * 1000;
-          const lookaheadMs = this.config.lookaheadMs;
           
           // Event is too late: scheduled more than lookahead buffer in the past
           if (timeDeltaMs < -lookaheadMs) {
