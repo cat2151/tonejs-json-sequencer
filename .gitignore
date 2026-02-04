@@ -13,3 +13,6 @@ demo/dist/
 
 # Note: dist/ is NOT gitignored because it's needed for GitHub Pages
 # The dist directory contains built files required for the demo to work
+# But exclude intermediate build artifacts (*.js without .mjs extension in esm/cjs)
+dist/esm/**/*.js
+dist/cjs/**/*.js

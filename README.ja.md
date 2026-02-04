@@ -313,6 +313,129 @@ tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記
 - 実装方針と進め方
 - 参考資料へのリンク
 
+# 未実装JSON Eventのロードマップ
+
+このセクションでは、「Tone.jsで実現可能だが、まだJSON eventとして実装されていない機能」をリストアップしています。
+
+## 現在実装済みのJSON Event
+
+- `createNode` - シンセやエフェクトノードの作成
+- `connect` - ノード同士の接続
+- `triggerAttackRelease` - 音符の発音
+- `depth.rampTo` - depthパラメータの滑らかな変更
+- `volume.rampTo` - volumeパラメータの滑らかな変更
+- `set` - グローバル設定（現在は `Transport.bpm.value` のみ対応）
+
+## 未実装機能リスト
+
+### 高優先度：奏法表現に必要なJSON Event
+
+これらは演奏表現に直接影響する重要な機能です。
+
+#### Panpot（パン）制御 ⏳
+- **概要**: ステレオ定位（L/R）をリアルタイムに変更
+- **必要なJSON Event**:
+  - `pan.rampTo` - パンの滑らかな変更
+  - `pan.value` - パンの即座の変更
+- **Tone.jsでの実現**: すべてのノードが `.pan` プロパティを持ち、Param APIをサポート
+- **用途例**: シーケンスフレーズでL/Rを動的に変化させる
+
+#### LPFカットオフ周波数とレゾナンス制御 ⏳
+- **概要**: ローパスフィルターのカットオフ周波数とQ値をリアルタイムに変更
+- **必要なJSON Event**:
+  - `filter.frequency.rampTo` - カットオフ周波数の滑らかな変更
+  - `filter.Q.rampTo` - レゾナンス（Q値）の滑らかな変更
+  - `filter.frequency.value` - カットオフ周波数の即座の変更
+  - `filter.Q.value` - レゾナンス（Q値）の即座の変更
+- **Tone.jsでの実現**: MonoSynth等のフィルター付きシンセがサポート
+- **用途例**: フレーズ中でフィルターを開閉、長いsweep、attack連動フィルタエンベロープ
+
+#### ピッチ制御（Portamento/Pitch Envelope） ⏳
+- **概要**: 音程を滑らかに変化させる
+- **必要なJSON Event**:
+  - `frequency.rampTo` - 周波数の滑らかな変更（ポルタメント）
+  - `detune.rampTo` - デチューンの滑らかな変更（ピッチエンベロープ）
+- **Tone.jsでの実現**: オシレーターとシンセのfrequency/detuneパラメータ
+- **用途例**: ポルタメント、attack時のピッチエンベロープ（-200cent→0cent等）
+
+#### Expression（表現力）制御 ⏳
+- **概要**: ボリュームやその他のパラメータを動的に制御
+- **必要なJSON Event**:
+  - 汎用的なパラメータアクセス機構
+  - 例: `<nodeId>.<paramPath>.rampTo` 形式
+- **Tone.jsでの実現**: すべてのParamオブジェクトがrampToをサポート
+- **用途例**: フレーズ中でExpressionを増減、ダイナミクスの変化
+
+### 中優先度：エフェクトパラメータ制御
+
+#### リバーブパラメータ ⏳
+- **必要なJSON Event**: `decay.rampTo`, `wet.rampTo` 等
+- **用途**: リバーブの深さやルームサイズを動的に変更
+
+#### コーラスパラメータ ⏳
+- **必要なJSON Event**: `frequency.rampTo`, `depth.rampTo` (Chorus専用)
+- **用途**: コーラスの速度や深さを動的に変更
+
+#### ディレイパラメータ ⏳
+- **必要なJSON Event**: `delayTime.rampTo`, `feedback.rampTo` 等
+- **用途**: ディレイタイムやフィードバック量を動的に変更
+
+#### フェイザーパラメータ ⏳
+- **必要なJSON Event**: `frequency.rampTo`, `octaves.rampTo`, `Q.rampTo` 等
+- **用途**: フェイザーの長いsweep、パッドへのモジュレーション
+
+#### EQ（イコライザー）パラメータ ⏳
+- **必要なJSON Event**: `low.rampTo`, `mid.rampTo`, `high.rampTo` 等
+- **用途**: 周波数帯域ごとのレベル調整
+
+#### コンプレッサーパラメータ ⏳
+- **必要なJSON Event**: `threshold.rampTo`, `ratio.rampTo`, `attack.rampTo`, `release.rampTo` 等
+- **用途**: ダイナミクス処理の動的な調整
+
+### 低優先度：高度な機能
+
+#### エンベロープ制御 ⏳
+- **必要なJSON Event**: ADSR各パラメータへのアクセス
+- **用途**: エンベロープ形状の動的な変更
+
+#### LFOパラメータ ⏳
+- **必要なJSON Event**: LFOの周波数、深さ、波形の制御
+- **用途**: モジュレーションの動的な変更
+
+#### 3Dパンニング ⏳
+- **必要なJSON Event**: 3D空間でのポジショニング制御
+- **用途**: 空間オーディオの実現
+
+## 実装済み機能の確認
+
+### Tempo（BPM）制御 ✅
+- **実装状況**: ✅ **実装済み**
+- **JSON Event**: `set` event with `nodeType: 'Transport.bpm.value'`
+- **使用例**:
+  ```json
+  {
+    "eventType": "set",
+    "nodeId": 0,
+    "nodeType": "Transport.bpm.value",
+    "args": [120]
+  }
+  ```
+
+### ディレイビブラート ✅
+- **実装状況**: ✅ **実装済み**
+- **実現方法**: `depth.rampTo` を使用
+
+## 実装方針
+
+1. **安全性優先**: `eval` 等は使用せず、switch-case によるホワイトリスト方式を継続
+2. **段階的実装**: 高優先度の機能から順次実装
+3. **ドッグフーディング**: 実装した機能は実際に使用して検証
+
+## 参考情報
+
+- 詳細なコンポーネント対応状況: [Tone.js コンポーネント JSON対応ロードマップ](docs/tonejs-components-roadmap.ja.md)
+- Tone.js公式ドキュメント: https://tonejs.github.io/docs/
+
 # ロードマップ
 - ※順不同
 - ※のち2種類に切り分けて、利用しやすさ優先で1つのtopicに絞ったシンプルなサンプルと、強みがわかりやすいよう複数topicを実用的にまとめたサンプル、がよさげ
