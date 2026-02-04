@@ -43,6 +43,15 @@ export function scheduleOrExecuteEvent(
       }
       break;
     }
+    case 'volume.rampTo': {
+      const node = nodes.get(element.nodeId);
+      if (node && node.volume && typeof node.volume.rampTo === 'function') {
+        node.volume.rampTo(...element.args);
+      } else {
+        console.warn(`Node ${element.nodeId} not found or doesn't support volume.rampTo`);
+      }
+      break;
+    }
     case 'set': {
       // Handle Transport settings and other global/node property settings
       // Note: Transport settings are global and not tied to individual audio graph nodes
