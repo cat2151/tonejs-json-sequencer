@@ -238,8 +238,18 @@ class OfflineRenderingDemo {
         ctx.lineWidth = 1;
         ctx.beginPath();
         for (let i = 0; i < canvas.width; i++) {
-            const min = Math.min(...Array.from(channelData.slice(i * step, (i + 1) * step)));
-            const max = Math.max(...Array.from(channelData.slice(i * step, (i + 1) * step)));
+            const start = i * step;
+            const end = Math.min((i + 1) * step, channelData.length);
+            let min = channelData[start];
+            let max = channelData[start];
+            // Find min and max in a single pass
+            for (let j = start + 1; j < end; j++) {
+                const value = channelData[j];
+                if (value < min)
+                    min = value;
+                if (value > max)
+                    max = value;
+            }
             const y1 = (1 + min) * amp;
             const y2 = (1 + max) * amp;
             if (i === 0) {
