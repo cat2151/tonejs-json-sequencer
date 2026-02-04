@@ -28,8 +28,16 @@ export interface DepthRampToEvent {
   args: string[]; // [value, rampTime, time]
 }
 
+export interface SetEvent {
+  eventType: 'set';
+  nodeId: number;
+  nodeType: string; // e.g., 'Transport.bpm.value'
+  args: number[]; // [value] - e.g., [120] for BPM
+}
+
 export type SequenceEvent =
   | CreateNodeEvent
   | ConnectEvent
   | TriggerAttackReleaseEvent
-  | DepthRampToEvent;
+  | DepthRampToEvent
+  | SetEvent;

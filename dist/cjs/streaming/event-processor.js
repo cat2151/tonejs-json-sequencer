@@ -20,7 +20,7 @@ class EventProcessor {
     async createNodesAndConnections(events, createdNodeIds) {
         events.forEach(event => {
             try {
-                if (event.eventType === 'createNode' || event.eventType === 'connect') {
+                if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set') {
                     if (event.eventType === 'createNode') {
                         createdNodeIds.add(event.nodeId);
                     }
@@ -38,7 +38,7 @@ class EventProcessor {
      * Process new node creation and connection events (for live editing)
      */
     processNewCreateAndConnectEvents(events, createdNodeIds) {
-        const newCreateAndConnectEvents = events.filter(e => e.eventType === 'createNode' || e.eventType === 'connect');
+        const newCreateAndConnectEvents = events.filter(e => e.eventType === 'createNode' || e.eventType === 'connect' || e.eventType === 'set');
         newCreateAndConnectEvents.forEach(event => {
             try {
                 // Check if node already exists for createNode events
@@ -99,7 +99,7 @@ class EventProcessor {
     calculateSequenceDuration(events, endBufferSeconds) {
         let maxEndTime = 0;
         events.forEach(event => {
-            if (event.eventType === 'createNode' || event.eventType === 'connect') {
+            if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set') {
                 return;
             }
             const eventTime = this.getEventTime(event);

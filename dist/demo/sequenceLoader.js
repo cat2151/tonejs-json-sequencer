@@ -1,5 +1,6 @@
 // Import all instrument demos
 import * as minimal from './instrument/minimal.js';
+import * as tempoTest from './instrument/tempo-test.js';
 import * as streamingTestDoremi from './instrument/streaming-test-doremi.js';
 import * as delayVibrato from './instrument/delay-vibrato.js';
 import * as multitimbral from './instrument/multitimbral.js';
@@ -37,6 +38,7 @@ import * as stereowidener from './effect/stereowidener.js';
 const allSequenceModules = [
     // Instrument demos
     minimal,
+    tempoTest,
     streamingTestDoremi,
     delayVibrato,
     multitimbral,

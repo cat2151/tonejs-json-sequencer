@@ -27,7 +27,7 @@ export class EventProcessor {
   ): Promise<void> {
     events.forEach(event => {
       try {
-        if (event.eventType === 'createNode' || event.eventType === 'connect') {
+        if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set') {
           if (event.eventType === 'createNode') {
             createdNodeIds.add(event.nodeId);
           }
@@ -50,7 +50,7 @@ export class EventProcessor {
     createdNodeIds: Set<number>
   ): void {
     const newCreateAndConnectEvents = events.filter(
-      e => e.eventType === 'createNode' || e.eventType === 'connect'
+      e => e.eventType === 'createNode' || e.eventType === 'connect' || e.eventType === 'set'
     );
     
     newCreateAndConnectEvents.forEach(event => {
@@ -119,7 +119,7 @@ export class EventProcessor {
     let maxEndTime = 0;
 
     events.forEach(event => {
-      if (event.eventType === 'createNode' || event.eventType === 'connect') {
+      if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set') {
         return;
       }
 

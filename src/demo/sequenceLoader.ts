@@ -3,6 +3,7 @@ import type { SequenceEvent } from './demo-types.js';
 
 // Import all instrument demos
 import * as minimal from './instrument/minimal.js';
+import * as tempoTest from './instrument/tempo-test.js';
 import * as streamingTestDoremi from './instrument/streaming-test-doremi.js';
 import * as delayVibrato from './instrument/delay-vibrato.js';
 import * as multitimbral from './instrument/multitimbral.js';
@@ -47,6 +48,7 @@ export interface SequenceDefinition {
 const allSequenceModules = [
   // Instrument demos
   minimal,
+  tempoTest,
   streamingTestDoremi,
   delayVibrato,
   multitimbral,
