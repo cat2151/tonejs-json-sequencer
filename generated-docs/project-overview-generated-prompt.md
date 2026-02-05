@@ -1,4 +1,4 @@
-Last updated: 2026-02-05
+Last updated: 2026-02-06
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -845,6 +845,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 110.md
   📖 111.md
   📖 112.md
+  📖 118.md
+  📖 120.md
   📖 62.md
   📖 64.md
   📖 67.md
@@ -947,7 +949,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**demo/offline-rendering.html** (301行, 7634バイト)
+**demo/offline-rendering.html** (227行, 5830バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1215,8 +1217,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, setupEventListeners, populateSequenceSelector, getTextareaValue, setTextareaValue, getSelectedSequenceName
   - インポート: なし
 
-**dist/demo/offline-rendering.js** (198行, 8080バイト)
-  - 関数: constructor, initializeUI, initializeCollapsibleSections, if, loadInitialSequence, loadSelectedSequence, sequenceToNDJSON, getNDJSONFromTextarea, render, catch, createAudioPreview, download, updateStatus, updateProgress
+**dist/demo/offline-rendering.js** (319行, 13210バイト)
+  - 関数: constructor, initializeUI, if, initializeCollapsibleSections, loadInitialSequence, loadSelectedSequence, sequenceToNDJSON, getNDJSONFromTextarea, debouncedRender, formatTimestamp, render, catch, createAudioPreview, download, clearWaveformOverlay, drawWaveformOverlay, for, updateStatus, updateProgress
   - インポート: ./sequenceLoader.js, ../../dist/index.mjs
 
 **dist/demo/sequenceLoader.js** (84行, 2834バイト)
@@ -1559,8 +1561,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: ../sequenceLoader.js
 
-**src/demo/offline-rendering.ts** (233行, 7805バイト)
-  - 関数: constructor, if, catch, render
+**src/demo/offline-rendering.ts** (374行, 12460バイト)
+  - 関数: constructor, if, catch, for, render
   - インポート: ./demo-types.js, ./sequenceLoader.js, ../../dist/index.mjs
 
 **src/demo/sequenceLoader.ts** (95行, 2961バイト)
@@ -1713,4 +1715,4 @@ googled947dc864c270e07.html
 
 
 ---
-Generated at: 2026-02-05 07:11:05 JST
+Generated at: 2026-02-06 07:12:02 JST
