@@ -30,4 +30,9 @@ export interface SetEvent {
     nodeType: string;
     args: number[];
 }
-export type SequenceEvent = CreateNodeEvent | ConnectEvent | TriggerAttackReleaseEvent | DepthRampToEvent | VolumeRampToEvent | SetEvent;
+export interface LoopEndEvent {
+    eventType: 'loopEnd';
+    nodeId: number;
+    args: string[];
+}
+export type SequenceEvent = CreateNodeEvent | ConnectEvent | TriggerAttackReleaseEvent | DepthRampToEvent | VolumeRampToEvent | SetEvent | LoopEndEvent;
