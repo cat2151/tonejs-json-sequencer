@@ -49,6 +49,10 @@ jobs:
           if [ -d "examples" ]; then
             cp -r examples _site/examples
           fi
+          # Copy demo-library directory if it exists
+          if [ -d "demo-library" ]; then
+            cp -r demo-library _site/demo-library
+          fi
           # Copy Google verification file if it exists
           if [ -f "googled947dc864c270e07.html" ]; then
             cp googled947dc864c270e07.html _site/

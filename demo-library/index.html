@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tonejs JSON Sequencer - Library Installation Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    .info-box {
+      background-color: #e8f4f8;
+      border-left: 4px solid #2196F3;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+    .info-box h3 {
+      margin-top: 0;
+      color: #1976D2;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    button:active {
+      background-color: #3d8b40;
+    }
+    pre {
+      background-color: #f4f4f4;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+    }
+    code {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+    }
+    .links {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #ddd;
+    }
+    .links a {
+      color: #2196F3;
+      text-decoration: none;
+      margin-right: 20px;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Tonejs JSON Sequencer</h1>
+    <p class="subtitle">Library Installation Demo - Minimal Example for External Repository Usage</p>
+
+    <div class="info-box">
+      <h3>📦 Installation via npm GitHub</h3>
+      <p>This demo shows how to use tonejs-json-sequencer as a library in your own project.</p>
+      <pre><code># Install from GitHub
+npm install cat2151/tonejs-json-sequencer
+
+# Install peer dependency
+npm install tone</code></pre>
+    </div>
+
+    <button id="playButton">▶ Play Simple Melody</button>
+
+    <h2>Sequence Data:</h2>
+    <pre id="sequenceDisplay"></pre>
+
+    <div class="links">
+      <strong>More Resources:</strong><br><br>
+      <a href="../demo/index.html">Full Demo</a>
+      <a href="../demo/streaming.html">Streaming Demo</a>
+      <a href="../examples/cdn-example.html">CDN Example</a>
+      <a href="README.md">README</a>
+    </div>
+  </div>
+
+  <!-- Load Tone.js from CDN -->
+  <script src="https://unpkg.com/tone@15.2.7/build/Tone.js"></script>
+  
+  <!-- Load tonejs-json-sequencer as ES module -->
+  <script type="module">
+    // Import the library (using relative path to dist/ directory)
+    // In your own project after npm install, you would use:
+    // import { SequencerNodes, playSequence } from 'tonejs-json-sequencer';
+    import { SequencerNodes, playSequence } from '../dist/index.mjs';
+
+    // Define a minimal sequence - creates a synth and plays a simple melody
+    const sequence = [
+      {
+        eventType: 'createNode',
+        nodeId: 0,
+        nodeType: 'Synth',
+        args: {
+          oscillator: { type: 'sine' },
+          envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 }
+        }
+      },
+      {
+        eventType: 'connect',
+        nodeId: 0,
+        connectTo: 'toDestination'
+      },
+      {
+        eventType: 'triggerAttackRelease',
+        nodeId: 0,
+        args: ['C4', '8n', '0']
+      },
+      {
+        eventType: 'triggerAttackRelease',
+        nodeId: 0,
+        args: ['E4', '8n', '0:0:2']
+      },
+      {
+        eventType: 'triggerAttackRelease',
+        nodeId: 0,
+        args: ['G4', '8n', '0:1:0']
+      },
+      {
+        eventType: 'triggerAttackRelease',
+        nodeId: 0,
+        args: ['C5', '4n', '0:1:2']
+      }
+    ];
+
+    // Display the sequence data
+    document.getElementById('sequenceDisplay').textContent = JSON.stringify(sequence, null, 2);
+
+    // Create a node manager
+    const nodes = new SequencerNodes();
+
+    // Play button handler
+    document.getElementById('playButton').addEventListener('click', async () => {
+      try {
+        // Start Tone.js audio context (required for browser audio)
+        await Tone.start();
+        console.log('Audio context started');
+        
+        // Play the sequence
+        await playSequence(Tone, nodes, sequence);
+        console.log('Sequence playing');
+      } catch (error) {
+        console.error('Error playing sequence:', error);
+        alert('Error playing sequence. Check console for details.');
+      }
+    });
+  </script>
+</body>
+</html>
