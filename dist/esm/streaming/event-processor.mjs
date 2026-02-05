@@ -23,6 +23,7 @@ export class EventProcessor {
                     }
                     scheduleOrExecuteEvent(this.Tone, this.nodes, event);
                 }
+                // loopEnd events are metadata only - skip them
             }
             catch (error) {
                 console.error('Error creating node or connection:', error);
@@ -51,6 +52,7 @@ export class EventProcessor {
                 console.error('Error processing new node/connection:', error);
             }
         });
+        // loopEnd events are metadata only - they're not included in the filter above
     }
     /**
      * Schedule an event at a specific time
@@ -94,9 +96,19 @@ export class EventProcessor {
      * Calculate the total duration of the sequence
      */
     calculateSequenceDuration(events, endBufferSeconds) {
+        // Check if there's a loopEnd event
+        const loopEndEvent = events.find(e => e.eventType === 'loopEnd');
+        if (loopEndEvent && loopEndEvent.args.length > 0) {
+            const loopDuration = this.timeParser.parseTimeToSeconds(loopEndEvent.args[0]);
+            if (loopDuration > 0) {
+                // Use explicit loop duration from loopEnd event
+                return loopDuration + endBufferSeconds;
+            }
+        }
+        // Fallback: calculate duration from events
         let maxEndTime = 0;
         events.forEach(event => {
-            if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set') {
+            if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set' || event.eventType === 'loopEnd') {
                 return;
             }
             const eventTime = this.getEventTime(event);

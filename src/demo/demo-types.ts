@@ -40,4 +40,10 @@ export interface SetEvent {
   args: number[]; // [value] - e.g., [120] for BPM
 }
 
-export type SequenceEvent = CreateNodeEvent | ConnectEvent | TriggerAttackReleaseEvent | DepthRampToEvent | VolumeRampToEvent | SetEvent;
+export interface LoopEndEvent {
+  eventType: 'loopEnd';
+  nodeId: number;
+  args: string[]; // [duration] - e.g., ["288i"] for 288 ticks
+}
+
+export type SequenceEvent = CreateNodeEvent | ConnectEvent | TriggerAttackReleaseEvent | DepthRampToEvent | VolumeRampToEvent | SetEvent | LoopEndEvent;

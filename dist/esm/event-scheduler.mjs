@@ -62,6 +62,12 @@ export function scheduleOrExecuteEvent(Tone, nodes, element) {
             }
             break;
         }
+        case 'loopEnd': {
+            // loopEnd is a metadata event that marks the explicit loop boundary
+            // It's used by streaming players to calculate proper loop duration
+            // No action needed during scheduling - handled by EventProcessor
+            break;
+        }
     }
 }
 /**
@@ -82,6 +88,7 @@ export async function playSequence(Tone, nodes, sequence) {
             if (element.eventType === 'createNode' || element.eventType === 'connect' || element.eventType === 'set') {
                 scheduleOrExecuteEvent(Tone, nodes, element);
             }
+            // loopEnd events are metadata only - skip them in first pass
         }
         catch (error) {
             console.error('Error creating node or connection:', error);
@@ -93,7 +100,7 @@ export async function playSequence(Tone, nodes, sequence) {
     // Second pass: schedule playback events
     sequence.forEach(element => {
         try {
-            if (element.eventType !== 'createNode' && element.eventType !== 'connect' && element.eventType !== 'set') {
+            if (element.eventType !== 'createNode' && element.eventType !== 'connect' && element.eventType !== 'set' && element.eventType !== 'loopEnd') {
                 scheduleOrExecuteEvent(Tone, nodes, element);
             }
         }

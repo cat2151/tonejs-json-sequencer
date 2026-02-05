@@ -2,6 +2,7 @@
 import * as minimal from './instrument/minimal.js';
 import * as tempoTest from './instrument/tempo-test.js';
 import * as streamingTestDoremi from './instrument/streaming-test-doremi.js';
+import * as loopendTest from './instrument/loopend-test.js';
 import * as delayVibrato from './instrument/delay-vibrato.js';
 import * as multitimbral from './instrument/multitimbral.js';
 import * as supersaw from './instrument/supersaw.js';
@@ -41,6 +42,7 @@ const allSequenceModules = [
     minimal,
     tempoTest,
     streamingTestDoremi,
+    loopendTest,
     delayVibrato,
     multitimbral,
     supersaw,
