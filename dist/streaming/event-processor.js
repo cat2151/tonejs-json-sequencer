@@ -101,7 +101,7 @@ class EventProcessor {
     calculateSequenceDuration(events, endBufferSeconds) {
         // Check if there's a loopEnd event
         const loopEndEvent = events.find(e => e.eventType === 'loopEnd');
-        if (loopEndEvent && 'args' in loopEndEvent && Array.isArray(loopEndEvent.args) && loopEndEvent.args.length > 0) {
+        if (loopEndEvent && loopEndEvent.eventType === 'loopEnd' && loopEndEvent.args.length > 0) {
             const loopDuration = this.timeParser.parseTimeToSeconds(loopEndEvent.args[0]);
             if (loopDuration > 0) {
                 // Use explicit loop duration from loopEnd event
