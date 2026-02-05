@@ -325,6 +325,7 @@ tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記
 - `depth.rampTo` - depthパラメータの滑らかな変更
 - `volume.rampTo` - volumeパラメータの滑らかな変更
 - `set` - グローバル設定（現在は `Transport.bpm.value` のみ対応）
+- `loopEnd` - ストリーミング再生用の明示的なループ境界のマーク（メタデータイベント）
 
 ## 未実装機能リスト
 

@@ -325,6 +325,7 @@ This section lists features that are "possible with Tone.js but not yet implemen
 - `depth.rampTo` - Smooth change of depth parameter
 - `volume.rampTo` - Smooth change of volume parameter
 - `set` - Global settings (currently only supports `Transport.bpm.value`)
+- `loopEnd` - Mark explicit loop boundary for streaming playback (metadata event)
 
 ## List of Unimplemented Features
 
