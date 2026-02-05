@@ -6,6 +6,7 @@
   <a href="README.md"><img src="https://img.shields.io/badge/🇺🇸-English-blue.svg" alt="English"></a>
   <a href="https://cat2151.github.io/tonejs-json-sequencer/index.html"><img src="https://img.shields.io/badge/🚀-Live%20Demo-brightgreen.svg" alt="Demo"></a>
   <a href="https://cat2151.github.io/tonejs-json-sequencer/streaming.html"><img src="https://img.shields.io/badge/🎵-Streaming%20Demo-orange.svg" alt="Streaming Demo"></a>
+  <a href="https://cat2151.github.io/tonejs-json-sequencer/demo-library/"><img src="https://img.shields.io/badge/📦-Library%20Demo-blue.svg" alt="Library Demo"></a>
 </p>
 
 # 状況
@@ -67,6 +68,16 @@ tonejs-json-sequencerは、他のプロジェクトからライブラリとし�
 ```bash
 npm install tonejs-json-sequencer tone
 ```
+
+### GitHubから直接インストールする場合
+
+GitHub から直接インストールして、最新の開発バージョンを使用できます：
+
+```bash
+npm install cat2151/tonejs-json-sequencer tone
+```
+
+GitHub インストール経由で外部プロジェクトからライブラリを使用する完全な例については、[demo-library](https://cat2151.github.io/tonejs-json-sequencer/demo-library/) ディレクトリを参照してください。
 
 ### dist/ ディレクトリを直接参照する場合
 

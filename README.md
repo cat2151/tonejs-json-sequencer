@@ -6,6 +6,7 @@
   <a href="README.md"><img src="https://img.shields.io/badge/🇺🇸-English-blue.svg" alt="English"></a>
   <a href="https://cat2151.github.io/tonejs-json-sequencer/index.html"><img src="https://img.shields.io/badge/🚀-Live%20Demo-brightgreen.svg" alt="Demo"></a>
   <a href="https://cat2151.github.io/tonejs-json-sequencer/streaming.html"><img src="https://img.shields.io/badge/🎵-Streaming%20Demo-orange.svg" alt="Streaming Demo"></a>
+  <a href="https://cat2151.github.io/tonejs-json-sequencer/demo-library/"><img src="https://img.shields.io/badge/📦-Library%20Demo-blue.svg" alt="Library Demo"></a>
 </p>
 
 # Current Status
@@ -67,6 +68,16 @@ This allows for flexible development by separating the low-level layer connected
 ```bash
 npm install tonejs-json-sequencer tone
 ```
+
+### Installing from GitHub
+
+You can install directly from GitHub to get the latest development version:
+
+```bash
+npm install cat2151/tonejs-json-sequencer tone
+```
+
+For a complete example of using the library in an external project via GitHub installation, see the [demo-library](https://cat2151.github.io/tonejs-json-sequencer/demo-library/) directory.
 
 ### Directly referencing the `dist/` directory
 
