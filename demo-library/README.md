@@ -27,8 +27,8 @@ Or specify a specific branch, tag, or commit:
 # Install from a specific branch
 npm install cat2151/tonejs-json-sequencer#main
 
-# Install from a specific tag
-npm install cat2151/tonejs-json-sequencer#v0.0.1
+# Install from a specific tag (check available tags first)
+npm install cat2151/tonejs-json-sequencer#vX.Y.Z
 
 # Install from a specific commit
 npm install cat2151/tonejs-json-sequencer#commit-hash
