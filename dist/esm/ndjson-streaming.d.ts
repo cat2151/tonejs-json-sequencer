@@ -59,6 +59,7 @@ export interface NDJSONStreamingConfig {
  * Processes events with lookahead timing and supports live editing and loop playback
  */
 export declare class NDJSONStreamingPlayer {
+    private static readonly SCHEDULE_TIME_TOLERANCE_SECONDS;
     private Tone;
     private nodes;
     private config;
@@ -72,6 +73,14 @@ export declare class NDJSONStreamingPlayer {
      * Log debug message if debug mode is enabled
      */
     private debug;
+    /**
+     * Check if an event is schedulable (i.e., not a setup/metadata event)
+     */
+    private isSchedulableEvent;
+    /**
+     * Extract time notation from event args
+     */
+    private getTimeNotation;
     /**
      * Generate event scheduling predictions
      * Creates predictions for the first loop and the first event of the next loop

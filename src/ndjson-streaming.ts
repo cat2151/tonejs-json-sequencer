@@ -105,6 +105,8 @@ export interface NDJSONStreamingConfig {
  * Processes events with lookahead timing and supports live editing and loop playback
  */
 export class NDJSONStreamingPlayer {
+  private static readonly SCHEDULE_TIME_TOLERANCE_SECONDS = 0.001; // 1ms tolerance for schedule time comparison
+  
   private Tone: typeof ToneTypes;
   private nodes: SequencerNodes;
   private config: Required<NDJSONStreamingConfig>;
@@ -155,6 +157,26 @@ export class NDJSONStreamingPlayer {
   }
 
   /**
+   * Check if an event is schedulable (i.e., not a setup/metadata event)
+   */
+  private isSchedulableEvent(event: SequenceEvent): boolean {
+    return event.eventType !== 'createNode' && 
+           event.eventType !== 'connect' && 
+           event.eventType !== 'set' && 
+           event.eventType !== 'loopEnd';
+  }
+
+  /**
+   * Extract time notation from event args
+   */
+  private getTimeNotation(event: SequenceEvent): string {
+    if ('args' in event && Array.isArray(event.args) && event.args.length > 0) {
+      return String(event.args[event.args.length - 1]);
+    }
+    return 'unknown';
+  }
+
+  /**
    * Generate event scheduling predictions
    * Creates predictions for the first loop and the first event of the next loop
    */
@@ -165,24 +187,17 @@ export class NDJSONStreamingPlayer {
     // Generate predictions for first loop (loop 0)
     events.forEach((event, index) => {
       // Skip non-schedulable events
-      if (event.eventType === 'createNode' || event.eventType === 'connect' || 
-          event.eventType === 'set' || event.eventType === 'loopEnd') {
+      if (!this.isSchedulableEvent(event)) {
         return;
       }
 
       const eventTime = this.eventProcessor.getEventTime(event);
       if (eventTime === null) return;
 
-      // Get time notation from event args
-      let timeNotation = 'unknown';
-      if ('args' in event && Array.isArray(event.args) && event.args.length > 0) {
-        timeNotation = String(event.args[event.args.length - 1]);
-      }
-
       const prediction: EventPrediction = {
         eventIndex: index,
         eventType: event.eventType,
-        timeNotation,
+        timeNotation: this.getTimeNotation(event),
         timeSeconds: eventTime,
         expectedScheduleTime: startTime + eventTime,
         loopIteration: 0
@@ -194,27 +209,18 @@ export class NDJSONStreamingPlayer {
 
     // Add prediction for first event of next loop (if loop mode enabled)
     if (this.config.loop && events.length > 0) {
-      const firstSchedulableEvent = events.find(e => 
-        e.eventType !== 'createNode' && e.eventType !== 'connect' && 
-        e.eventType !== 'set' && e.eventType !== 'loopEnd'
-      );
+      const firstSchedulableEvent = events.find(e => this.isSchedulableEvent(e));
 
       if (firstSchedulableEvent) {
         const firstEventIndex = events.indexOf(firstSchedulableEvent);
         const eventTime = this.eventProcessor.getEventTime(firstSchedulableEvent);
         
         if (eventTime !== null) {
-          let timeNotation = 'unknown';
-          if ('args' in firstSchedulableEvent && Array.isArray(firstSchedulableEvent.args) && 
-              firstSchedulableEvent.args.length > 0) {
-            timeNotation = String(firstSchedulableEvent.args[firstSchedulableEvent.args.length - 1]);
-          }
-
           const loopOffset = sequenceDuration + this.config.loopWaitSeconds;
           const prediction: EventPrediction = {
             eventIndex: firstEventIndex,
             eventType: firstSchedulableEvent.eventType,
-            timeNotation,
+            timeNotation: this.getTimeNotation(firstSchedulableEvent),
             timeSeconds: eventTime,
             expectedScheduleTime: startTime + loopOffset + eventTime,
             loopIteration: 1
@@ -463,9 +469,8 @@ export class NDJSONStreamingPlayer {
             const expectedTime = prediction.expectedScheduleTime;
             const actualTime = absoluteTime;
             const mismatch = Math.abs(actualTime - expectedTime);
-            const TOLERANCE = 0.001; // 1ms tolerance
             
-            if (mismatch > TOLERANCE) {
+            if (mismatch > NDJSONStreamingPlayer.SCHEDULE_TIME_TOLERANCE_SECONDS) {
               // Mismatch detected - highlight in red
               this.debug(`🔴 MISMATCH Event #${index} (${event.eventType}) Loop:${this.playbackState.loopCount}`, {
                 timeNotation: prediction.timeNotation,
