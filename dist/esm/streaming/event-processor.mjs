@@ -110,7 +110,7 @@ export class EventProcessor {
         }
         // Fallback: calculate duration from events
         let maxEndTime = 0;
-        let maxStartTime = 0;
+        const eventStartTimes = [];
         events.forEach(event => {
             if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set' || event.eventType === 'loopEnd') {
                 return;
@@ -118,10 +118,8 @@ export class EventProcessor {
             const eventTime = this.getEventTime(event);
             if (eventTime === null)
                 return;
-            // Track the latest event start time
-            if (eventTime > maxStartTime) {
-                maxStartTime = eventTime;
-            }
+            // Collect event start times for spacing analysis
+            eventStartTimes.push(eventTime);
             // Calculate the end time of this event (start time + duration)
             let eventEndTime = eventTime;
             // For triggerAttackRelease events, add the note duration to get the actual end time
@@ -159,20 +157,26 @@ export class EventProcessor {
                 maxEndTime = eventEndTime;
             }
         });
-        // When in loop mode, use the latest event START time instead of END time for seamless looping.
-        // This prevents gaps between loop iterations when the last note's duration extends beyond
-        // where the next iteration should begin.
-        // However, if all events start at time 0 but have non-zero duration, maxStartTime will be 0
-        // while maxEndTime will be > 0. In that case, fall back to maxEndTime so that such
-        // one-shot sequences can still produce a non-zero loop duration.
-        // For non-loop mode, use END time to let the last note finish playing.
+        // Calculate sequence duration based on mode
         let sequenceDuration;
-        if (isLoopMode) {
-            // Loop mode: use start time, but fall back to end time if start time is 0
-            sequenceDuration = maxStartTime > 0 ? maxStartTime : maxEndTime;
+        if (isLoopMode && eventStartTimes.length >= 2) {
+            // Loop mode: calculate inter-event spacing to determine when next iteration should start
+            // Sort event times to calculate spacing
+            eventStartTimes.sort((a, b) => a - b);
+            // Calculate the spacing between the last two events
+            const lastEventTime = eventStartTimes[eventStartTimes.length - 1];
+            const secondLastEventTime = eventStartTimes[eventStartTimes.length - 2];
+            const lastSpacing = lastEventTime - secondLastEventTime;
+            // The next iteration's first event should start at: lastEventTime + lastSpacing
+            // This maintains the inter-event spacing pattern
+            sequenceDuration = lastEventTime + lastSpacing;
+        }
+        else if (isLoopMode && eventStartTimes.length === 1) {
+            // Single event: fall back to maxEndTime to allow the event to complete
+            sequenceDuration = maxEndTime;
         }
         else {
-            // Non-loop mode: use end time to let notes finish
+            // Non-loop mode: use maxEndTime to let all notes finish playing
             sequenceDuration = maxEndTime;
         }
         // Add buffer after the sequence
