@@ -9,14 +9,14 @@ import type { SequencerNodes } from './sequencer-nodes.js';
  */
 export declare function parseNDJSON(ndjson: string): SequenceEvent[];
 /**
- * Debug information for a single event
+ * Predicted scheduling information for an event
  */
-export interface DebugEventInfo {
+export interface EventPrediction {
     eventIndex: number;
     eventType: string;
-    scheduledTime: number;
-    currentTime: number;
-    timeDelta: number;
+    timeNotation: string;
+    timeSeconds: number;
+    expectedScheduleTime: number;
     loopIteration: number;
 }
 /**
@@ -39,7 +39,7 @@ export interface NDJSONStreamingConfig {
     loopWaitSeconds?: number;
     /** Callback when playback completes a loop iteration */
     onLoopComplete?: () => void;
-    /** Ticks per quarter note for timing calculations (default: 480) */
+    /** Ticks per quarter note for timing calculations (default: 192, Tone.js standard) */
     ticksPerQuarter?: number;
     /** Beats per minute for timing calculations (default: 120) */
     beatsPerMinute?: number;
@@ -59,6 +59,7 @@ export interface NDJSONStreamingConfig {
  * Processes events with lookahead timing and supports live editing and loop playback
  */
 export declare class NDJSONStreamingPlayer {
+    private static readonly SCHEDULE_TIME_TOLERANCE_SECONDS;
     private Tone;
     private nodes;
     private config;
@@ -66,11 +67,25 @@ export declare class NDJSONStreamingPlayer {
     private timeParser;
     private eventProcessor;
     private animationFrameId;
+    private eventPredictions;
     constructor(Tone: typeof ToneTypes, nodes: SequencerNodes, config?: NDJSONStreamingConfig);
     /**
      * Log debug message if debug mode is enabled
      */
     private debug;
+    /**
+     * Check if an event is schedulable (i.e., not a setup/metadata event)
+     */
+    private isSchedulableEvent;
+    /**
+     * Extract time notation from event args
+     */
+    private getTimeNotation;
+    /**
+     * Generate event scheduling predictions
+     * Creates predictions for the first loop and the first event of the next loop
+     */
+    private generatePredictions;
     /**
      * Start or update the streaming playback
      * @param eventsOrNDJSON - Array of events or NDJSON string

@@ -23,7 +23,7 @@ export {
   NDJSONStreamingPlayer, 
   parseNDJSON,
   type NDJSONStreamingConfig,
-  type DebugEventInfo,
+  type EventPrediction,
   type DebugCallback
 } from './ndjson-streaming.js';
 
