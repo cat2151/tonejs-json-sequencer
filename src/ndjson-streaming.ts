@@ -84,7 +84,7 @@ export interface NDJSONStreamingConfig {
   loopWaitSeconds?: number;
   /** Callback when playback completes a loop iteration */
   onLoopComplete?: () => void;
-  /** Ticks per quarter note for timing calculations (default: 480) */
+  /** Ticks per quarter note for timing calculations (default: 192, Tone.js standard) */
   ticksPerQuarter?: number;
   /** Beats per minute for timing calculations (default: 120) */
   beatsPerMinute?: number;
@@ -128,7 +128,7 @@ export class NDJSONStreamingPlayer {
       loop: config.loop ?? false,
       loopWaitSeconds: config.loopWaitSeconds ?? 0.5,
       onLoopComplete: config.onLoopComplete ?? (() => {}),
-      ticksPerQuarter: config.ticksPerQuarter ?? 480,
+      ticksPerQuarter: config.ticksPerQuarter ?? 192,
       beatsPerMinute: config.beatsPerMinute ?? 120,
       beatsPerBar: config.beatsPerBar ?? 4,
       subdivisionsPerBeat: config.subdivisionsPerBeat ?? 4,

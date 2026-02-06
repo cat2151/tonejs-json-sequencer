@@ -4,7 +4,7 @@ import type { SequenceEvent } from './types.js';
  * Configuration for offline renderer
  */
 export interface OfflineRendererConfig {
-    /** Ticks per quarter note for timing calculations (default: 480) */
+    /** Ticks per quarter note for timing calculations (default: 192, Tone.js standard) */
     ticksPerQuarter?: number;
     /** Beats per minute for timing calculations (default: 120) */
     beatsPerMinute?: number;

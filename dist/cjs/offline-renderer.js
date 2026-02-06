@@ -18,7 +18,7 @@ class OfflineRenderer {
     constructor(Tone, config = {}) {
         this.Tone = Tone;
         this.config = {
-            ticksPerQuarter: config.ticksPerQuarter ?? 480,
+            ticksPerQuarter: config.ticksPerQuarter ?? 192,
             beatsPerMinute: config.beatsPerMinute ?? 120,
             beatsPerBar: config.beatsPerBar ?? 4,
             subdivisionsPerBeat: config.subdivisionsPerBeat ?? 4,

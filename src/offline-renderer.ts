@@ -13,7 +13,7 @@ import { parseNDJSON } from './ndjson-streaming.js';
  * Configuration for offline renderer
  */
 export interface OfflineRendererConfig {
-  /** Ticks per quarter note for timing calculations (default: 480) */
+  /** Ticks per quarter note for timing calculations (default: 192, Tone.js standard) */
   ticksPerQuarter?: number;
   /** Beats per minute for timing calculations (default: 120) */
   beatsPerMinute?: number;
@@ -60,7 +60,7 @@ export class OfflineRenderer {
   ) {
     this.Tone = Tone;
     this.config = {
-      ticksPerQuarter: config.ticksPerQuarter ?? 480,
+      ticksPerQuarter: config.ticksPerQuarter ?? 192,
       beatsPerMinute: config.beatsPerMinute ?? 120,
       beatsPerBar: config.beatsPerBar ?? 4,
       subdivisionsPerBeat: config.subdivisionsPerBeat ?? 4,

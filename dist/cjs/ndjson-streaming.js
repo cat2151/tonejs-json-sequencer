@@ -56,7 +56,7 @@ class NDJSONStreamingPlayer {
             loop: config.loop ?? false,
             loopWaitSeconds: config.loopWaitSeconds ?? 0.5,
             onLoopComplete: config.onLoopComplete ?? (() => { }),
-            ticksPerQuarter: config.ticksPerQuarter ?? 480,
+            ticksPerQuarter: config.ticksPerQuarter ?? 192,
             beatsPerMinute: config.beatsPerMinute ?? 120,
             beatsPerBar: config.beatsPerBar ?? 4,
             subdivisionsPerBeat: config.subdivisionsPerBeat ?? 4,
