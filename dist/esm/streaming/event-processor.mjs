@@ -162,8 +162,13 @@ export class EventProcessor {
         // When in loop mode, use the latest event START time instead of END time for seamless looping.
         // This prevents gaps between loop iterations when the last note's duration extends beyond
         // where the next iteration should begin.
+        // However, if all events start at time 0 but have non-zero duration, maxStartTime will be 0
+        // while maxEndTime will be > 0. In that case, fall back to maxEndTime so that such
+        // one-shot sequences can still produce a non-zero loop duration.
         // For non-loop mode, use END time to let the last note finish playing.
-        const sequenceDuration = isLoopMode ? maxStartTime : maxEndTime;
+        const sequenceDuration = isLoopMode
+            ? (maxStartTime > 0 ? maxStartTime : maxEndTime)
+            : maxEndTime;
         // Add buffer after the sequence
         return sequenceDuration + endBufferSeconds;
     }
