@@ -1,4 +1,4 @@
-Last updated: 2026-02-06
+Last updated: 2026-02-07
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -217,6 +217,8 @@ Last updated: 2026-02-06
 - demo/streaming-demo.css
 - demo/streaming.html
 - demo/styles.css
+- demo-library/README.md
+- demo-library/index.html
 - dist/cjs/event-scheduler.d.ts
 - dist/cjs/event-scheduler.js
 - dist/cjs/factories/effect-factory.d.ts
@@ -263,6 +265,7 @@ Last updated: 2026-02-06
 - dist/demo/instrument/amsynth.js
 - dist/demo/instrument/delay-vibrato.js
 - dist/demo/instrument/duosynth.js
+- dist/demo/instrument/loopend-test.js
 - dist/demo/instrument/membranesynth.js
 - dist/demo/instrument/metalsynth.js
 - dist/demo/instrument/minimal.js
@@ -351,6 +354,10 @@ Last updated: 2026-02-06
 - issue-notes/112.md
 - issue-notes/118.md
 - issue-notes/120.md
+- issue-notes/122.md
+- issue-notes/124.md
+- issue-notes/125.md
+- issue-notes/127.md
 - issue-notes/62.md
 - issue-notes/64.md
 - issue-notes/67.md
@@ -398,6 +405,7 @@ Last updated: 2026-02-06
 - src/demo/instrument/amsynth.ts
 - src/demo/instrument/delay-vibrato.ts
 - src/demo/instrument/duosynth.ts
+- src/demo/instrument/loopend-test.ts
 - src/demo/instrument/membranesynth.ts
 - src/demo/instrument/metalsynth.ts
 - src/demo/instrument/minimal.ts
@@ -439,47 +447,65 @@ Last updated: 2026-02-06
 - tsconfig.json
 
 ## 現在のオープンIssues
-## [Issue #120](../issue-notes/120.md): demoがエラー
-[issue-notes/120.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/120.md)
+## [Issue #128](../issue-notes/128.md): Add repository navigation footer to demo pages
+## Add Repository Links to Demo Pages
+
+### Requirements Analysis
+- ✅ Add a small, semi-transparent repository link in bottom-left of demo screens
+- ✅ Add demo-library link similarly  
+- ✅ Fix 404 links from demo-library to other pages
+
+### Changes Made
+
+#### Added CSS Styling (demo/styles.css)
+- Add...
+ラベル: 
+--- issue-notes/128.md の内容 ---
+
+```markdown
+
+```
+
+## [Issue #127](../issue-notes/127.md): demo画面左下にリポジトリへのリンクを小さく半透明で表示する
+[issue-notes/127.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/127.md)
 
 ...
 ラベル: good first issue
---- issue-notes/120.md の内容 ---
+--- issue-notes/127.md の内容 ---
 
 ```markdown
-# issue demoがエラー #120
-[issues #120](https://github.com/cat2151/tonejs-json-sequencer/issues/120)
+# issue demo画面左下にリポジトリへのリンクを小さく半透明で表示する #127
+[issues #127](https://github.com/cat2151/tonejs-json-sequencer/issues/127)
 
-# エラーログ
-```
-streaming.html:115  GET https://cat2151.github.io/dist/demo/streaming.js net::ERR_ABORTED 404 (Not Found)
-```
+
 
 ```
 
-## [Issue #119](../issue-notes/119.md): Add loopEnd event support for explicit loop boundary marking
-The tonejs-mml-to-json converter now emits `loopEnd` events to mark explicit loop boundaries when note durations diverge from timing positions (e.g., 50% gate time). Without this, streaming players miscalculate loop points based on note durations rather than actual sequence length.
-
-## Changes
-
-- **...
-ラベル: 
---- issue-notes/119.md の内容 ---
-
-```markdown
-
-```
-
-## [Issue #118](../issue-notes/118.md): tonejs-mml-to-jsonリポジトリの最近のPRを参考に、loopend eventに対応する
-[issue-notes/118.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/118.md)
+## [Issue #125](../issue-notes/125.md): streaming loop演奏がバグっており、loopするたびに間があいてしまう
+[issue-notes/125.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/125.md)
 
 ...
 ラベル: 
---- issue-notes/118.md の内容 ---
+--- issue-notes/125.md の内容 ---
 
 ```markdown
-# issue tonejs-mml-to-jsonリポジトリの最近のPRを参考に、loopend eventに対応する #118
-[issues #118](https://github.com/cat2151/tonejs-json-sequencer/issues/118)
+# issue streaming loop演奏がバグっており、loopするたびに間があいてしまう #125
+[issues #125](https://github.com/cat2151/tonejs-json-sequencer/issues/125)
+
+
+
+```
+
+## [Issue #124](../issue-notes/124.md): （人力）demo-libの動作確認をする
+[issue-notes/124.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/124.md)
+
+...
+ラベル: 
+--- issue-notes/124.md の内容 ---
+
+```markdown
+# issue demo-libの動作確認をする #124
+[issues #124](https://github.com/cat2151/tonejs-json-sequencer/issues/124)
 
 
 
@@ -501,146 +527,395 @@ The tonejs-mml-to-json converter now emits `loopEnd` events to mark explicit loo
 ```
 
 ## ドキュメントで言及されているファイルの内容
-### .github/actions-tmp/issue-notes/18.md
+### .github/actions-tmp/issue-notes/24.md
 ```md
 {% raw %}
-# issue DevelopmentStatusGenerator.cjs 内に、Geminiに与えるpromptがハードコーディングされてしまっている #18
-[issues #18](https://github.com/cat2151/github-actions/issues/18)
+# issue Geminiが503で落ちたのでretryを実装する #24
+[issues #24](https://github.com/cat2151/github-actions/issues/24)
 
 # 何が困るの？
-- project把握しづらい。どこにpromptが書いてあるのか、把握しづらい。
-- prompts/ にほかのpromptがあるため、方針がブレていると、読みづらい。
-- 備忘、いくらテンプレートリテラルとプレースホルダーで密結合しているからとはいえ、ハードコーディングはNG。
-    - それらはreplaceを使う等で楽に切り出しできるので。
+- 朝起きて、development statusがgenerateされてないのは困る
+    - それをタスク実施のヒントにしているので
+    - 毎朝generatedな状態を維持したい
 
-# 問題のcjsの場所は？
-- ファイルパス : .github_automation/project_summary/scripts/development/DevelopmentStatusGenerator.cjs
-- 関数 : generateDevelopmentStatus
+# 方法
+- retryを実装する
+    - 現在は `this.model.generateContent(developmentPrompt);`
+    - 実装後は `this.generateContent(developmentPrompt);`
+    - BaseGenerator 側に、
+        - generateContent関数を実装する
+            - そこで、
+                - `this.model.generateContent(developmentPrompt);` する
+                - 503のとき、
+                    - retryあり
+                    - Exponential Backoff
 
 # 結果
-- Geminiに生成させたpromptを、agentに投げて、リファクタリングさせてみた
-- ハルシネーションした。使い物にならなかった
-- 人力でやる
+- 直近の実行結果をlog確認した
+    - 本番で503が発生しなかったことをlog確認した
+- 本番の503 testは、今回発生しなかったので、できず
+- ここ1週間で2回発生しているので、次の1週間で1回発生する想定
+- ソース机上確認した
+
+# どうする？
+- このissueはcloseしたほうがわかりやすい、と判断する
+- 1週間503を毎日チェック、は省略とする
+- もし今後503が発生したら別issueとする
+- 2日チェックして503なし
+
+# closeとする
+
+{% endraw %}
+```
+
+### .github/actions-tmp/issue-notes/25.md
+```md
+{% raw %}
+# issue project summaryを他projectからcallしたところ、issue-notes参照ディレクトリ誤りが発覚した #25
+[issues #25](https://github.com/cat2151/github-actions/issues/25)
+
+# 事象
+- `Issueノートが存在しません: /home/runner/work/tonejs-mml-to-json/tonejs-mml-to-json/.github/actions-tmp/issue-notes/6.md`
+
+# どうする？
+- 当該処理のディレクトリ部分を確認する
+- 日次バッチでGeminiに確認させてみる
+- 結果
+    - Geminiに確認させてpromptを生成させ、agentに投げた
+    - 結果、projectRootの扱いの誤り、と判明
+        - 共通workflow側のdirを引数でわたしてしまっていた
+        - target repository側のdirを引数でわたすべき
+- 修正したつもり
+- 次の日次バッチで動作確認させるつもり
 
 # 結果
 - test green
 
 # closeとする
 
+{% endraw %}
+```
+
+### .github/actions-tmp/issue-notes/27.md
+```md
+{% raw %}
+# issue LLMが生成したコードに、commit時のemailとnameについて公式推奨と公式非推奨の2つがブレて混在している。さらに判定処理が片方だけ対応になっている #27
+[issues #27](https://github.com/cat2151/github-actions/issues/27)
+
+# 補足
+- さらに、commit messageもブレている。auto があったりなかったりしている。
+    - auto があるほうが適切である、と判断する。
+- 公式推奨とは：
+    - name, emailが推奨、commit messageにautoが入っている
+```
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git commit -m "Update callgraph.html [auto]"
+```
+- 公式非推奨とは：
+    - name, emailが非推奨、commit messageにもautoが入っていない
+```
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git commit -m "Add issue note for #${{ inputs.issue_number }}"
+```
+
+# どうする？
+- 当該のworkflowとscriptで、github-actions@github.com 等をgrepし、公式推奨に統一する
+    - 影響範囲
+        - 24hチェック側もブレているので、しばらくは誤爆が続く
+        - #28 を修正して24h待てば、誤爆は解消する見込みである
+- 注意、24hチェックは変更しない。
+    - なぜなら #28 で全面的に修正するため、変更しても手戻りになる。
+- 過去commit messageはそのままとする
+
+# close条件は？
+- [x] name, email, commit comment のlogicが、公式推奨に統一されること
+- [x] #28 が修正されること
+- 以上を満たせば、test不要で、机上checkのみでcloseとする。
+- ほかは #26 のtestで担保する。
 
 {% endraw %}
 ```
 
-### .github/actions-tmp/issue-notes/19.md
+### .github/actions-tmp/issue-notes/28.md
 ```md
 {% raw %}
-# issue project-summary の development-status 生成時、issue-notes/ 配下のmdファイルの内容を参照させる #19
-[issues #19](https://github.com/cat2151/github-actions/issues/19)
+# issue 直近24時間でuser commitがあるかどうか、のチェックを、workflowのjobs先頭に新規jobを追加して実施し、本体jobの先頭にneedsを書く #28
+[issues #28](https://github.com/cat2151/github-actions/issues/28)
 
-# 何が困るの？
-- issue解決に向けての次の一手の内容が実態に即していないことが多い。
+# これまでの課題は？
+- これまでは各workflow内の終盤のscriptにバラバラに実装されていたので、
+    - ムダにcheckout等、各種処理が走っていた
 
-# 対策案
-- issue-notes/ 配下のmdファイルの内容を参照させる
+# 対策案は？
+- 直近24時間でuser commitがあるかどうか、
+    - のチェックを、
+        - workflowのjobs先頭に新規jobを追加して実施し、
+            - 本体jobの先頭にneedsを書く
+- この対策で、各workflow先頭にこれを書くだけでよくなり、エコになる想定
 
-# 備考
-- さらにmd内に書かれているfileも、project内をcjsに検索させて添付させると、よりGeminiの生成品質が向上する可能性がある。
-    - [issues #20](https://github.com/cat2151/github-actions/issues/20)
-- さらにproject overviewでGeminiがまとめたmdも、Geminiに与えると、よりGeminiの生成品質が向上する可能性がある。
-    - [issues #21](https://github.com/cat2151/github-actions/issues/21)
-- さらに、Geminiに与えたpromptをfileにしてcommit pushしておくと、デバッグに役立つ可能性がある。
-    - [issues #22](https://github.com/cat2151/github-actions/issues/22)
-
-# close条件
-- issues #22 がcloseされること。
-- commitされたpromptを確認し、issue-notes/ 配下のmdファイルがpromptに添付されていること、が確認できること。
-
-# 状況
-- 課題、実装したがtestができていない
-- 対策、issues #22 が実装されれば、testができる
-- 対策、issues #22 のcloseを待つ
-
-# 状況
-- issues #22 がcloseされた
-- testできるようになった
-- commitされたpromptを確認した。issue-notes/ 配下のmdファイルがpromptに添付されていること、が確認できた
-
-# closeする
-
-{% endraw %}
+# ChatGPTに生成させた
+## 呼び出し元のサンプル
+- 実際には、共通workflowのjobsの先頭付近を、このサンプルを参考に書き換えるイメージ
 ```
+jobs:
+  check_recent_human_commit:
+    uses: ./.github/workflows/check-recent-human-commit.yml
 
-### .github/actions-tmp/issue-notes/20.md
-```md
-{% raw %}
-# issue project-summary の development-status 生成時、issue-notes/ 配下のmdにファイル名が書いてあれば、そのファイル内容もpromptに添付、を試す #20
-[issues #20](https://github.com/cat2151/github-actions/issues/20)
+  build:
+    needs: check_recent_human_commit
+    if: needs.check_recent_human_commit.outputs.has_recent_human_commit == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run build
+        run: echo "Building because there is a recent human commit!"
+```
+## 共通ワークフロー側の案
+- シンプルにmailのみを条件とし、mailも1種類のみに明示する
+```
+name: "Check recent human commit"
 
-# 何が困るの？
-- Geminiに次の一手を生成させるとき、cjsの内容も添付したほうが、生成品質が改善できる可能性がある。
+on:
+  workflow_call:
 
-# 案
-## outputのimage
-- promptが言及するfilename、について、そのfileの内容もすべてpromptに含める。
-    - 軸は、projectのfilename一覧である。
-        - 一覧それぞれのfilenameについて、promptで言及されているものをfile内容埋め込み、とする。
-- 方向性
-    - シンプルで明確なルール、曖昧さのないルールで、メンテを楽にすることを優先する
-    - 余分なファイルが出てしまうが割り切ってOKとし、欠落リスクを減らせることを優先する
-- 備考
-    - 曖昧でメンテが必要な「documentからのfilename抽出」をやめ、
-        - かわりに、逆に、「今のprojectにあるfileすべてのうち、promptで言及されているもの」を軸とする
-## 実現方法の案
-- project全体について、filenameと、filepath配列（複数ありうる）、のmapを取得する。そういう関数Aをまず実装する。
-    - filepathは、agentが扱えるよう、github上のworkの絶対pathではなく、projectRootからの相対パス表記とする。
-- そして、そのfilenameにmatchするfilepath配列について、filepathとファイル内容を記したmarkdown文字列を返却、という関数Bを実装する。
-- さらに、Geminiにわたすpromptについて、前述の関数Aのfilenameそれぞれについて、prompt内を検索し、filenameが存在する場合は、そのfilenameについて、関数Bを用いてmarkdown文字列を取得する。そうして得られたmarkdown文字列群を返却する、という関数Cを実装する。
-- さらに、promptの末尾に書いてあるプレースホルダー「`${file_contents}`」を、関数Cの結果で置き換える、という関数Dを実装する。
-- 実際には、Geminiにわたすpromptのプレースホルダー展開は、2回にわたる必要がある。1回目でissues-note内容をpromptに埋め込む。2回目でそのpromptに対して関数Dを適用する。
+jobs:
+  check-recent-human-commit:
+    runs-on: ubuntu-latest
+    outputs:
+      has_recent_human_commit: ${{ steps.check.outputs.has_recent_human_commit }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Check recent human commit
+        id: check
+        run: |
+          set -e
+
+          HAS_HUMAN=false
+
+          while IFS=$'\x01' read -r HASH NAME EMAIL SUBJECT; do
+            SUBJECT="${SUBJECT%$'\x02'}"
+
+            if [[ ! "$EMAIL" =~ ^41898282\+github-actions\[bot\]@users\.noreply\.github\.com$ ]]; then
+              echo "HUMAN: Commit $HASH | Author: $NAME <$EMAIL> | Message: $SUBJECT"
+              HAS_HUMAN=true
+              break
+            else
+              echo "BOT: Commit $HASH | Author: $NAME <$EMAIL> | Message: $SUBJECT"
+            fi
+          done <<< "$(git log --since="24 hours ago" --pretty=format:'%H%x01%an%x01%ae%x01%s%x02')"
+
+          if [ "$HAS_HUMAN" = true ]; then
+            echo "Found recent human commit."
+            echo "has_recent_human_commit=true" >> $GITHUB_OUTPUT
+          else
+            echo "No human commits in last 24h."
+            echo "has_recent_human_commit=false" >> $GITHUB_OUTPUT
+```
 ## 備忘
-- 上記は、agentにplanさせてレビューし、context不足と感じたら上記をメンテ、というサイクルで書いた。
+- 上記はChatGPTに生成させ、それをレビューさせて改善させる、のサイクルで生成した。
+    - 一発で生成はできなかった
+    - ChatGPTが自分で生成したものに対して自己レビューでミスや改善点が多発していた
+        - ブレも発生し、二転三転気味でもあり、
+            - ハルシネーションに近い低品質状態だと感じた
+                - これは経験則からの感覚的なもの
+    - 生成の品質が低い、ということ
+        - LLMはまだ学習不足、github-actions workflow yml の学習不足である、と解釈する
+        - shell scriptの生成品質も低いかも。
+            - もともとshell scriptで複雑なlogicを書くとtest costが高い、なぜなら読みづらいから。
+                - なのでロジックをcjs側に切り出したほうが全体最適の観点からよりよい、と考える
 
 # どうする？
-- 上記をagentに投げる。documentやtestについてのplanもしてくるかもしれないがそこは時間の都合で省略して実施させるつもり。
-- 投げた、実装させた、レビューして人力リファクタリングした
+- shell scriptはやめて、cjsでlogicを担当させる。
+  - 現状のshell scriptを改めて見直すと、これはcjs側にしたほうがよい、と感覚的に、経験則で、わかる。
+- logicをcjs側に切り出す。実際、既存でgitの24hチェックをcjs側でやっている実績がある。そこのロジックを参考にする。
+- 今のmdの仕様をもとに、ymlとcjsを生成させる。
+- 生成させた。ChatGPTに投げた
+- 人力でいくつか変更したり、ChatGPTに投げて修正させるサイクルを回したりした
 - testする
 
-# 結果
-- バグ
-    - この20.mdにあるプレースホルダーが置換されてしまっている
-    - issue-notesで言及されていないfileまで添付されてしまっている
-- 分析
-    - この20.mdにあるプレースホルダーが置換されてしまっている
-        - 原因
-            - 20.mdにあるプレースホルダーまで置換対象としてしまっていたため。
-            - prompt全体のプレースホルダーを置換対象としてしまっていたため。
-            - issue-notesを埋め込んだあとでの、プレースホルダー処理だったので、
-                - 20.md が置換対象となってしまったため。
-        - 対策案
-            - プレースホルダーはすべて、「行頭と行末で囲まれている」ときだけ置換対象とする。
-                - つまり文中やcode中のプレースホルダーは置換対象外とする。
-            - さらに、2つ以上プレースホルダーが出たら想定外なので早期エラー終了させ、検知させる。
-    - issue-notesで言及されていないfileまで添付されてしまっている
-        - 原因
-            - promptに、既にprojectの全file listが書き込まれたあとなので、
-                - issue-noteで言及されていなくても、
-                - promptの全file listを対象に検索してしまっている
-        - 対策案の候補
-            - プレースホルダー置換の順番を変更し、全file listは最後に置換する
-            - file添付の対象を変更し、promptでなく、issue-notesとする
-                - これが範囲が絞られているので安全である、と考える
-        - 備忘
-            - 全fileの対象は、リモートリポジトリ側のfileなので、secretsの心配はないし、実際に検索して確認済み
-
-# どうする？
-- agent半分、人力が半分（agentがハルシネーションでソース破壊したので、関数切り分けしたり、リファクタリングしたり）。
-- で実装した。
+# バグ
+- 結果、バグがあったのでagentにlogを投げ、修正させ、人力修正し、agentにセルフレビューさせ、のサイクルを回した
 - testする
-
-# 結果
-- test green
+- 結果、callgraphで、エラーなくhumanを検知したが、callgraphが呼ばれない、というバグが発生
+- ひとまずagentの提案したcodeを切り分けのため試す、バグ状況は変わらない想定
+- 結果、バグ状況は変わらず
+- 対策、trueのlogをagentに投げて、callgraphが呼ばれないことを伝え、可視化を実装させた
+- testする
+- 結果、バグ状況は変わらず
+- 対策、logをagentに投げて、callgraphが呼ばれないことを伝え、さらに可視化を実装させた
+- testする
+- 結果、バグ状況は変わらず
+- 対策、logをagentに投げて、callgraphが呼ばれないことを伝え、さらに可視化を実装させた
+- testする
+- 結果、バグ状況は変わらず
+- 対策、logをagentに投げて、callgraphが呼ばれないことを伝えた
+- ここで、根本的にymlのworkflow記述が間違っていることが判明
+  - agentが最初にcode生成したときから根本的なバグが仕込まれていたということ。
+    - agentの学習不足。github-actionsのworkflowの学習不足。
+- そこをagentに修正させ、test greenとなった
 
 # closeとする
+
+{% endraw %}
+```
+
+### .github/actions-tmp/issue-notes/4.md
+```md
+{% raw %}
+# issue GitHub Actions「project概要生成」を共通ワークフロー化する #4
+[issues #4](https://github.com/cat2151/github-actions/issues/4)
+
+# prompt
+```
+あなたはGitHub Actionsと共通ワークフローのスペシャリストです。
+このymlファイルを、以下の2つのファイルに分割してください。
+1. 共通ワークフロー       cat2151/github-actions/.github/workflows/daily-project-summary.yml
+2. 呼び出し元ワークフロー cat2151/github-actions/.github/workflows/call-daily-project-summary.yml
+まずplanしてください
+```
+
+# 結果、あちこちハルシネーションのあるymlが生成された
+- agentの挙動があからさまにハルシネーション
+    - インデントが修正できない、「失敗した」という
+    - 構文誤りを認識できない
+- 人力で修正した
+
+# このagentによるセルフレビューが信頼できないため、別のLLMによるセカンドオピニオンを試す
+```
+あなたはGitHub Actionsと共通ワークフローのスペシャリストです。
+以下の2つのファイルをレビューしてください。最優先で、エラーが発生するかどうかだけレビューてください。エラー以外の改善事項のチェックをするかわりに、エラー発生有無チェックに最大限注力してください。
+
+--- 呼び出し元
+
+name: Call Daily Project Summary
+
+on:
+  schedule:
+    # 日本時間 07:00 (UTC 22:00 前日)
+    - cron: '0 22 * * *'
+  workflow_dispatch:
+
+jobs:
+  call-daily-project-summary:
+    uses: cat2151/github-actions/.github/workflows/daily-project-summary.yml
+    secrets:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+--- 共通ワークフロー
+name: Daily Project Summary
+on:
+  workflow_call:
+
+jobs:
+  generate-summary:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      issues: read
+      pull-requests: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0  # 履歴を取得するため
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          # 一時的なディレクトリで依存関係をインストール
+          mkdir -p /tmp/summary-deps
+          cd /tmp/summary-deps
+          npm init -y
+          npm install @google/generative-ai @octokit/rest
+          # generated-docsディレクトリを作成
+          mkdir -p $GITHUB_WORKSPACE/generated-docs
+
+      - name: Generate project summary
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          NODE_PATH: /tmp/summary-deps/node_modules
+        run: |
+          node .github/scripts/generate-project-summary.cjs
+
+      - name: Check for generated summaries
+        id: check_summaries
+        run: |
+          if [ -f "generated-docs/project-overview.md" ] && [ -f "generated-docs/development-status.md" ]; then
+            echo "summaries_generated=true" >> $GITHUB_OUTPUT
+          else
+            echo "summaries_generated=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push summaries
+        if: steps.check_summaries.outputs.summaries_generated == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          # package.jsonの変更のみリセット（generated-docsは保持）
+          git restore package.json 2>/dev/null || true
+          # サマリーファイルのみを追加
+          git add generated-docs/project-overview.md
+          git add generated-docs/development-status.md
+          git commit -m "Update project summaries (overview & development status)"
+          git push
+
+      - name: Summary generation result
+        run: |
+          if [ "${{ steps.check_summaries.outputs.summaries_generated }}" == "true" ]; then
+            echo "✅ Project summaries updated successfully"
+            echo "📊 Generated: project-overview.md & development-status.md"
+          else
+            echo "ℹ️ No summaries generated (likely no user commits in the last 24 hours)"
+          fi
+```
+
+# 上記promptで、2つのLLMにレビューさせ、合格した
+
+# 細部を、先行する2つのymlを参照に手直しした
+
+# ローカルtestをしてからcommitできるとよい。方法を検討する
+- ローカルtestのメリット
+    - 素早く修正のサイクルをまわせる
+    - ムダにgit historyを汚さない
+        - これまでの事例：「実装したつもり」「エラー。修正したつもり」「エラー。修正したつもり」...（以降エラー多数）
+- 方法
+    - ※検討、WSL + act を環境構築済みである。test可能であると判断する
+    - 呼び出し元のURLをコメントアウトし、相対パス記述にする
+    - ※備考、テスト成功すると結果がcommit pushされる。それでよしとする
+- 結果
+    - OK
+    - secretsを簡略化できるか試した、できなかった、現状のsecrets記述が今わかっている範囲でベストと判断する
+    - OK
+
+# test green
+
+# commit用に、yml 呼び出し元 uses をlocal用から本番用に書き換える
+
+# closeとする
+
+{% endraw %}
+```
+
+### .github/actions-tmp/issue-notes/7.md
+```md
+{% raw %}
+# issue issue note生成できるかのtest用 #7
+[issues #7](https://github.com/cat2151/github-actions/issues/7)
+
+- 生成できた
+- closeとする
 
 {% endraw %}
 ```
@@ -742,521 +1017,253 @@ planにおいては、修正対象のソースファイル名と関数名を、�
 {% endraw %}
 ```
 
-### demo/streaming.html
-```html
+### demo/styles.css
+```css
 {% raw %}
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tone.js JSON Sequencer - NDJSONストリーミングデモ</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="streaming-demo.css">
-</head>
-<body>
-  <h1>NDJSONストリーミングデモ</h1>
-  
-  <p style="margin: 10px 0;">
-    <a href="index.html">← メインデモに戻る</a> | 
-    <a href="offline-rendering.html">オフラインレンダリングデモ →</a>
-  </p>
-  
-  <div class="collapsible-section">
-    <button class="collapsible-button" id="aboutButton" aria-expanded="false" aria-controls="aboutContent">📖 このデモについて</button>
-    <div class="collapsible-content" id="aboutContent">
-      <p><strong>🎵 Streaming（ストリーミング再生）方式</strong></p>
-      <ul>
-        <li><strong>ライブ編集:</strong> 再生中にテキストエリアでシーケンスを編集 - 変更はリアルタイムに反映されます</li>
-        <li><strong>ループ再生:</strong> ループモードを有効にすると、シーケンスを連続再生できます</li>
-        <li><strong>50ms先読み:</strong> スムーズな再生のため、イベントは50msの先読みでスケジュールされます</li>
-        <li><strong>デバッグモード:</strong> 詳細なタイミングとスケジューリング情報を確認できます</li>
-      </ul>
-      <div class="hint-box">
-        <strong>💡 ヒント:</strong> シーケンス全体を一括でレンダリングする場合は、<a href="offline-rendering.html">オフラインレンダリングデモ</a>をご利用ください（One-shot方式）
-      </div>
-    </div>
-  </div>
-
-  <div class="collapsible-section">
-    <button class="collapsible-button" id="usageButton" aria-expanded="false" aria-controls="usageContent">📝 使い方</button>
-    <div class="collapsible-content" id="usageContent">
-      <ol>
-        <li><strong>再生:</strong> 「再生」ボタンをクリックすると、50msの先読みスケジューリングで再生が開始されます</li>
-        <li><strong>ライブ編集:</strong> 再生中にテキストエリアでシーケンスを編集 - 変更は即座に反映されます</li>
-        <li><strong>ループ:</strong> 「ループ再生」を有効にすると、シーケンスを連続的に繰り返し再生できます</li>
-        <li><strong>デバッグ:</strong> 「デバッグモード」を有効にすると、イベントのスケジューリングとタイミングの詳細情報が表示されます</li>
-        <li><strong>停止:</strong> 「停止」ボタンをクリックすると、再生が停止してリセットされます</li>
-      </ol>
-      <p><strong>📝 Note:</strong> この方式は<strong>リアルタイムストリーミング再生</strong>です。ライブ編集や連続再生が可能で、対話的な音楽制作に最適です。</p>
-    </div>
-  </div>
-
-  <div class="streaming-controls">
-    <button id="playButton" autofocus>再生</button>
-    <button id="stopButton">停止</button>
-    <label>
-      <input type="checkbox" id="loopCheckbox" checked>
-      ループ再生
-    </label>
-    <label>
-      <input type="checkbox" id="debugCheckbox">
-      デバッグモード
-    </label>
-    <select id="sequenceSelector">
-      <!-- Options populated by JavaScript -->
-    </select>
-  </div>
-
-  <div class="streaming-controls">
-    <label style="font-weight: bold; margin-right: 10px;">編集の反映方式:</label>
-    <label>
-      <input type="radio" name="updateMode" id="updateModeManual" value="manual">
-      CTRL+SかSHIFT+ENTERで反映
-    </label>
-    <label>
-      <input type="radio" name="updateMode" id="updateModeDebounce" value="debounce" checked>
-      デバウンス1秒で反映
-    </label>
-  </div>
-
-  <div class="status" id="status">ステータス: 停止中</div>
-
-  <div class="debug-section">
-    <div class="debug-controls">
-      <h3>タイミング可視化:</h3>
-    </div>
-    <div id="timingVisualization" style="display: none; background: var(--status-bg); color: var(--text-color); border: 1px solid #444; border-radius: 4px; padding: 15px; margin-bottom: 15px; font-family: monospace; font-size: 14px;">
-      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
-        <div>
-          <div style="font-weight: bold; margin-bottom: 5px;">📊 イベントスケジューリング:</div>
-          <div id="eventSchedulingStats">-</div>
-        </div>
-        <div>
-          <div style="font-weight: bold; margin-bottom: 5px;">🔄 ループタイミング:</div>
-          <div id="loopTimingStats">-</div>
-        </div>
-      </div>
-      <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #444;">
-        <div style="font-weight: bold; margin-bottom: 5px;">凡例:</div>
-        <div style="font-size: 12px;">
-          ⚪ = タイミング正常 (予約バッファ内) | 🔴 = 遅延 | 🟢 = 早い | 
-          ✅ = ループ正常 (±5ms以内) | ⚠️ = ループ遅延 | ⏩ = ループ早い
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="debug-section">
-    <div class="debug-controls">
-      <h3>デバッグ出力:</h3>
-      <button id="clearDebugButton">デバッグをクリア</button>
-    </div>
-    <pre id="debugOutput"></pre>
-  </div>
-
-  <h3>シーケンス（NDJSON形式 - 1行につき1イベント）:</h3>
-  <textarea id="sequenceEditor" rows="30" cols="80"></textarea>
-
-  <script src="https://unpkg.com/tone@15.2.7/build/Tone.js"></script>
-  <script type="module" src="../dist/demo/streaming.js"></script>
-</body>
-</html>
-
-{% endraw %}
-```
-
-### dist/demo/streaming.js
-```js
-{% raw %}
-import { loadAllSequences } from './sequenceLoader.js';
-// @ts-ignore - Using built library
-import { SequencerNodes, NDJSONStreamingPlayer } from '../../dist/index.mjs';
-class StreamingDemo {
-    constructor() {
-        this.player = null;
-        this.nodes = new SequencerNodes();
-        this.sequences = loadAllSequences();
-        this.debugMessages = [];
-        this.maxDebugMessages = 100;
-        this.debounceTimer = null;
-        this.updateMode = 'debounce';
-        this.DEBOUNCE_DELAY_MS = 1000;
-        this.timingStats = this.createInitialTimingStats();
-        this.initializeUI();
-        this.initializeCollapsibleSections();
-        this.loadInitialSequence();
-    }
-    createInitialTimingStats() {
-        return {
-            totalEvents: 0,
-            onTimeEvents: 0,
-            lateEvents: 0,
-            earlyEvents: 0,
-            loopCount: 0,
-            lastLoopStatus: 'N/A',
-            lastLoopDriftMs: null
-        };
-    }
-    initializeUI() {
-        // Populate sequence selector
-        const selector = document.getElementById('sequenceSelector');
-        this.sequences.forEach((seq, index) => {
-            const option = document.createElement('option');
-            option.value = index.toString();
-            option.textContent = seq.name;
-            selector.appendChild(option);
-        });
-        // Play button
-        document.getElementById('playButton')?.addEventListener('click', () => {
-            this.play();
-        });
-        // Stop button
-        document.getElementById('stopButton')?.addEventListener('click', () => {
-            this.stop();
-        });
-        // Sequence selector change - immediately play the selected sequence for easier debugging
-        selector.addEventListener('change', async () => {
-            // Stop current playback if any, then load and play the new sequence
-            if (this.player && this.player.playing) {
-                this.stop();
-            }
-            this.loadSelectedSequence();
-            // Auto-play when selecting a new sequence for easier debugging
-            try {
-                await this.play();
-            }
-            catch (error) {
-                console.error('Error during auto-play:', error);
-            }
-        });
-        // Loop checkbox change
-        document.getElementById('loopCheckbox')?.addEventListener('change', () => {
-            // If playing, restart with new loop setting
-            if (this.player && this.player.playing) {
-                this.stop();
-                this.play();
-            }
-        });
-        // Debug checkbox change
-        document.getElementById('debugCheckbox')?.addEventListener('change', (e) => {
-            const enabled = e.target.checked;
-            const debugOutput = document.getElementById('debugOutput');
-            const timingVisualization = document.getElementById('timingVisualization');
-            if (debugOutput) {
-                debugOutput.style.display = enabled ? 'block' : 'none';
-            }
-            if (timingVisualization) {
-                timingVisualization.style.display = enabled ? 'block' : 'none';
-            }
-            if (!enabled) {
-                this.clearDebugOutput();
-            }
-            // If playing, restart with new debug setting
-            if (this.player && this.player.playing) {
-                this.stop();
-                this.play();
-            }
-        });
-        // Clear debug button
-        document.getElementById('clearDebugButton')?.addEventListener('click', () => {
-            this.clearDebugOutput();
-        });
-        // Update mode radio buttons
-        document.getElementById('updateModeManual')?.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                this.updateMode = 'manual';
-                // Clear any pending debounce timer when switching to manual mode
-                this.clearDebounceTimer();
-            }
-        });
-        document.getElementById('updateModeDebounce')?.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                this.updateMode = 'debounce';
-            }
-        });
-        // Textarea change (live editing)
-        const textarea = document.getElementById('sequenceEditor');
-        // Input event handler for debounce mode
-        textarea.addEventListener('input', () => {
-            if (this.updateMode === 'debounce') {
-                this.onSequenceEditDebounced();
-            }
-        });
-        // Keyboard shortcuts for manual mode (CTRL+S and SHIFT+ENTER)
-        textarea.addEventListener('keydown', (e) => {
-            if (this.updateMode === 'manual') {
-                // CTRL+S (prevent default save behavior)
-                if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
-                    e.preventDefault();
-                    this.onSequenceEdit();
-                }
-                // SHIFT+ENTER
-                else if (e.shiftKey && e.key === 'Enter') {
-                    e.preventDefault();
-                    this.onSequenceEdit();
-                }
-            }
-        });
-    }
-    initializeCollapsibleSections() {
-        // About button
-        const aboutButton = document.getElementById('aboutButton');
-        const aboutContent = document.getElementById('aboutContent');
-        aboutButton?.addEventListener('click', () => {
-            if (aboutContent && aboutButton) {
-                const isExpanded = aboutContent.classList.toggle('active');
-                aboutButton.setAttribute('aria-expanded', String(isExpanded));
-            }
-        });
-        // Usage button
-        const usageButton = document.getElementById('usageButton');
-        const usageContent = document.getElementById('usageContent');
-        usageButton?.addEventListener('click', () => {
-            if (usageContent && usageButton) {
-                const isExpanded = usageContent.classList.toggle('active');
-                usageButton.setAttribute('aria-expanded', String(isExpanded));
-            }
-        });
-    }
-    loadInitialSequence() {
-        if (this.sequences.length > 0) {
-            this.loadSelectedSequence();
-        }
-    }
-    loadSelectedSequence() {
-        const selector = document.getElementById('sequenceSelector');
-        const index = parseInt(selector.value);
-        const sequence = this.sequences[index];
-        if (sequence) {
-            const ndjson = this.sequenceToNDJSON(sequence.data);
-            const textarea = document.getElementById('sequenceEditor');
-            textarea.value = ndjson;
-        }
-    }
-    sequenceToNDJSON(sequence) {
-        return sequence.map(event => JSON.stringify(event)).join('\n');
-    }
-    getNDJSONFromTextarea() {
-        const textarea = document.getElementById('sequenceEditor');
-        return textarea.value;
-    }
-    async play() {
-        try {
-            // Ensure audio context is started
-            await Tone.start();
-            const loopCheckbox = document.getElementById('loopCheckbox');
-            const loop = loopCheckbox.checked;
-            const debugCheckbox = document.getElementById('debugCheckbox');
-            const debug = debugCheckbox.checked;
-            // Loop wait is fixed to 0 seconds
-            const loopWaitSeconds = 0;
-            // Create player only if it doesn't exist or isn't playing
-            if (!this.player || !this.player.playing) {
-                // Dispose old nodes and create fresh instance
-                this.nodes.disposeAll();
-                this.nodes = new SequencerNodes();
-                this.player = new NDJSONStreamingPlayer(Tone, this.nodes, {
-                    lookaheadMs: 50,
-                    loop: loop,
-                    loopWaitSeconds: loopWaitSeconds,
-                    debug: debug,
-                    onDebug: (message, data) => this.handleDebugMessage(message, data),
-                    onLoopComplete: () => {
-                        this.updateStatus('再生中（ループ）');
-                    }
-                });
-            }
-            // Get NDJSON from textarea
-            const ndjson = this.getNDJSONFromTextarea();
-            // Start playback
-            await this.player.start(ndjson);
-            this.updateStatus(loop ? '再生中（ループ有効）' : '再生中');
-            // Disable play button, enable stop button
-            document.getElementById('playButton').disabled = true;
-            document.getElementById('stopButton').disabled = false;
-        }
-        catch (error) {
-            console.error('Error during playback:', error);
-            this.updateStatus('エラー: ' + error.message);
-            alert('再生の開始に失敗しました。詳細はコンソールを確認してください。');
-        }
-    }
-    stop() {
-        if (this.player) {
-            this.player.stop();
-            this.player = null;
-        }
-        // Clear any pending debounce timer
-        this.clearDebounceTimer();
-        // Dispose all nodes on stop
-        this.nodes.disposeAll();
-        this.updateStatus('停止中');
-        // Enable play button, disable stop button
-        document.getElementById('playButton').disabled = false;
-        document.getElementById('stopButton').disabled = true;
-    }
-    onSequenceEdit() {
-        // If playing, update the sequence in real-time
-        if (this.player && this.player.playing) {
-            try {
-                const ndjson = this.getNDJSONFromTextarea();
-                this.player.start(ndjson);
-                this.updateStatus('再生中（ライブ編集）');
-            }
-            catch (error) {
-                console.error('Error updating sequence:', error);
-                // Don't stop playback on edit errors
-            }
-        }
-    }
-    onSequenceEditDebounced() {
-        // Clear existing timer
-        this.clearDebounceTimer();
-        // Set new timer for debounce
-        this.debounceTimer = window.setTimeout(() => {
-            this.onSequenceEdit();
-            this.debounceTimer = null;
-        }, this.DEBOUNCE_DELAY_MS);
-    }
-    clearDebounceTimer() {
-        if (this.debounceTimer !== null) {
-            window.clearTimeout(this.debounceTimer);
-            this.debounceTimer = null;
-        }
-    }
-    updateStatus(status) {
-        const statusElement = document.getElementById('status');
-        if (statusElement) {
-            statusElement.textContent = `ステータス: ${status}`;
-        }
-    }
-    handleDebugMessage(message, data) {
-        const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
-        let debugLine = `[${timestamp}] ${message}`;
-        if (data !== undefined && data !== null && data !== '') {
-            if (typeof data === 'object') {
-                debugLine += ': ' + JSON.stringify(data);
-            }
-            else {
-                debugLine += ': ' + data;
-            }
-        }
-        // Parse timing information from debug messages
-        if (message.includes('⚪') || message.includes('🔴') || message.includes('🟢')) {
-            // Event scheduling message
-            this.timingStats.totalEvents++;
-            if (message.includes('⚪')) {
-                this.timingStats.onTimeEvents++;
-            }
-            else if (message.includes('🔴')) {
-                this.timingStats.lateEvents++;
-            }
-            else if (message.includes('🟢')) {
-                this.timingStats.earlyEvents++;
-            }
-        }
-        else if (message.includes('🔄') && message.includes('Loop')) {
-            // Loop completion message
-            if (data && typeof data === 'object') {
-                this.timingStats.loopCount = data.currentLoop || 0;
-                if (data.timingStatus) {
-                    this.timingStats.lastLoopStatus = data.timingStatus;
-                }
-                if (data.loopTimingDriftMs !== undefined) {
-                    this.timingStats.lastLoopDriftMs = parseFloat(data.loopTimingDriftMs);
-                }
-            }
-        }
-        else if (message.includes('🎵') && message.includes('Initializing')) {
-            // Reset stats on playback initialization
-            this.timingStats = this.createInitialTimingStats();
-        }
-        this.debugMessages.push(debugLine);
-        // Keep only the last N messages
-        if (this.debugMessages.length > this.maxDebugMessages) {
-            this.debugMessages.shift();
-        }
-        this.updateDebugOutput();
-        this.updateTimingVisualization();
-    }
-    updateDebugOutput() {
-        const debugOutput = document.getElementById('debugOutput');
-        if (debugOutput) {
-            debugOutput.textContent = this.debugMessages.join('\n');
-            // Auto-scroll to bottom
-            debugOutput.scrollTop = debugOutput.scrollHeight;
-        }
-    }
-    updateTimingVisualization() {
-        const eventSchedulingStats = document.getElementById('eventSchedulingStats');
-        const loopTimingStats = document.getElementById('loopTimingStats');
-        if (eventSchedulingStats) {
-            const total = this.timingStats.totalEvents;
-            const onTime = this.timingStats.onTimeEvents;
-            const late = this.timingStats.lateEvents;
-            const early = this.timingStats.earlyEvents;
-            const onTimePercent = total > 0 ? ((onTime / total) * 100).toFixed(1) : '0.0';
-            const latePercent = total > 0 ? ((late / total) * 100).toFixed(1) : '0.0';
-            const earlyPercent = total > 0 ? ((early / total) * 100).toFixed(1) : '0.0';
-            eventSchedulingStats.innerHTML = `
-        <div>総イベント数: ${total}</div>
-        <div style="margin-top: 5px;">
-          <div>⚪ 正常: ${onTime} (${onTimePercent}%)</div>
-          <div>🔴 遅延: ${late} (${latePercent}%)</div>
-          <div>🟢 早い: ${early} (${earlyPercent}%)</div>
-        </div>
-      `;
-        }
-        if (loopTimingStats) {
-            const driftDisplay = this.timingStats.lastLoopDriftMs !== null
-                ? `${this.timingStats.lastLoopDriftMs > 0 ? '+' : ''}${this.timingStats.lastLoopDriftMs.toFixed(2)}ms`
-                : '-';
-            loopTimingStats.innerHTML = `
-        <div>ループ回数: ${this.timingStats.loopCount}</div>
-        <div style="margin-top: 5px;">
-          <div>ステータス: ${this.timingStats.lastLoopStatus}</div>
-          <div>タイミングずれ: ${driftDisplay}</div>
-        </div>
-      `;
-        }
-    }
-    clearDebugOutput() {
-        this.debugMessages = [];
-        this.timingStats = this.createInitialTimingStats();
-        this.updateDebugOutput();
-        this.updateTimingVisualization();
-    }
+/* デフォルト（ライトモード）のスタイル */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #333333;
+  --button-bg: #007acc;
+  --button-text: #ffffff;
+  --button-hover: #005a9e;
+  --textarea-bg: #ffffff;
+  --textarea-border: #cccccc;
+  --output-bg: #f8f9fa;
+  --output-border: #e9ecef;
+  --select-bg: #ffffff;
+  --select-border: #cccccc;
+  --select-hover: #f5f5f5;
+  --select-focus: #007acc;
 }
-// Initialize demo when page loads
-window.addEventListener('load', () => {
-    new StreamingDemo();
-});
+
+/* ダークモードのスタイル */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #1e1e1e;
+    --text-color: #ffffff;
+    --button-bg: #0078d4;
+    --button-text: #ffffff;
+    --button-hover: #106ebe;
+    --textarea-bg: #2d2d30;
+    --textarea-border: #3e3e42;
+    --output-bg: #252526;
+    --output-border: #3e3e42;
+    --select-bg: #2d2d30;
+    --select-border: #3e3e42;
+    --select-hover: #3e3e42;
+    --select-focus: #0078d4;
+  }
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 20px;
+}
+
+button:hover {
+  background-color: var(--button-hover);
+}
+
+button:focus {
+  outline: 2px solid var(--button-bg);
+  outline-offset: 2px;
+}
+
+/* ドロップダウンメニューのスタイル */
+#sequenceSelector {
+  background-color: var(--select-bg);
+  color: var(--text-color);
+  border: 1px solid var(--select-border);
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  margin-left: 10px;
+  margin-bottom: 20px;
+  min-width: 180px;
+}
+
+#sequenceSelector:hover {
+  background-color: var(--select-hover);
+  border-color: var(--select-focus);
+}
+
+#sequenceSelector:focus {
+  outline: 2px solid var(--select-focus);
+  outline-offset: 2px;
+  border-color: var(--select-focus);
+}
+
+/* ドロップダウンのオプション */
+#sequenceSelector option {
+  background-color: var(--select-bg);
+  color: var(--text-color);
+  padding: 8px 16px;
+}
+
+/* コントロール部分のレイアウト */
+.controls {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.controls label {
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--text-color);
+  margin-right: 5px;
+}
+
+#output {
+  background-color: var(--output-bg);
+  border: 1px solid var(--output-border);
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  min-height: 100px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  white-space: pre-wrap;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#textarea3 {
+  background-color: var(--textarea-bg);
+  color: var(--text-color);
+  border: 1px solid var(--textarea-border);
+  border-radius: 6px;
+  padding: 15px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  resize: both;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  width: 100%;
+  max-width: 800px;
+  box-sizing: border-box;
+}
+
+#textarea3:focus {
+  outline: 2px solid var(--button-bg);
+  outline-offset: 2px;
+  border-color: var(--button-bg);
+}
+
+/* リンクのスタイル（ボタン風） */
+a {
+  display: inline-block;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  margin: 2px 0;
+}
+
+a:hover {
+  background-color: var(--button-hover);
+  text-decoration: none;
+}
+
+a:focus {
+  outline: 2px solid var(--button-bg);
+  outline-offset: 2px;
+}
+
+a:visited {
+  color: var(--button-text);
+}
+
+/* インラインリンク（段落内）のスタイル調整 */
+p a {
+  padding: 8px 16px;
+  font-size: inherit;
+  vertical-align: baseline;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+  body {
+    margin: 10px;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .controls label {
+    margin-bottom: 5px;
+    align-self: flex-start;
+  }
+
+  #sequenceSelector {
+    margin-left: 0;
+    margin-top: 0;
+    min-width: unset;
+  }
+
+  #textarea3 {
+    height: 400px;
+    font-size: 12px;
+  }
+}
 
 {% endraw %}
 ```
 
-### issue-notes/118.md
+### issue-notes/124.md
 ```md
 {% raw %}
-# issue tonejs-mml-to-jsonリポジトリの最近のPRを参考に、loopend eventに対応する #118
-[issues #118](https://github.com/cat2151/tonejs-json-sequencer/issues/118)
+# issue demo-libの動作確認をする #124
+[issues #124](https://github.com/cat2151/tonejs-json-sequencer/issues/124)
 
 
 
 {% endraw %}
 ```
 
-### issue-notes/120.md
+### issue-notes/125.md
 ```md
 {% raw %}
-# issue demoがエラー #120
-[issues #120](https://github.com/cat2151/tonejs-json-sequencer/issues/120)
+# issue streaming loop演奏がバグっており、loopするたびに間があいてしまう #125
+[issues #125](https://github.com/cat2151/tonejs-json-sequencer/issues/125)
 
-# エラーログ
+
+
+{% endraw %}
 ```
-streaming.html:115  GET https://cat2151.github.io/dist/demo/streaming.js net::ERR_ABORTED 404 (Not Found)
-```
+
+### issue-notes/127.md
+```md
+{% raw %}
+# issue demo画面左下にリポジトリへのリンクを小さく半透明で表示する #127
+[issues #127](https://github.com/cat2151/tonejs-json-sequencer/issues/127)
+
+
 
 {% endraw %}
 ```
@@ -1274,38 +1281,58 @@ streaming.html:115  GET https://cat2151.github.io/dist/demo/streaming.js net::ER
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-e64747c Update issue-notes/120.md with error log
-0dbce4b Add issue note for #120 [auto]
-0e961fd Add issue note for #118 [auto]
-8eb013b Merge pull request #117 from cat2151/copilot/improve-offline-rendering-demo
-cc00214 Update project summaries (overview & development status) [auto]
-29cd4b4 Minor code improvements: simplify null check and log error details
-03bdc6a Address code review feedback: prevent concurrent renders, fix auto-play, improve waveform drawing
-83a721b Optimize waveform drawing and fix script path
-2ddf779 Fix script path for demo page
-9832ccf Implement auto-rendering and remove manual render button
+0b62f21 Merge pull request #126 from cat2151/copilot/fix-streaming-loop-issue
+b82879e CRITICAL FIX: Change default ticks per quarter from 480 to 192
+f2eebfa Address code review: add constant and improve comments
+0de0d10 Fix loop timing: calculate inter-event spacing for correct loop point
+1274962 Fix: clarify constant comment to match unit in name
+2185ff7 Refactor: extract helper methods and constants for better maintainability
+30f2d73 Redesign debug logging: prediction-based approach with zero-drift principle
+93a19d4 Improve readability: refactor nested ternary to if-else
+b944220 Fix edge case: fall back to maxEndTime when maxStartTime is 0
+cf86f30 Add issue note for #127 [auto]
 
 ### 変更されたファイル:
-demo/offline-rendering.html
-dist/cjs/event-scheduler.js
+.github/workflows/deploy-pages.yml
+README.ja.md
+README.md
+demo-library/README.md
+demo-library/index.html
+demo/streaming.html
+dist/cjs/index.d.ts
+dist/cjs/ndjson-streaming.d.ts
 dist/cjs/ndjson-streaming.js
-dist/demo/modules/audioManager.js
-dist/demo/offline-rendering.js
-dist/esm/event-scheduler.mjs
+dist/cjs/offline-renderer.d.ts
+dist/cjs/offline-renderer.js
+dist/cjs/streaming/event-processor.d.ts
+dist/cjs/streaming/event-processor.js
+dist/cjs/utils/time-parser.d.ts
+dist/esm/index.d.ts
+dist/esm/ndjson-streaming.d.ts
 dist/esm/ndjson-streaming.mjs
-dist/event-scheduler.js
+dist/esm/offline-renderer.d.ts
+dist/esm/offline-renderer.mjs
+dist/esm/streaming/event-processor.d.ts
+dist/esm/streaming/event-processor.mjs
+dist/esm/utils/time-parser.d.ts
+dist/index.d.ts
+dist/ndjson-streaming.d.ts
 dist/ndjson-streaming.js
-generated-docs/development-status-generated-prompt.md
-generated-docs/development-status.md
-generated-docs/project-overview-generated-prompt.md
-generated-docs/project-overview.md
-issue-notes/118.md
-issue-notes/120.md
-src/demo/modules/audioManager.ts
-src/demo/offline-rendering.ts
-src/event-scheduler.ts
+dist/offline-renderer.d.ts
+dist/offline-renderer.js
+dist/streaming/event-processor.d.ts
+dist/streaming/event-processor.js
+dist/utils/time-parser.d.ts
+issue-notes/122.md
+issue-notes/124.md
+issue-notes/125.md
+issue-notes/127.md
+src/index.ts
 src/ndjson-streaming.ts
+src/offline-renderer.ts
+src/streaming/event-processor.ts
+src/utils/time-parser.ts
 
 
 ---
-Generated at: 2026-02-06 07:12:02 JST
+Generated at: 2026-02-07 07:09:12 JST

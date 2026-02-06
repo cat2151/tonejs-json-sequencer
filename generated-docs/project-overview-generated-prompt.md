@@ -1,4 +1,4 @@
-Last updated: 2026-02-06
+Last updated: 2026-02-07
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -69,6 +69,7 @@ Last updated: 2026-02-06
   <a href="README.md"><img src="https://img.shields.io/badge/🇺🇸-English-blue.svg" alt="English"></a>
   <a href="https://cat2151.github.io/tonejs-json-sequencer/index.html"><img src="https://img.shields.io/badge/🚀-Live%20Demo-brightgreen.svg" alt="Demo"></a>
   <a href="https://cat2151.github.io/tonejs-json-sequencer/streaming.html"><img src="https://img.shields.io/badge/🎵-Streaming%20Demo-orange.svg" alt="Streaming Demo"></a>
+  <a href="https://cat2151.github.io/tonejs-json-sequencer/demo-library/"><img src="https://img.shields.io/badge/📦-Library%20Demo-blue.svg" alt="Library Demo"></a>
 </p>
 
 # 状況
@@ -130,6 +131,16 @@ tonejs-json-sequencerは、他のプロジェクトからライブラリとし�
 ```bash
 npm install tonejs-json-sequencer tone
 ```
+
+### GitHubから直接インストールする場合
+
+GitHub から直接インストールして、最新の開発バージョンを使用できます：
+
+```bash
+npm install cat2151/tonejs-json-sequencer tone
+```
+
+GitHub インストール経由で外部プロジェクトからライブラリを使用する完全な例については、[demo-library](https://cat2151.github.io/tonejs-json-sequencer/demo-library/) ディレクトリを参照してください。
 
 ### dist/ ディレクトリを直接参照する場合
 
@@ -388,6 +399,7 @@ tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記
 - `depth.rampTo` - depthパラメータの滑らかな変更
 - `volume.rampTo` - volumeパラメータの滑らかな変更
 - `set` - グローバル設定（現在は `Transport.bpm.value` のみ対応）
+- `loopEnd` - ストリーミング再生用の明示的なループ境界のマーク（メタデータイベント）
 
 ## 未実装機能リスト
 
@@ -693,6 +705,9 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   🎨 streaming-demo.css
   🌐 streaming.html
   🎨 styles.css
+📁 demo-library/
+  📖 README.md
+  🌐 index.html
 📁 dist/
   📁 cjs/
     📘 event-scheduler.d.ts
@@ -747,6 +762,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
       📜 amsynth.js
       📜 delay-vibrato.js
       📜 duosynth.js
+      📜 loopend-test.js
       📜 membranesynth.js
       📜 metalsynth.js
       📜 minimal.js
@@ -847,6 +863,10 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 112.md
   📖 118.md
   📖 120.md
+  📖 122.md
+  📖 124.md
+  📖 125.md
+  📖 127.md
   📖 62.md
   📖 64.md
   📖 67.md
@@ -899,6 +919,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
       📘 amsynth.ts
       📘 delay-vibrato.ts
       📘 duosynth.ts
+      📘 loopend-test.ts
       📘 membranesynth.ts
       📘 metalsynth.ts
       📘 minimal.ts
@@ -957,7 +978,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**demo/streaming.html** (118行, 4424バイト)
+**demo/streaming.html** (118行, 4423バイト)
   - 関数: なし
   - インポート: なし
 
@@ -965,11 +986,15 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
+**demo-library/index.html** (184行, 4823バイト)
+  - 関数: なし
+  - インポート: なし
+
 **dist/cjs/event-scheduler.d.ts** (18行, 710バイト)
   - 関数: scheduleOrExecuteEvent, playSequence
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/cjs/event-scheduler.js** (109行, 4128バイト)
+**dist/cjs/event-scheduler.js** (116行, 4531バイト)
   - 関数: scheduleOrExecuteEvent, playSequence, switch, if, forEach, catch
   - インポート: ./node-factory.js
 
@@ -989,7 +1014,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: createInstrument, createPolySynth, createSampler, switch, if
   - インポート: なし
 
-**dist/cjs/index.d.ts** (6行, 563バイト)
+**dist/cjs/index.d.ts** (6行, 564バイト)
   - 関数: なし
   - インポート: なし
 
@@ -997,12 +1022,12 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: defineProperty
   - インポート: ./sequencer-nodes.js, ./event-scheduler.js, ./ndjson-streaming.js
 
-**dist/cjs/ndjson-streaming.d.ts** (100行, 3197バイト)
+**dist/cjs/ndjson-streaming.d.ts** (115行, 3716バイト)
   - 関数: parseNDJSON
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/cjs/ndjson-streaming.js** (398行, 20287バイト)
-  - 関数: parseNDJSON, if, catch, constructor, debug, start, initializePlayback, updateEvents, for, processEvents, stop, playing
+**dist/cjs/ndjson-streaming.js** (419行, 20481バイト)
+  - 関数: parseNDJSON, if, catch, constructor, debug, isSchedulableEvent, getTimeNotation, generatePredictions, start, initializePlayback, updateEvents, for, processEvents, stop, playing
   - インポート: ./utils/time-parser.js, ./streaming/playback-state.js, ./streaming/event-processor.js
 
 **dist/cjs/node-factory.d.ts** (12行, 478バイト)
@@ -1013,7 +1038,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: createNode, connectNode, if
   - インポート: ./factories/instrument-factory.js, ./factories/effect-factory.js
 
-**dist/cjs/offline-renderer.d.ts** (76行, 2635バイト)
+**dist/cjs/offline-renderer.d.ts** (76行, 2653バイト)
   - 関数: audioBufferToWav, downloadWav
   - インポート: tone, ./types.js
 
@@ -1029,11 +1054,11 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, get, set, disposeAll, forEach, catch
   - インポート: なし
 
-**dist/cjs/streaming/event-processor.d.ts** (38行, 1282バイト)
+**dist/cjs/streaming/event-processor.d.ts** (41行, 1513バイト)
   - 関数: なし
   - インポート: tone, ../types.js, ../sequencer-nodes.js
 
-**dist/cjs/streaming/event-processor.js** (150行, 6250バイト)
+**dist/cjs/streaming/event-processor.js** (192行, 8710バイト)
   - 関数: constructor, createNodesAndConnections, forEach, if, catch, processNewCreateAndConnectEvents, scheduleEvent, adjustEventTime, getEventTime, calculateSequenceDuration
   - インポート: ../event-scheduler.js
 
@@ -1045,7 +1070,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, isPlaying, startTime, currentEvents, processedEventIndices, loopCount, cachedSequenceDuration, createdNodeIds, processLoopCount, incrementProcessLoopCount, start, stop, markEventAsProcessed, resetProcessedEvents
   - インポート: なし
 
-**dist/cjs/types.d.ts** (34行, 843バイト)
+**dist/cjs/types.d.ts** (39行, 958バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1053,7 +1078,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/cjs/utils/time-parser.d.ts** (44行, 1334バイト)
+**dist/cjs/utils/time-parser.d.ts** (44行, 1352バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1149,6 +1174,10 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
+**dist/demo/instrument/loopend-test.js** (48行, 1449バイト)
+  - 関数: なし
+  - インポート: なし
+
 **dist/demo/instrument/membranesynth.js** (47行, 1068バイト)
   - 関数: なし
   - インポート: なし
@@ -1221,7 +1250,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, initializeUI, if, initializeCollapsibleSections, loadInitialSequence, loadSelectedSequence, sequenceToNDJSON, getNDJSONFromTextarea, debouncedRender, formatTimestamp, render, catch, createAudioPreview, download, clearWaveformOverlay, drawWaveformOverlay, for, updateStatus, updateProgress
   - インポート: ./sequenceLoader.js, ../../dist/index.mjs
 
-**dist/demo/sequenceLoader.js** (84行, 2834バイト)
+**dist/demo/sequenceLoader.js** (86行, 2912バイト)
   - 関数: loadAllSequences
   - インポート: ./instrument/minimal.js, ./instrument/tempo-test.js, ./instrument/streaming-test-doremi.js
 
@@ -1253,11 +1282,11 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: createInstrument
   - インポート: tone
 
-**dist/esm/index.d.ts** (6行, 563バイト)
+**dist/esm/index.d.ts** (6行, 564バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/esm/ndjson-streaming.d.ts** (100行, 3197バイト)
+**dist/esm/ndjson-streaming.d.ts** (115行, 3716バイト)
   - 関数: parseNDJSON
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
@@ -1265,7 +1294,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: createNode, connectNode
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/esm/offline-renderer.d.ts** (76行, 2635バイト)
+**dist/esm/offline-renderer.d.ts** (76行, 2653バイト)
   - 関数: audioBufferToWav, downloadWav
   - インポート: tone, ./types.js
 
@@ -1273,7 +1302,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/esm/streaming/event-processor.d.ts** (38行, 1282バイト)
+**dist/esm/streaming/event-processor.d.ts** (41行, 1513バイト)
   - 関数: なし
   - インポート: tone, ../types.js, ../sequencer-nodes.js
 
@@ -1281,11 +1310,11 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: ../types.js
 
-**dist/esm/types.d.ts** (34行, 843バイト)
+**dist/esm/types.d.ts** (39行, 958バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/esm/utils/time-parser.d.ts** (44行, 1334バイト)
+**dist/esm/utils/time-parser.d.ts** (44行, 1352バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1293,7 +1322,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: scheduleOrExecuteEvent, playSequence
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/event-scheduler.js** (109行, 4128バイト)
+**dist/event-scheduler.js** (116行, 4531バイト)
   - 関数: scheduleOrExecuteEvent, playSequence, switch, if, forEach, catch
   - インポート: ./node-factory.js
 
@@ -1313,7 +1342,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: createInstrument, createPolySynth, createSampler, switch, if
   - インポート: なし
 
-**dist/index.d.ts** (6行, 563バイト)
+**dist/index.d.ts** (6行, 564バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1321,12 +1350,12 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: defineProperty
   - インポート: ./sequencer-nodes.js, ./event-scheduler.js, ./ndjson-streaming.js
 
-**dist/ndjson-streaming.d.ts** (100行, 3197バイト)
+**dist/ndjson-streaming.d.ts** (115行, 3716バイト)
   - 関数: parseNDJSON
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/ndjson-streaming.js** (398行, 20287バイト)
-  - 関数: parseNDJSON, if, catch, constructor, debug, start, initializePlayback, updateEvents, for, processEvents, stop, playing
+**dist/ndjson-streaming.js** (419行, 20481バイト)
+  - 関数: parseNDJSON, if, catch, constructor, debug, isSchedulableEvent, getTimeNotation, generatePredictions, start, initializePlayback, updateEvents, for, processEvents, stop, playing
   - インポート: ./utils/time-parser.js, ./streaming/playback-state.js, ./streaming/event-processor.js
 
 **dist/node-factory.d.ts** (12行, 478バイト)
@@ -1337,7 +1366,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: createNode, connectNode, if
   - インポート: ./factories/instrument-factory.js, ./factories/effect-factory.js
 
-**dist/offline-renderer.d.ts** (76行, 2635バイト)
+**dist/offline-renderer.d.ts** (76行, 2653バイト)
   - 関数: audioBufferToWav, downloadWav
   - インポート: tone, ./types.js
 
@@ -1353,11 +1382,11 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, get, set, disposeAll, forEach, catch
   - インポート: なし
 
-**dist/streaming/event-processor.d.ts** (38行, 1282バイト)
+**dist/streaming/event-processor.d.ts** (41行, 1513バイト)
   - 関数: なし
   - インポート: tone, ../types.js, ../sequencer-nodes.js
 
-**dist/streaming/event-processor.js** (150行, 6250バイト)
+**dist/streaming/event-processor.js** (192行, 8710バイト)
   - 関数: constructor, createNodesAndConnections, forEach, if, catch, processNewCreateAndConnectEvents, scheduleEvent, adjustEventTime, getEventTime, calculateSequenceDuration
   - インポート: ../event-scheduler.js
 
@@ -1369,7 +1398,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, isPlaying, startTime, currentEvents, processedEventIndices, loopCount, cachedSequenceDuration, createdNodeIds, processLoopCount, incrementProcessLoopCount, start, stop, markEventAsProcessed, resetProcessedEvents
   - インポート: なし
 
-**dist/types.d.ts** (34行, 843バイト)
+**dist/types.d.ts** (39行, 958バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1377,7 +1406,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/utils/time-parser.d.ts** (44行, 1334バイト)
+**dist/utils/time-parser.d.ts** (44行, 1352バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1405,7 +1434,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: renameFiles, updateImports, catch, if
   - インポート: fs, path
 
-**src/demo/demo-types.ts** (44行, 1049バイト)
+**src/demo/demo-types.ts** (50行, 1204バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1493,6 +1522,10 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: ../demo-types.js
 
+**src/demo/instrument/loopend-test.ts** (52行, 1430バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
 **src/demo/instrument/membranesynth.ts** (51行, 1159バイト)
   - 関数: なし
   - インポート: ../demo-types.js
@@ -1565,7 +1598,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, if, catch, for, render
   - インポート: ./demo-types.js, ./sequenceLoader.js, ../../dist/index.mjs
 
-**src/demo/sequenceLoader.ts** (95行, 2961バイト)
+**src/demo/sequenceLoader.ts** (97行, 3037バイト)
   - 関数: loadAllSequences
   - インポート: ./demo-types.js, ./instrument/minimal.js, ./instrument/tempo-test.js
 
@@ -1589,7 +1622,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: tone
 
-**src/event-scheduler.ts** (116行, 3747バイト)
+**src/event-scheduler.ts** (123行, 4112バイト)
   - 関数: scheduleOrExecuteEvent, playSequence, switch, if, forEach, catch
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
@@ -1601,11 +1634,11 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: createInstrument, createPolySynth, createSampler, switch, if
   - インポート: tone
 
-**src/index.ts** (38行, 902バイト)
+**src/index.ts** (38行, 903バイト)
   - 関数: なし
   - インポート: なし
 
-**src/ndjson-streaming.ts** (544行, 20523バイト)
+**src/ndjson-streaming.ts** (566行, 20957バイト)
   - 関数: parseNDJSON, if, catch, constructor, for, start, initializePlayback
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
@@ -1613,7 +1646,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: createNode, connectNode, if
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**src/offline-renderer.ts** (298行, 9348バイト)
+**src/offline-renderer.ts** (298行, 9366バイト)
   - 関数: audioBufferToWav, writeString, downloadWav, constructor, if, for, forEach, render
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
@@ -1621,7 +1654,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: forEach, catch
   - インポート: なし
 
-**src/streaming/event-processor.ts** (175行, 5686バイト)
+**src/streaming/event-processor.ts** (222行, 7980バイト)
   - 関数: constructor, forEach, if, catch, createNodesAndConnections
   - インポート: tone, ../types.js, ../sequencer-nodes.js
 
@@ -1629,11 +1662,11 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: startTime, currentEvents, loopCount, cachedSequenceDuration
   - インポート: ../types.js
 
-**src/types.ts** (51行, 1197バイト)
+**src/types.ts** (58行, 1354バイト)
   - 関数: なし
   - インポート: なし
 
-**src/utils/time-parser.ts** (140行, 4331バイト)
+**src/utils/time-parser.ts** (140行, 4349バイト)
   - 関数: constructor, if
   - インポート: なし
 
@@ -1678,6 +1711,8 @@ demo/offline-rendering.html
 demo/streaming-demo.css
 demo/streaming.html
 demo/styles.css
+demo-library/README.md
+demo-library/index.html
 dist/cjs/event-scheduler.d.ts
 dist/cjs/event-scheduler.js
 dist/cjs/factories/effect-factory.d.ts
@@ -1695,8 +1730,6 @@ dist/cjs/offline-renderer.js
 dist/cjs/sequencer-nodes.d.ts
 dist/cjs/sequencer-nodes.js
 dist/cjs/streaming/event-processor.d.ts
-dist/cjs/streaming/event-processor.js
-dist/cjs/streaming/playback-state.d.ts
 dist/cjs/types.d.ts
 dist/demo/demo-types.js
 dist/esm/event-scheduler.d.ts
@@ -1715,4 +1748,4 @@ googled947dc864c270e07.html
 
 
 ---
-Generated at: 2026-02-06 07:12:02 JST
+Generated at: 2026-02-07 07:09:12 JST
