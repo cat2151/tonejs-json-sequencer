@@ -32,7 +32,9 @@ export declare class EventProcessor {
     getEventTime(event: SequenceEvent): number | null;
     /**
      * Calculate the total duration of the sequence
-     * @param endBufferSeconds - Buffer time to add after sequence (0 for loop mode)
+     * @param events - Array of sequence events
+     * @param endBufferSeconds - Buffer time to add after sequence
+     * @param isLoopMode - Whether the sequence will be looped (affects duration calculation)
      */
-    calculateSequenceDuration(events: SequenceEvent[], endBufferSeconds: number): number;
+    calculateSequenceDuration(events: SequenceEvent[], endBufferSeconds: number, isLoopMode?: boolean): number;
 }

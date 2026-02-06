@@ -97,9 +97,11 @@ class EventProcessor {
     }
     /**
      * Calculate the total duration of the sequence
-     * @param endBufferSeconds - Buffer time to add after sequence (0 for loop mode)
+     * @param events - Array of sequence events
+     * @param endBufferSeconds - Buffer time to add after sequence
+     * @param isLoopMode - Whether the sequence will be looped (affects duration calculation)
      */
-    calculateSequenceDuration(events, endBufferSeconds) {
+    calculateSequenceDuration(events, endBufferSeconds, isLoopMode = false) {
         // Check if there's a loopEnd event
         const loopEndEvent = events.find(e => e.eventType === 'loopEnd');
         if (loopEndEvent && loopEndEvent.args.length > 0) {
@@ -160,11 +162,11 @@ class EventProcessor {
                 maxEndTime = eventEndTime;
             }
         });
-        // When endBufferSeconds is 0 (loop mode), use the latest event START time
-        // instead of END time for seamless looping. This prevents gaps between loop iterations
-        // when the last note's duration extends beyond where the next iteration should begin.
-        // For non-loop mode (endBufferSeconds > 0), use END time to let the last note finish.
-        const sequenceDuration = endBufferSeconds === 0 ? maxStartTime : maxEndTime;
+        // When in loop mode, use the latest event START time instead of END time for seamless looping.
+        // This prevents gaps between loop iterations when the last note's duration extends beyond
+        // where the next iteration should begin.
+        // For non-loop mode, use END time to let the last note finish playing.
+        const sequenceDuration = isLoopMode ? maxStartTime : maxEndTime;
         // Add buffer after the sequence
         return sequenceDuration + endBufferSeconds;
     }
