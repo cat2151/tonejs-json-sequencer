@@ -191,9 +191,12 @@ export class EventProcessor {
     // Calculate sequence duration based on mode
     let sequenceDuration: number;
     
-    if (isLoopMode && eventStartTimes.length >= 2) {
+    // Minimum number of events needed to calculate inter-event spacing pattern
+    const MIN_EVENTS_FOR_SPACING = 2;
+    
+    if (isLoopMode && eventStartTimes.length >= MIN_EVENTS_FOR_SPACING) {
       // Loop mode: calculate inter-event spacing to determine when next iteration should start
-      // Sort event times to calculate spacing
+      // Sort event times to ensure chronological order (input events may not be sorted)
       eventStartTimes.sort((a, b) => a - b);
       
       // Calculate the spacing between the last two events
