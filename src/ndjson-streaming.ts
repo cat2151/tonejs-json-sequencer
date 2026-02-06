@@ -105,7 +105,7 @@ export interface NDJSONStreamingConfig {
  * Processes events with lookahead timing and supports live editing and loop playback
  */
 export class NDJSONStreamingPlayer {
-  private static readonly SCHEDULE_TIME_TOLERANCE_SECONDS = 0.001; // 1ms tolerance for schedule time comparison
+  private static readonly SCHEDULE_TIME_TOLERANCE_SECONDS = 0.001; // 0.001s (1ms) tolerance for schedule time comparison
   
   private Tone: typeof ToneTypes;
   private nodes: SequencerNodes;

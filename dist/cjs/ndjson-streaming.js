@@ -415,4 +415,4 @@ class NDJSONStreamingPlayer {
     }
 }
 exports.NDJSONStreamingPlayer = NDJSONStreamingPlayer;
-NDJSONStreamingPlayer.SCHEDULE_TIME_TOLERANCE_SECONDS = 0.001; // 1ms tolerance for schedule time comparison
+NDJSONStreamingPlayer.SCHEDULE_TIME_TOLERANCE_SECONDS = 0.001; // 0.001s (1ms) tolerance for schedule time comparison
