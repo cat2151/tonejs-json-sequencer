@@ -78,6 +78,23 @@
     .links a:hover {
       text-decoration: underline;
     }
+    .repo-link-footer {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      font-size: 12px;
+      opacity: 0.5;
+      z-index: 1000;
+    }
+    .repo-link-footer a {
+      color: #2196F3;
+      text-decoration: none;
+      margin-right: 15px;
+    }
+    .repo-link-footer a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -107,6 +124,11 @@ npm install tone</code></pre>
       <a href="../examples/cdn-example.html">CDN Example</a>
       <a href="README.md">README</a>
     </div>
+  </div>
+
+  <div class="repo-link-footer">
+    <a href="https://github.com/cat2151/tonejs-json-sequencer" target="_blank">Repository</a>
+    <a href="../demo/index.html">Demo</a>
   </div>
 
   <!-- Load Tone.js from CDN -->
