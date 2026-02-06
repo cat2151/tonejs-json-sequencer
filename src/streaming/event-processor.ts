@@ -197,9 +197,14 @@ export class EventProcessor {
     // while maxEndTime will be > 0. In that case, fall back to maxEndTime so that such
     // one-shot sequences can still produce a non-zero loop duration.
     // For non-loop mode, use END time to let the last note finish playing.
-    const sequenceDuration = isLoopMode
-      ? (maxStartTime > 0 ? maxStartTime : maxEndTime)
-      : maxEndTime;
+    let sequenceDuration: number;
+    if (isLoopMode) {
+      // Loop mode: use start time, but fall back to end time if start time is 0
+      sequenceDuration = maxStartTime > 0 ? maxStartTime : maxEndTime;
+    } else {
+      // Non-loop mode: use end time to let notes finish
+      sequenceDuration = maxEndTime;
+    }
 
     // Add buffer after the sequence
     return sequenceDuration + endBufferSeconds;
