@@ -97,6 +97,7 @@ class EventProcessor {
     }
     /**
      * Calculate the total duration of the sequence
+     * @param endBufferSeconds - Buffer time to add after sequence (0 for loop mode)
      */
     calculateSequenceDuration(events, endBufferSeconds) {
         // Check if there's a loopEnd event
@@ -110,6 +111,7 @@ class EventProcessor {
         }
         // Fallback: calculate duration from events
         let maxEndTime = 0;
+        let maxStartTime = 0;
         events.forEach(event => {
             if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set' || event.eventType === 'loopEnd') {
                 return;
@@ -117,6 +119,10 @@ class EventProcessor {
             const eventTime = this.getEventTime(event);
             if (eventTime === null)
                 return;
+            // Track the latest event start time
+            if (eventTime > maxStartTime) {
+                maxStartTime = eventTime;
+            }
             // Calculate the end time of this event (start time + duration)
             let eventEndTime = eventTime;
             // For triggerAttackRelease events, add the note duration to get the actual end time
@@ -154,8 +160,13 @@ class EventProcessor {
                 maxEndTime = eventEndTime;
             }
         });
-        // Add buffer after the last event ends
-        return maxEndTime + endBufferSeconds;
+        // When endBufferSeconds is 0 (loop mode), use the latest event START time
+        // instead of END time for seamless looping. This prevents gaps between loop iterations
+        // when the last note's duration extends beyond where the next iteration should begin.
+        // For non-loop mode (endBufferSeconds > 0), use END time to let the last note finish.
+        const sequenceDuration = endBufferSeconds === 0 ? maxStartTime : maxEndTime;
+        // Add buffer after the sequence
+        return sequenceDuration + endBufferSeconds;
     }
 }
 exports.EventProcessor = EventProcessor;
