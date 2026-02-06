@@ -9,14 +9,14 @@ import type { SequencerNodes } from './sequencer-nodes.js';
  */
 export declare function parseNDJSON(ndjson: string): SequenceEvent[];
 /**
- * Debug information for a single event
+ * Predicted scheduling information for an event
  */
-export interface DebugEventInfo {
+export interface EventPrediction {
     eventIndex: number;
     eventType: string;
-    scheduledTime: number;
-    currentTime: number;
-    timeDelta: number;
+    timeNotation: string;
+    timeSeconds: number;
+    expectedScheduleTime: number;
     loopIteration: number;
 }
 /**
@@ -66,11 +66,17 @@ export declare class NDJSONStreamingPlayer {
     private timeParser;
     private eventProcessor;
     private animationFrameId;
+    private eventPredictions;
     constructor(Tone: typeof ToneTypes, nodes: SequencerNodes, config?: NDJSONStreamingConfig);
     /**
      * Log debug message if debug mode is enabled
      */
     private debug;
+    /**
+     * Generate event scheduling predictions
+     * Creates predictions for the first loop and the first event of the next loop
+     */
+    private generatePredictions;
     /**
      * Start or update the streaming playback
      * @param eventsOrNDJSON - Array of events or NDJSON string
