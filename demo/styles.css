@@ -188,7 +188,6 @@ p a {
   bottom: 10px;
   left: 10px;
   font-size: 12px;
-  opacity: 0.5;
   z-index: 1000;
 }
 
@@ -199,6 +198,7 @@ p a {
   color: var(--text-color);
   text-decoration: underline;
   border: none;
+  opacity: 0.5;
 }
 
 .repo-link-footer a:hover {
