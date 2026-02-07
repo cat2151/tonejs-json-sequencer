@@ -4,7 +4,7 @@ export class UIManager {
         this.onSequenceChange = onSequenceChange;
         this.textarea = document.querySelector('textarea');
         this.sequenceSelector = document.getElementById('sequenceSelector');
-        this.playButton = document.querySelector('button');
+        this.playButton = document.getElementById('playButton');
         this.errorStatus = document.getElementById('errorStatus');
         this.errorLog = document.getElementById('errorLog');
         this.errorLogToggle = document.getElementById('errorLogToggle');
@@ -29,10 +29,14 @@ export class UIManager {
     toggleErrorLog() {
         if (this.errorLog.classList.contains('collapsed')) {
             this.errorLog.classList.remove('collapsed');
+            this.errorLog.removeAttribute('hidden');
+            this.errorLogToggle.setAttribute('aria-expanded', 'true');
             this.errorLogToggle.textContent = 'エラーログを非表示';
         }
         else {
             this.errorLog.classList.add('collapsed');
+            this.errorLog.setAttribute('hidden', '');
+            this.errorLogToggle.setAttribute('aria-expanded', 'false');
             this.errorLogToggle.textContent = 'エラーログを表示';
         }
     }
@@ -64,6 +68,8 @@ export class UIManager {
         this.errorStatus.className = 'error-status ok';
         this.errorLog.textContent = '';
         this.errorLog.classList.add('collapsed');
+        this.errorLog.setAttribute('hidden', '');
+        this.errorLogToggle.setAttribute('aria-expanded', 'false');
         this.errorLogToggle.textContent = 'エラーログを表示';
     }
     setErrorStatusNg(errorMessage) {

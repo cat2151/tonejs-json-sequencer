@@ -15,7 +15,7 @@ export class UIManager {
   ) {
     this.textarea = document.querySelector('textarea') as HTMLTextAreaElement;
     this.sequenceSelector = document.getElementById('sequenceSelector') as HTMLSelectElement;
-    this.playButton = document.querySelector('button') as HTMLButtonElement;
+    this.playButton = document.getElementById('playButton') as HTMLButtonElement;
     this.errorStatus = document.getElementById('errorStatus') as HTMLDivElement;
     this.errorLog = document.getElementById('errorLog') as HTMLPreElement;
     this.errorLogToggle = document.getElementById('errorLogToggle') as HTMLButtonElement;
@@ -43,9 +43,13 @@ export class UIManager {
   private toggleErrorLog(): void {
     if (this.errorLog.classList.contains('collapsed')) {
       this.errorLog.classList.remove('collapsed');
+      this.errorLog.removeAttribute('hidden');
+      this.errorLogToggle.setAttribute('aria-expanded', 'true');
       this.errorLogToggle.textContent = 'エラーログを非表示';
     } else {
       this.errorLog.classList.add('collapsed');
+      this.errorLog.setAttribute('hidden', '');
+      this.errorLogToggle.setAttribute('aria-expanded', 'false');
       this.errorLogToggle.textContent = 'エラーログを表示';
     }
   }
@@ -84,6 +88,8 @@ export class UIManager {
     this.errorStatus.className = 'error-status ok';
     this.errorLog.textContent = '';
     this.errorLog.classList.add('collapsed');
+    this.errorLog.setAttribute('hidden', '');
+    this.errorLogToggle.setAttribute('aria-expanded', 'false');
     this.errorLogToggle.textContent = 'エラーログを表示';
   }
 
