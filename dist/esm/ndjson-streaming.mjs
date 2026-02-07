@@ -243,8 +243,7 @@ export class NDJSONStreamingPlayer {
         // because that's what was used when events were actually scheduled
         this.playbackState.resetProcessedEvents();
         events.forEach((event, index) => {
-            // Skip createNode, connect, and set events
-            if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set') {
+            if (!this.isSchedulableEvent(event)) {
                 return;
             }
             const eventTime = this.eventProcessor.getEventTime(event);
@@ -304,8 +303,7 @@ export class NDJSONStreamingPlayer {
         const lookaheadMs = this.config.lookaheadMs;
         // Process events within lookahead window
         this.playbackState.currentEvents.forEach((event, index) => {
-            // Skip createNode, connect, and set events
-            if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set') {
+            if (!this.isSchedulableEvent(event)) {
                 return;
             }
             // Get event time from args (last argument is time)
