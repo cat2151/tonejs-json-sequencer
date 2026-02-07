@@ -313,7 +313,10 @@ class OfflineRenderingDemo {
     const step = Math.ceil(channelData.length / rect.width);
     const amp = rect.height / 2;
 
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    const waveformColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--waveform-color')
+      .trim() || 'rgba(255, 255, 255, 0.5)';
+    ctx.strokeStyle = waveformColor;
     ctx.lineWidth = 1;
 
     for (let i = 0; i < rect.width; i++) {
