@@ -28,7 +28,15 @@ jobs:
       
       - name: Build distribution files
         run: npm run build
-      
+
+      - name: Verify dist directory exists
+        run: |
+          if [ ! -d "dist" ] || [ -z "$(ls -A dist)" ]; then
+            echo "Error: dist/ directory does not exist or is empty"
+            exit 1
+          fi
+          echo "dist/ directory verified"
+
       - name: Get version
         id: package_version
         run: |
