@@ -9,9 +9,9 @@
  * @returns Created effect node or null if unknown type
  */
 export function createEffect(Tone, nodeType, args) {
-    // When args is a non-array object, pass it directly as options.
+    // When args is a non-array value (including primitives), treat it as a single constructor argument.
     // When args is an array, spread it as positional arguments (backward compatible).
-    const effectArgs = args && !Array.isArray(args) ? [args] : (args || []);
+    const effectArgs = args != null && !Array.isArray(args) ? [args] : (args || []);
     switch (nodeType) {
         case 'AutoFilter':
             return new Tone.AutoFilter(...effectArgs);

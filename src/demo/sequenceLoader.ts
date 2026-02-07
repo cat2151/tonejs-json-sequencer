@@ -26,6 +26,7 @@ import * as reverb from './effect/reverb.js';
 import * as freeverb from './effect/freeverb.js';
 import * as jcreverb from './effect/jcreverb.js';
 import * as chorus from './effect/chorus.js';
+import * as chorusObjectArgs from './effect/chorus-object-args.js';
 import * as phaser from './effect/phaser.js';
 import * as tremolo from './effect/tremolo.js';
 import * as vibrato from './effect/vibrato.js';
@@ -72,6 +73,7 @@ const allSequenceModules = [
   freeverb,
   jcreverb,
   chorus,
+  chorusObjectArgs,
   phaser,
   tremolo,
   vibrato,
