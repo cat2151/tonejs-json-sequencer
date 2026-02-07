@@ -124,7 +124,7 @@ export class EventProcessor {
     // Check if there's a loopEnd event
     const loopEndEvent = events.find(e => e.eventType === 'loopEnd');
     if (loopEndEvent && loopEndEvent.args.length > 0) {
-      const loopDuration = this.timeParser.parseTimeToSeconds(loopEndEvent.args[0]);
+      const loopDuration = this.timeParser.parseTimeToSeconds(loopEndEvent.args[loopEndEvent.args.length - 1]);
       if (loopDuration > 0) {
         // Use explicit loop duration from loopEnd event
         return loopDuration + endBufferSeconds;
