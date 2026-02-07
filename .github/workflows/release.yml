@@ -29,6 +29,9 @@ jobs:
       - name: Build distribution files
         run: npm run build
 
+      - name: Remove duplicated CJS artifacts
+        run: rm -rf dist/cjs
+
       - name: Verify dist directory exists
         run: |
           if [ ! -d "dist" ] || [ -z "$(ls -A dist)" ]; then
