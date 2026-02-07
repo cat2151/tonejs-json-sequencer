@@ -204,6 +204,21 @@ export class NDJSONStreamingPlayer {
             loopEnabled: this.config.loop,
             loopWaitSeconds: this.config.loop ? this.config.loopWaitSeconds : 'N/A'
         });
+        // Log loopEnd event details for verifiability
+        const loopEndEvent = events.find(e => e.eventType === 'loopEnd');
+        if (loopEndEvent && 'args' in loopEndEvent && Array.isArray(loopEndEvent.args)) {
+            const loopEndArg = loopEndEvent.args[loopEndEvent.args.length - 1];
+            const loopEndSeconds = this.eventProcessor.getEventTime(loopEndEvent);
+            this.debug('🔁 loopEnd event', {
+                args: JSON.stringify(loopEndEvent.args),
+                timeArg: loopEndArg,
+                timeSeconds: loopEndSeconds !== null ? loopEndSeconds.toFixed(3) + 's' : 'parse error',
+                formula: `parseTimeToSeconds("${loopEndArg}") = ${loopEndSeconds !== null ? loopEndSeconds.toFixed(3) : 'null'}s → sequenceDuration = ${this.playbackState.cachedSequenceDuration.toFixed(3)}s`
+            });
+        }
+        else {
+            this.debug('🔁 loopEnd event: not found (duration calculated from note events)');
+        }
         // Generate event scheduling predictions
         this.generatePredictions(events, startTime, this.playbackState.cachedSequenceDuration);
         // Start processing loop
@@ -254,8 +269,7 @@ export class NDJSONStreamingPlayer {
                 // Use previous duration for loop offset calculation
                 // because that's what was used when events were originally scheduled
                 // Wait time is only added between loops (not for the first iteration)
-                const loopWaitOffset = Math.max(0, loop - 1) * this.config.loopWaitSeconds;
-                const loopOffset = loop * previousDuration + loopWaitOffset;
+                const loopOffset = loop * (previousDuration + this.config.loopWaitSeconds);
                 const absoluteTime = this.playbackState.startTime + eventTime + loopOffset;
                 // If this event's scheduled time has passed, mark it as processed
                 if (absoluteTime <= currentTime) {
@@ -299,78 +313,31 @@ export class NDJSONStreamingPlayer {
                 totalEvents: this.playbackState.currentEvents.length
             });
         }
-        let scheduledInThisLoop = 0;
-        const lookaheadMs = this.config.lookaheadMs;
-        // Process events within lookahead window
-        this.playbackState.currentEvents.forEach((event, index) => {
-            if (!this.isSchedulableEvent(event)) {
-                return;
-            }
-            // Get event time from args (last argument is time)
-            const eventTime = this.eventProcessor.getEventTime(event);
-            if (eventTime === null)
-                return;
-            // Calculate absolute time with loop offset
-            // Wait time is only added between loops (not for the first iteration)
-            const loopWaitOffset = Math.max(0, this.playbackState.loopCount - 1) * this.config.loopWaitSeconds;
-            const loopOffset = this.playbackState.loopCount * sequenceDuration + loopWaitOffset;
-            const absoluteTime = this.playbackState.startTime + eventTime + loopOffset;
-            // Check if event should be scheduled
-            const eventKey = index + this.playbackState.loopCount * this.playbackState.currentEvents.length;
-            if (absoluteTime <= lookaheadTime && !this.playbackState.processedEventIndices.has(eventKey)) {
-                if (this.config.debug) {
-                    // Look up prediction for this event
-                    const predictionKey = `${this.playbackState.loopCount}-${index}`;
-                    const prediction = this.eventPredictions.get(predictionKey);
-                    if (prediction) {
-                        // Compare actual scheduled time with prediction
-                        const expectedTime = prediction.expectedScheduleTime;
-                        const actualTime = absoluteTime;
-                        const mismatch = Math.abs(actualTime - expectedTime);
-                        if (mismatch > NDJSONStreamingPlayer.SCHEDULE_TIME_TOLERANCE_SECONDS) {
-                            // Mismatch detected - highlight in red
-                            this.debug(`🔴 MISMATCH Event #${index} (${event.eventType}) Loop:${this.playbackState.loopCount}`, {
-                                timeNotation: prediction.timeNotation,
-                                expectedScheduleTime: expectedTime.toFixed(3) + 's',
-                                actualScheduleTime: actualTime.toFixed(3) + 's',
-                                mismatch: (mismatch * 1000).toFixed(1) + 'ms'
-                            });
-                        }
-                        else {
-                            // Matches prediction - simple confirmation
-                            this.debug(`✓ Event #${index} (${event.eventType}) Loop:${this.playbackState.loopCount}: ${prediction.timeNotation} → scheduled at ${actualTime.toFixed(3)}s (expected ${expectedTime.toFixed(3)}s)`);
-                        }
-                    }
-                    else {
-                        // No prediction available (e.g., loop iterations beyond first two)
-                        this.debug(`Event #${index} (${event.eventType}) Loop:${this.playbackState.loopCount}: scheduled at ${absoluteTime.toFixed(3)}s`);
-                    }
-                }
-                this.eventProcessor.scheduleEvent(event, absoluteTime);
-                this.playbackState.processedEventIndices.add(eventKey);
-                scheduledInThisLoop++;
-            }
-        });
-        // Check if we need to loop
+        // Check if we need to advance loop count (before scheduling to keep loopCount up to date)
         if (this.config.loop && sequenceDuration > 0) {
             const timeSinceStart = currentTime - this.playbackState.startTime;
             // Calculate which loop we should be on
-            // The first loop has no wait, subsequent loops have wait time added
+            // Each loop cycle = sequenceDuration + loopWaitSeconds
             let completedLoops = 0;
-            if (timeSinceStart > sequenceDuration) {
-                // First loop is complete
-                completedLoops = 1;
-                // Calculate additional completed loops after the first one
-                const timeAfterFirstLoop = timeSinceStart - sequenceDuration;
-                const subsequentLoopDuration = sequenceDuration + this.config.loopWaitSeconds;
-                if (subsequentLoopDuration > 0) {
-                    completedLoops += Math.floor(timeAfterFirstLoop / subsequentLoopDuration);
-                }
+            const loopCycleDuration = sequenceDuration + this.config.loopWaitSeconds;
+            if (loopCycleDuration > 0 && timeSinceStart >= loopCycleDuration) {
+                completedLoops = Math.floor(timeSinceStart / loopCycleDuration);
             }
             // Guard against multiple increments due to processing delays
             if (completedLoops > this.playbackState.loopCount) {
                 const previousLoopCount = this.playbackState.loopCount;
                 this.playbackState.loopCount = completedLoops;
+                // Prune processedEventIndices from old loop iterations to prevent unbounded memory growth.
+                // Keep only entries for the current and next loop (which may be pre-scheduled).
+                const eventsLength = this.playbackState.currentEvents.length;
+                if (eventsLength > 0) {
+                    const minKeepKey = this.playbackState.loopCount * eventsLength;
+                    for (const key of this.playbackState.processedEventIndices) {
+                        if (key < minKeepKey) {
+                            this.playbackState.processedEventIndices.delete(key);
+                        }
+                    }
+                }
                 this.debug(`🔄 === Loop #${previousLoopCount} → #${this.playbackState.loopCount} ===`, {
                     previousLoop: previousLoopCount,
                     currentLoop: this.playbackState.loopCount,
@@ -380,6 +347,61 @@ export class NDJSONStreamingPlayer {
                 });
                 this.config.onLoopComplete();
             }
+        }
+        // Determine the range of loop iterations to schedule
+        // When loop mode is enabled, also pre-schedule events for the next loop iteration
+        // to ensure seamless transitions at loop boundaries
+        const minLoop = this.playbackState.loopCount;
+        const maxLoop = this.config.loop ? minLoop + 1 : minLoop;
+        for (let checkLoop = minLoop; checkLoop <= maxLoop; checkLoop++) {
+            // Process events within lookahead window
+            this.playbackState.currentEvents.forEach((event, index) => {
+                if (!this.isSchedulableEvent(event)) {
+                    return;
+                }
+                // Get event time from args (last argument is time)
+                const eventTime = this.eventProcessor.getEventTime(event);
+                if (eventTime === null)
+                    return;
+                // Calculate absolute time with loop offset
+                // Each loop cycle = sequenceDuration + loopWaitSeconds
+                const loopOffset = checkLoop * (sequenceDuration + this.config.loopWaitSeconds);
+                const absoluteTime = this.playbackState.startTime + eventTime + loopOffset;
+                // Check if event should be scheduled
+                const eventKey = index + checkLoop * this.playbackState.currentEvents.length;
+                if (absoluteTime <= lookaheadTime && !this.playbackState.processedEventIndices.has(eventKey)) {
+                    if (this.config.debug) {
+                        // Look up prediction for this event
+                        const predictionKey = `${checkLoop}-${index}`;
+                        const prediction = this.eventPredictions.get(predictionKey);
+                        if (prediction) {
+                            // Compare actual scheduled time with prediction
+                            const expectedTime = prediction.expectedScheduleTime;
+                            const actualTime = absoluteTime;
+                            const mismatch = Math.abs(actualTime - expectedTime);
+                            if (mismatch > NDJSONStreamingPlayer.SCHEDULE_TIME_TOLERANCE_SECONDS) {
+                                // Mismatch detected - highlight in red
+                                this.debug(`🔴 MISMATCH Event #${index} (${event.eventType}) Loop:${checkLoop}`, {
+                                    timeNotation: prediction.timeNotation,
+                                    expectedScheduleTime: expectedTime.toFixed(3) + 's',
+                                    actualScheduleTime: actualTime.toFixed(3) + 's',
+                                    mismatch: (mismatch * 1000).toFixed(1) + 'ms'
+                                });
+                            }
+                            else {
+                                // Matches prediction - simple confirmation
+                                this.debug(`✓ Event #${index} (${event.eventType}) Loop:${checkLoop}: ${prediction.timeNotation} → scheduled at ${actualTime.toFixed(3)}s (expected ${expectedTime.toFixed(3)}s)`);
+                            }
+                        }
+                        else {
+                            // No prediction available (e.g., loop iterations beyond first two)
+                            this.debug(`Event #${index} (${event.eventType}) Loop:${checkLoop}: scheduled at ${absoluteTime.toFixed(3)}s`);
+                        }
+                    }
+                    this.eventProcessor.scheduleEvent(event, absoluteTime);
+                    this.playbackState.processedEventIndices.add(eventKey);
+                }
+            });
         }
         // Continue processing
         this.animationFrameId = requestAnimationFrame(() => this.processEvents());
