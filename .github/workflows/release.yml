@@ -37,6 +37,11 @@ jobs:
           fi
           echo "dist/ directory verified"
 
+      - name: Package dist directory
+        run: |
+          rm -f dist.zip
+          zip -r dist.zip dist
+
       - name: Get version
         id: package_version
         run: |
@@ -79,7 +84,7 @@ jobs:
             <script src="https://cdn.jsdelivr.net/gh/cat2151/tonejs-json-sequencer/dist/index.js"></script>
             ```
           files: |
-            dist/**/*
+            dist.zip
           draft: false
           prerelease: false
           # Mark as latest release even if version doesn't change
