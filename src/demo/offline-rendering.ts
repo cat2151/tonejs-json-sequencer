@@ -203,11 +203,8 @@ class OfflineRenderingDemo {
       // Show audio player
       if (audioPlayer) audioPlayer.classList.add('active');
 
-      // Auto-play preview (only if user is not actively editing the textarea)
-      const textarea = document.getElementById('sequenceEditor') as HTMLTextAreaElement;
-      const isEditing = document.activeElement === textarea;
-
-      if (!isEditing && this.lastRenderTrigger === 'selector') {
+      // Auto-play preview after rendering
+      if (this.lastRenderTrigger !== null) {
         const audioElement = document.getElementById('audioElement') as HTMLAudioElement | null;
         if (audioElement) {
           try {
@@ -216,8 +213,6 @@ class OfflineRenderingDemo {
             console.log('Auto-play was prevented by browser policy', e);
           }
         }
-      } else if (isEditing) {
-        console.log('Skipping auto-play because the user is actively editing the sequence.');
       }
 
       // Draw waveform overlay on progress bar
