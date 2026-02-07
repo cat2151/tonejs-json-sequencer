@@ -8,12 +8,17 @@
 </head>
 <body>
   <div class="controls">
-    <button autofocus>play</button>
+    <button id="playButton" autofocus>play</button>
     <select id="sequenceSelector">
       <!-- オプションは JavaScript で動的に生成されます -->
     </select>
   </div>
   <!-- <div id="output"></div> -->
+  <div id="errorStatus" class="error-status">OK</div>
+  <div class="error-log-container">
+    <button id="errorLogToggle" class="error-log-toggle" aria-controls="errorLog" aria-expanded="false">エラーログを表示</button>
+    <pre id="errorLog" class="error-log collapsed" hidden></pre>
+  </div>
   <textarea id="textarea3" rows="45" cols="70">
   </textarea><br>
   <div style="margin-top: 20px;">

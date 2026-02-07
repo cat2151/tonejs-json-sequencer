@@ -69,16 +69,19 @@ class DemoApp {
 
   private async play(): Promise<void> {
     const json = this.uiManager.getTextareaValue();
-    
+
     let sequence: SequenceEvent[];
     try {
       sequence = JSON.parse(json) as SequenceEvent[];
+      // JSON is valid, set status to OK
+      this.uiManager.setErrorStatusOk();
     } catch (error: any) {
       console.error('Invalid JSON in sequence editor:', error);
-      alert('Invalid JSON in sequence editor. Please fix the JSON syntax and try again.');
+      // JSON is invalid, set status to NG and display error message
+      this.uiManager.setErrorStatusNg(`Invalid JSON: ${error.message}`);
       return;
     }
-    
+
     await this.audioManager.playSequence(sequence);
   }
 }

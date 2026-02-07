@@ -13,6 +13,13 @@
   --select-border: #cccccc;
   --select-hover: #f5f5f5;
   --select-focus: #007acc;
+  --error-ok-bg: #d4edda;
+  --error-ok-text: #155724;
+  --error-ng-bg: #f8d7da;
+  --error-ng-text: #721c24;
+  --error-log-bg: #fff3cd;
+  --error-log-text: #856404;
+  --error-log-border: #ffeeba;
 }
 
 /* ダークモードのスタイル */
@@ -31,6 +38,13 @@
     --select-border: #3e3e42;
     --select-hover: #3e3e42;
     --select-focus: #0078d4;
+    --error-ok-bg: #1e3a28;
+    --error-ok-text: #9bd3a7;
+    --error-ng-bg: #4a1f23;
+    --error-ng-text: #f8b4b8;
+    --error-log-bg: #3d3420;
+    --error-log-text: #f0d08a;
+    --error-log-border: #5a4f2a;
   }
 }
 
@@ -233,4 +247,71 @@ p a {
     height: 400px;
     font-size: 12px;
   }
+}
+
+/* エラーステータス表示 */
+.error-status {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 10px;
+  max-width: 800px;
+  text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.error-status.ok {
+  background-color: var(--error-ok-bg);
+  color: var(--error-ok-text);
+}
+
+.error-status.ng {
+  background-color: var(--error-ng-bg);
+  color: var(--error-ng-text);
+}
+
+/* エラーログ表示 */
+.error-log-container {
+  margin-bottom: 10px;
+  max-width: 800px;
+}
+
+.error-log-toggle {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 5px;
+}
+
+.error-log-toggle:hover {
+  background-color: var(--button-hover);
+}
+
+.error-log {
+  background-color: var(--error-log-bg);
+  color: var(--error-log-text);
+  border: 1px solid var(--error-log-border);
+  border-radius: 6px;
+  padding: 15px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  transition: max-height 0.3s ease, padding 0.3s ease, border-width 0.3s ease;
+}
+
+.error-log.collapsed {
+  max-height: 0;
+  padding: 0;
+  border-width: 0;
+  overflow: hidden;
 }
