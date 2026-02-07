@@ -17,12 +17,20 @@ class OfflineRenderingDemo {
   constructor() {
     this.initializeUI();
     this.initializeCollapsibleSections();
-    this.loadInitialSequence();
   }
 
   private initializeUI(): void {
     // Populate sequence selector
     const selector = document.getElementById('sequenceSelector') as HTMLSelectElement;
+
+    // Add placeholder option to guide the user
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = '▼ シーケンスを選んでください';
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    selector.appendChild(placeholder);
+
     this.sequences.forEach((seq, index) => {
       const option = document.createElement('option');
       option.value = index.toString();
@@ -74,12 +82,6 @@ class OfflineRenderingDemo {
         usageButton.setAttribute('aria-expanded', String(isExpanded));
       }
     });
-  }
-
-  private loadInitialSequence(): void {
-    if (this.sequences.length > 0) {
-      this.loadSelectedSequence();
-    }
   }
 
   private loadSelectedSequence(): void {
