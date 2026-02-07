@@ -17,7 +17,6 @@ class OfflineRenderingDemo {
   constructor() {
     this.initializeUI();
     this.initializeCollapsibleSections();
-    this.loadInitialSequence();
   }
 
   private initializeUI(): void {
@@ -83,10 +82,6 @@ class OfflineRenderingDemo {
         usageButton.setAttribute('aria-expanded', String(isExpanded));
       }
     });
-  }
-
-  private loadInitialSequence(): void {
-    // Don't auto-load: let the user choose a sequence from the dropdown
   }
 
   private loadSelectedSequence(): void {

@@ -13,7 +13,6 @@ class OfflineRenderingDemo {
         this.lastRenderTrigger = null;
         this.initializeUI();
         this.initializeCollapsibleSections();
-        this.loadInitialSequence();
     }
     initializeUI() {
         // Populate sequence selector
@@ -71,9 +70,6 @@ class OfflineRenderingDemo {
                 usageButton.setAttribute('aria-expanded', String(isExpanded));
             }
         });
-    }
-    loadInitialSequence() {
-        // Don't auto-load: let the user choose a sequence from the dropdown
     }
     loadSelectedSequence() {
         const selector = document.getElementById('sequenceSelector');
