@@ -9,43 +9,46 @@
  * @returns Created effect node or null if unknown type
  */
 export function createEffect(Tone, nodeType, args) {
+    // When args is a non-array value (including primitives), treat it as a single constructor argument.
+    // When args is an array, spread it as positional arguments (backward compatible).
+    const effectArgs = args != null && !Array.isArray(args) ? [args] : (args || []);
     switch (nodeType) {
         case 'AutoFilter':
-            return new Tone.AutoFilter(...(args || []));
+            return new Tone.AutoFilter(...effectArgs);
         case 'AutoPanner':
-            return new Tone.AutoPanner(...(args || []));
+            return new Tone.AutoPanner(...effectArgs);
         case 'AutoWah':
-            return new Tone.AutoWah(...(args || []));
+            return new Tone.AutoWah(...effectArgs);
         case 'BitCrusher':
-            return new Tone.BitCrusher(...(args || []));
+            return new Tone.BitCrusher(...effectArgs);
         case 'Chebyshev':
-            return new Tone.Chebyshev(...(args || []));
+            return new Tone.Chebyshev(...effectArgs);
         case 'Chorus':
-            return new Tone.Chorus(...(args || []));
+            return new Tone.Chorus(...effectArgs);
         case 'Distortion':
-            return new Tone.Distortion(...(args || []));
+            return new Tone.Distortion(...effectArgs);
         case 'FeedbackDelay':
-            return new Tone.FeedbackDelay(...(args || []));
+            return new Tone.FeedbackDelay(...effectArgs);
         case 'Freeverb':
-            return new Tone.Freeverb(...(args || []));
+            return new Tone.Freeverb(...effectArgs);
         case 'FrequencyShifter':
-            return new Tone.FrequencyShifter(...(args || []));
+            return new Tone.FrequencyShifter(...effectArgs);
         case 'JCReverb':
-            return new Tone.JCReverb(...(args || []));
+            return new Tone.JCReverb(...effectArgs);
         case 'Phaser':
-            return new Tone.Phaser(...(args || []));
+            return new Tone.Phaser(...effectArgs);
         case 'PingPongDelay':
-            return new Tone.PingPongDelay(...(args || []));
+            return new Tone.PingPongDelay(...effectArgs);
         case 'PitchShift':
-            return new Tone.PitchShift(...(args || []));
+            return new Tone.PitchShift(...effectArgs);
         case 'Reverb':
-            return new Tone.Reverb(...(args || []));
+            return new Tone.Reverb(...effectArgs);
         case 'StereoWidener':
-            return new Tone.StereoWidener(...(args || []));
+            return new Tone.StereoWidener(...effectArgs);
         case 'Tremolo':
-            return new Tone.Tremolo(...(args || []));
+            return new Tone.Tremolo(...effectArgs);
         case 'Vibrato':
-            return new Tone.Vibrato(...(args || []));
+            return new Tone.Vibrato(...effectArgs);
         default:
             return null;
     }
