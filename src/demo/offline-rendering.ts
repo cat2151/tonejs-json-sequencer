@@ -12,7 +12,6 @@ class OfflineRenderingDemo {
   private debounceTimer: number | null = null;
   private renderStartTime: number = 0;
   private isRendering: boolean = false;
-  private lastRenderTrigger: 'selector' | 'textarea' | null = null;
 
   constructor() {
     this.initializeUI();
@@ -51,7 +50,6 @@ class OfflineRenderingDemo {
         this.debounceTimer = null;
       }
       this.loadSelectedSequence();
-      this.lastRenderTrigger = 'selector';
       this.render();
     });
 
@@ -110,7 +108,6 @@ class OfflineRenderingDemo {
       window.clearTimeout(this.debounceTimer);
     }
     this.debounceTimer = window.setTimeout(() => {
-      this.lastRenderTrigger = 'textarea';
       this.render();
     }, 1000); // 1 second debounce
   }
@@ -204,15 +201,11 @@ class OfflineRenderingDemo {
       if (audioPlayer) audioPlayer.classList.add('active');
 
       // Auto-play preview after rendering
-      if (this.lastRenderTrigger === 'selector' || this.lastRenderTrigger === 'textarea') {
-        const audioElement = document.getElementById('audioElement') as HTMLAudioElement | null;
-        if (audioElement) {
-          try {
-            await audioElement.play();
-          } catch (e) {
-            console.log('Auto-play was prevented by browser policy', e);
-          }
-        }
+      const audioElement = document.getElementById('audioElement') as HTMLAudioElement | null;
+      if (audioElement) {
+        audioElement.play().catch((e) => {
+          console.log('Auto-play was prevented by browser policy', e);
+        });
       }
 
       // Draw waveform overlay on progress bar
