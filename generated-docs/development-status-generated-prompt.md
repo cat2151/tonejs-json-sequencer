@@ -1,4 +1,4 @@
-Last updated: 2026-02-07
+Last updated: 2026-02-08
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -201,9 +201,11 @@ Last updated: 2026-02-07
 - .github/workflows/call-daily-project-summary.yml
 - .github/workflows/call-issue-note.yml
 - .github/workflows/call-translate-readme.yml
+- .github/workflows/create-issue-on-actions-failure.yml
 - .github/workflows/deploy-pages.yml
 - .github/workflows/release.yml
 - .gitignore
+- AGENTS.md
 - LICENSE
 - NPM_README.md
 - README.ja.md
@@ -249,6 +251,7 @@ Last updated: 2026-02-07
 - dist/demo/effect/autowah.js
 - dist/demo/effect/bitcrusher.js
 - dist/demo/effect/chebyshev.js
+- dist/demo/effect/chorus-object-args.js
 - dist/demo/effect/chorus.js
 - dist/demo/effect/distortion.js
 - dist/demo/effect/feedbackdelay.js
@@ -358,6 +361,17 @@ Last updated: 2026-02-07
 - issue-notes/124.md
 - issue-notes/125.md
 - issue-notes/127.md
+- issue-notes/129.md
+- issue-notes/131.md
+- issue-notes/133.md
+- issue-notes/135.md
+- issue-notes/136.md
+- issue-notes/137.md
+- issue-notes/139.md
+- issue-notes/141.md
+- issue-notes/144.md
+- issue-notes/148.md
+- issue-notes/150.md
 - issue-notes/62.md
 - issue-notes/64.md
 - issue-notes/67.md
@@ -389,6 +403,7 @@ Last updated: 2026-02-07
 - src/demo/effect/autowah.ts
 - src/demo/effect/bitcrusher.ts
 - src/demo/effect/chebyshev.ts
+- src/demo/effect/chorus-object-args.ts
 - src/demo/effect/chorus.ts
 - src/demo/effect/distortion.ts
 - src/demo/effect/feedbackdelay.ts
@@ -447,55 +462,6 @@ Last updated: 2026-02-07
 - tsconfig.json
 
 ## 現在のオープンIssues
-## [Issue #128](../issue-notes/128.md): Add repository navigation footer to demo pages
-## Add Repository Links to Demo Pages
-
-### Requirements Analysis
-- ✅ Add a small, semi-transparent repository link in bottom-left of demo screens
-- ✅ Add demo-library link similarly  
-- ✅ Fix 404 links from demo-library to other pages
-
-### Changes Made
-
-#### Added CSS Styling (demo/styles.css)
-- Add...
-ラベル: 
---- issue-notes/128.md の内容 ---
-
-```markdown
-
-```
-
-## [Issue #127](../issue-notes/127.md): demo画面左下にリポジトリへのリンクを小さく半透明で表示する
-[issue-notes/127.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/127.md)
-
-...
-ラベル: good first issue
---- issue-notes/127.md の内容 ---
-
-```markdown
-# issue demo画面左下にリポジトリへのリンクを小さく半透明で表示する #127
-[issues #127](https://github.com/cat2151/tonejs-json-sequencer/issues/127)
-
-
-
-```
-
-## [Issue #125](../issue-notes/125.md): streaming loop演奏がバグっており、loopするたびに間があいてしまう
-[issue-notes/125.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/125.md)
-
-...
-ラベル: 
---- issue-notes/125.md の内容 ---
-
-```markdown
-# issue streaming loop演奏がバグっており、loopするたびに間があいてしまう #125
-[issues #125](https://github.com/cat2151/tonejs-json-sequencer/issues/125)
-
-
-
-```
-
 ## [Issue #124](../issue-notes/124.md): （人力）demo-libの動作確認をする
 [issue-notes/124.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/124.md)
 
@@ -562,200 +528,6 @@ Last updated: 2026-02-07
 - 1週間503を毎日チェック、は省略とする
 - もし今後503が発生したら別issueとする
 - 2日チェックして503なし
-
-# closeとする
-
-{% endraw %}
-```
-
-### .github/actions-tmp/issue-notes/25.md
-```md
-{% raw %}
-# issue project summaryを他projectからcallしたところ、issue-notes参照ディレクトリ誤りが発覚した #25
-[issues #25](https://github.com/cat2151/github-actions/issues/25)
-
-# 事象
-- `Issueノートが存在しません: /home/runner/work/tonejs-mml-to-json/tonejs-mml-to-json/.github/actions-tmp/issue-notes/6.md`
-
-# どうする？
-- 当該処理のディレクトリ部分を確認する
-- 日次バッチでGeminiに確認させてみる
-- 結果
-    - Geminiに確認させてpromptを生成させ、agentに投げた
-    - 結果、projectRootの扱いの誤り、と判明
-        - 共通workflow側のdirを引数でわたしてしまっていた
-        - target repository側のdirを引数でわたすべき
-- 修正したつもり
-- 次の日次バッチで動作確認させるつもり
-
-# 結果
-- test green
-
-# closeとする
-
-{% endraw %}
-```
-
-### .github/actions-tmp/issue-notes/27.md
-```md
-{% raw %}
-# issue LLMが生成したコードに、commit時のemailとnameについて公式推奨と公式非推奨の2つがブレて混在している。さらに判定処理が片方だけ対応になっている #27
-[issues #27](https://github.com/cat2151/github-actions/issues/27)
-
-# 補足
-- さらに、commit messageもブレている。auto があったりなかったりしている。
-    - auto があるほうが適切である、と判断する。
-- 公式推奨とは：
-    - name, emailが推奨、commit messageにautoが入っている
-```
-        git config user.name "github-actions[bot]"
-        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git commit -m "Update callgraph.html [auto]"
-```
-- 公式非推奨とは：
-    - name, emailが非推奨、commit messageにもautoが入っていない
-```
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        git commit -m "Add issue note for #${{ inputs.issue_number }}"
-```
-
-# どうする？
-- 当該のworkflowとscriptで、github-actions@github.com 等をgrepし、公式推奨に統一する
-    - 影響範囲
-        - 24hチェック側もブレているので、しばらくは誤爆が続く
-        - #28 を修正して24h待てば、誤爆は解消する見込みである
-- 注意、24hチェックは変更しない。
-    - なぜなら #28 で全面的に修正するため、変更しても手戻りになる。
-- 過去commit messageはそのままとする
-
-# close条件は？
-- [x] name, email, commit comment のlogicが、公式推奨に統一されること
-- [x] #28 が修正されること
-- 以上を満たせば、test不要で、机上checkのみでcloseとする。
-- ほかは #26 のtestで担保する。
-
-{% endraw %}
-```
-
-### .github/actions-tmp/issue-notes/28.md
-```md
-{% raw %}
-# issue 直近24時間でuser commitがあるかどうか、のチェックを、workflowのjobs先頭に新規jobを追加して実施し、本体jobの先頭にneedsを書く #28
-[issues #28](https://github.com/cat2151/github-actions/issues/28)
-
-# これまでの課題は？
-- これまでは各workflow内の終盤のscriptにバラバラに実装されていたので、
-    - ムダにcheckout等、各種処理が走っていた
-
-# 対策案は？
-- 直近24時間でuser commitがあるかどうか、
-    - のチェックを、
-        - workflowのjobs先頭に新規jobを追加して実施し、
-            - 本体jobの先頭にneedsを書く
-- この対策で、各workflow先頭にこれを書くだけでよくなり、エコになる想定
-
-# ChatGPTに生成させた
-## 呼び出し元のサンプル
-- 実際には、共通workflowのjobsの先頭付近を、このサンプルを参考に書き換えるイメージ
-```
-jobs:
-  check_recent_human_commit:
-    uses: ./.github/workflows/check-recent-human-commit.yml
-
-  build:
-    needs: check_recent_human_commit
-    if: needs.check_recent_human_commit.outputs.has_recent_human_commit == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run build
-        run: echo "Building because there is a recent human commit!"
-```
-## 共通ワークフロー側の案
-- シンプルにmailのみを条件とし、mailも1種類のみに明示する
-```
-name: "Check recent human commit"
-
-on:
-  workflow_call:
-
-jobs:
-  check-recent-human-commit:
-    runs-on: ubuntu-latest
-    outputs:
-      has_recent_human_commit: ${{ steps.check.outputs.has_recent_human_commit }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Check recent human commit
-        id: check
-        run: |
-          set -e
-
-          HAS_HUMAN=false
-
-          while IFS=$'\x01' read -r HASH NAME EMAIL SUBJECT; do
-            SUBJECT="${SUBJECT%$'\x02'}"
-
-            if [[ ! "$EMAIL" =~ ^41898282\+github-actions\[bot\]@users\.noreply\.github\.com$ ]]; then
-              echo "HUMAN: Commit $HASH | Author: $NAME <$EMAIL> | Message: $SUBJECT"
-              HAS_HUMAN=true
-              break
-            else
-              echo "BOT: Commit $HASH | Author: $NAME <$EMAIL> | Message: $SUBJECT"
-            fi
-          done <<< "$(git log --since="24 hours ago" --pretty=format:'%H%x01%an%x01%ae%x01%s%x02')"
-
-          if [ "$HAS_HUMAN" = true ]; then
-            echo "Found recent human commit."
-            echo "has_recent_human_commit=true" >> $GITHUB_OUTPUT
-          else
-            echo "No human commits in last 24h."
-            echo "has_recent_human_commit=false" >> $GITHUB_OUTPUT
-```
-## 備忘
-- 上記はChatGPTに生成させ、それをレビューさせて改善させる、のサイクルで生成した。
-    - 一発で生成はできなかった
-    - ChatGPTが自分で生成したものに対して自己レビューでミスや改善点が多発していた
-        - ブレも発生し、二転三転気味でもあり、
-            - ハルシネーションに近い低品質状態だと感じた
-                - これは経験則からの感覚的なもの
-    - 生成の品質が低い、ということ
-        - LLMはまだ学習不足、github-actions workflow yml の学習不足である、と解釈する
-        - shell scriptの生成品質も低いかも。
-            - もともとshell scriptで複雑なlogicを書くとtest costが高い、なぜなら読みづらいから。
-                - なのでロジックをcjs側に切り出したほうが全体最適の観点からよりよい、と考える
-
-# どうする？
-- shell scriptはやめて、cjsでlogicを担当させる。
-  - 現状のshell scriptを改めて見直すと、これはcjs側にしたほうがよい、と感覚的に、経験則で、わかる。
-- logicをcjs側に切り出す。実際、既存でgitの24hチェックをcjs側でやっている実績がある。そこのロジックを参考にする。
-- 今のmdの仕様をもとに、ymlとcjsを生成させる。
-- 生成させた。ChatGPTに投げた
-- 人力でいくつか変更したり、ChatGPTに投げて修正させるサイクルを回したりした
-- testする
-
-# バグ
-- 結果、バグがあったのでagentにlogを投げ、修正させ、人力修正し、agentにセルフレビューさせ、のサイクルを回した
-- testする
-- 結果、callgraphで、エラーなくhumanを検知したが、callgraphが呼ばれない、というバグが発生
-- ひとまずagentの提案したcodeを切り分けのため試す、バグ状況は変わらない想定
-- 結果、バグ状況は変わらず
-- 対策、trueのlogをagentに投げて、callgraphが呼ばれないことを伝え、可視化を実装させた
-- testする
-- 結果、バグ状況は変わらず
-- 対策、logをagentに投げて、callgraphが呼ばれないことを伝え、さらに可視化を実装させた
-- testする
-- 結果、バグ状況は変わらず
-- 対策、logをagentに投げて、callgraphが呼ばれないことを伝え、さらに可視化を実装させた
-- testする
-- 結果、バグ状況は変わらず
-- 対策、logをagentに投げて、callgraphが呼ばれないことを伝えた
-- ここで、根本的にymlのworkflow記述が間違っていることが判明
-  - agentが最初にcode生成したときから根本的なバグが仕込まれていたということ。
-    - agentの学習不足。github-actionsのworkflowの学習不足。
-- そこをagentに修正させ、test greenとなった
 
 # closeとする
 
@@ -908,97 +680,6 @@ jobs:
 {% endraw %}
 ```
 
-### .github/actions-tmp/issue-notes/7.md
-```md
-{% raw %}
-# issue issue note生成できるかのtest用 #7
-[issues #7](https://github.com/cat2151/github-actions/issues/7)
-
-- 生成できた
-- closeとする
-
-{% endraw %}
-```
-
-### .github/actions-tmp/issue-notes/8.md
-```md
-{% raw %}
-# issue 関数コールグラフhtmlビジュアライズ生成の対象ソースファイルを、呼び出し元ymlで指定できるようにする #8
-[issues #8](https://github.com/cat2151/github-actions/issues/8)
-
-# これまでの課題
-- 以下が決め打ちになっていた
-```
-  const allowedFiles = [
-    'src/main.js',
-    'src/mml2json.js',
-    'src/play.js'
-  ];
-```
-
-# 対策
-- 呼び出し元ymlで指定できるようにする
-
-# agent
-- agentにやらせることができれば楽なので、初手agentを試した
-- 失敗
-    - ハルシネーションしてscriptを大量破壊した
-- 分析
-    - 修正対象scriptはagentが生成したもの
-    - 低品質な生成結果でありソースが巨大
-    - ハルシネーションで破壊されやすいソース
-    - AIの生成したソースは、必ずしもAIフレンドリーではない
-
-# 人力リファクタリング
-- 低品質コードを、最低限agentが扱えて、ハルシネーションによる大量破壊を防止できる内容、にする
-- 手短にやる
-    - そもそもビジュアライズは、agentに雑に指示してやらせたもので、
-    - 今後別のビジュアライザを選ぶ可能性も高い
-    - 今ここで手間をかけすぎてコンコルド効果（サンクコストバイアス）を増やすのは、project群をトータルで俯瞰して見たとき、損
-- 対象
-    - allowedFiles のあるソース
-        - callgraph-utils.cjs
-            - たかだか300行未満のソースである
-            - この程度でハルシネーションされるのは予想外
-            - やむなし、リファクタリングでソース分割を進める
-
-# agentに修正させる
-## prompt
-```
-allowedFilesを引数で受け取るようにしたいです。
-ないならエラー。
-最終的に呼び出し元すべてに波及して修正したいです。
-
-呼び出し元をたどってエントリポイントも見つけて、
-エントリポイントにおいては、
-引数で受け取ったjsonファイル名 allowedFiles.js から
-jsonファイル allowedFiles.jsonの内容をreadして
-変数 allowedFilesに格納、
-後続処理に引き渡す、としたいです。
-
-まずplanしてください。
-planにおいては、修正対象のソースファイル名と関数名を、呼び出し元を遡ってすべて特定し、listしてください。
-```
-
-# 修正が順調にできた
-- コマンドライン引数から受け取る作りになっていなかったので、そこだけ指示して修正させた
-- yml側は人力で修正した
-
-# 他のリポジトリから呼び出した場合にバグらないよう修正する
-- 気付いた
-    - 共通ワークフローとして他のリポジトリから使った場合はバグるはず。
-        - ymlから、共通ワークフロー側リポジトリのcheckoutが漏れているので。
-- 他のyml同様に修正する
-- あわせて全体にymlをリファクタリングし、修正しやすくし、今後のyml読み書きの学びにしやすくする
-
-# local WSL + act : test green
-
-# closeとする
-- もし生成されたhtmlがNGの場合は、別issueとするつもり
-
-{% endraw %}
-```
-
 ### .github/actions-tmp/issue-notes/9.md
 ```md
 {% raw %}
@@ -1017,251 +698,11 @@ planにおいては、修正対象のソースファイル名と関数名を、�
 {% endraw %}
 ```
 
-### demo/styles.css
-```css
-{% raw %}
-/* デフォルト（ライトモード）のスタイル */
-:root {
-  --bg-color: #ffffff;
-  --text-color: #333333;
-  --button-bg: #007acc;
-  --button-text: #ffffff;
-  --button-hover: #005a9e;
-  --textarea-bg: #ffffff;
-  --textarea-border: #cccccc;
-  --output-bg: #f8f9fa;
-  --output-border: #e9ecef;
-  --select-bg: #ffffff;
-  --select-border: #cccccc;
-  --select-hover: #f5f5f5;
-  --select-focus: #007acc;
-}
-
-/* ダークモードのスタイル */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-color: #1e1e1e;
-    --text-color: #ffffff;
-    --button-bg: #0078d4;
-    --button-text: #ffffff;
-    --button-hover: #106ebe;
-    --textarea-bg: #2d2d30;
-    --textarea-border: #3e3e42;
-    --output-bg: #252526;
-    --output-border: #3e3e42;
-    --select-bg: #2d2d30;
-    --select-border: #3e3e42;
-    --select-hover: #3e3e42;
-    --select-focus: #0078d4;
-  }
-}
-
-body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 20px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-button {
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  padding: 12px 24px;
-  font-size: 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-bottom: 20px;
-}
-
-button:hover {
-  background-color: var(--button-hover);
-}
-
-button:focus {
-  outline: 2px solid var(--button-bg);
-  outline-offset: 2px;
-}
-
-/* ドロップダウンメニューのスタイル */
-#sequenceSelector {
-  background-color: var(--select-bg);
-  color: var(--text-color);
-  border: 1px solid var(--select-border);
-  border-radius: 6px;
-  padding: 12px 16px;
-  font-size: 16px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-  margin-left: 10px;
-  margin-bottom: 20px;
-  min-width: 180px;
-}
-
-#sequenceSelector:hover {
-  background-color: var(--select-hover);
-  border-color: var(--select-focus);
-}
-
-#sequenceSelector:focus {
-  outline: 2px solid var(--select-focus);
-  outline-offset: 2px;
-  border-color: var(--select-focus);
-}
-
-/* ドロップダウンのオプション */
-#sequenceSelector option {
-  background-color: var(--select-bg);
-  color: var(--text-color);
-  padding: 8px 16px;
-}
-
-/* コントロール部分のレイアウト */
-.controls {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  gap: 10px;
-}
-
-.controls label {
-  font-weight: 500;
-  font-size: 16px;
-  color: var(--text-color);
-  margin-right: 5px;
-}
-
-#output {
-  background-color: var(--output-bg);
-  border: 1px solid var(--output-border);
-  padding: 15px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  min-height: 100px;
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-  white-space: pre-wrap;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-#textarea3 {
-  background-color: var(--textarea-bg);
-  color: var(--text-color);
-  border: 1px solid var(--textarea-border);
-  border-radius: 6px;
-  padding: 15px;
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-  resize: both;
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-  width: 100%;
-  max-width: 800px;
-  box-sizing: border-box;
-}
-
-#textarea3:focus {
-  outline: 2px solid var(--button-bg);
-  outline-offset: 2px;
-  border-color: var(--button-bg);
-}
-
-/* リンクのスタイル（ボタン風） */
-a {
-  display: inline-block;
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  text-decoration: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
-  cursor: pointer;
-  margin: 2px 0;
-}
-
-a:hover {
-  background-color: var(--button-hover);
-  text-decoration: none;
-}
-
-a:focus {
-  outline: 2px solid var(--button-bg);
-  outline-offset: 2px;
-}
-
-a:visited {
-  color: var(--button-text);
-}
-
-/* インラインリンク（段落内）のスタイル調整 */
-p a {
-  padding: 8px 16px;
-  font-size: inherit;
-  vertical-align: baseline;
-}
-
-/* レスポンシブデザイン */
-@media (max-width: 768px) {
-  body {
-    margin: 10px;
-  }
-
-  .controls {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .controls label {
-    margin-bottom: 5px;
-    align-self: flex-start;
-  }
-
-  #sequenceSelector {
-    margin-left: 0;
-    margin-top: 0;
-    min-width: unset;
-  }
-
-  #textarea3 {
-    height: 400px;
-    font-size: 12px;
-  }
-}
-
-{% endraw %}
-```
-
 ### issue-notes/124.md
 ```md
 {% raw %}
 # issue demo-libの動作確認をする #124
 [issues #124](https://github.com/cat2151/tonejs-json-sequencer/issues/124)
-
-
-
-{% endraw %}
-```
-
-### issue-notes/125.md
-```md
-{% raw %}
-# issue streaming loop演奏がバグっており、loopするたびに間があいてしまう #125
-[issues #125](https://github.com/cat2151/tonejs-json-sequencer/issues/125)
-
-
-
-{% endraw %}
-```
-
-### issue-notes/127.md
-```md
-{% raw %}
-# issue demo画面左下にリポジトリへのリンクを小さく半透明で表示する #127
-[issues #127](https://github.com/cat2151/tonejs-json-sequencer/issues/127)
 
 
 
@@ -1281,58 +722,32 @@ p a {
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-0b62f21 Merge pull request #126 from cat2151/copilot/fix-streaming-loop-issue
-b82879e CRITICAL FIX: Change default ticks per quarter from 480 to 192
-f2eebfa Address code review: add constant and improve comments
-0de0d10 Fix loop timing: calculate inter-event spacing for correct loop point
-1274962 Fix: clarify constant comment to match unit in name
-2185ff7 Refactor: extract helper methods and constants for better maintainability
-30f2d73 Redesign debug logging: prediction-based approach with zero-drift principle
-93a19d4 Improve readability: refactor nested ternary to if-else
-b944220 Fix edge case: fall back to maxEndTime when maxStartTime is 0
-cf86f30 Add issue note for #127 [auto]
+dd4e353 Add issue note for #150 [auto]
+bce87d3 Merge pull request #149 from cat2151/codex/investigate-demo-library-404
+2c61a5d fix: align demo-library links and agent instructions
+f2bba57 Initial plan
+871f523 Add issue note for #148 [auto]
+bb194b4 Merge pull request #147 from cat2151/codex/fix-create-release-workflow
+e41a8e9 ci: package release assets as zip
+fb0a769 fix: prevent duplicate release asset deletions
+9c6e086 Initial plan
+2b9f953 Merge pull request #145 from cat2151/codex/fix-build-deploy-errors
 
 ### 変更されたファイル:
-.github/workflows/deploy-pages.yml
-README.ja.md
-README.md
-demo-library/README.md
+.github/workflows/create-issue-on-actions-failure.yml
+.github/workflows/release.yml
+AGENTS.md
 demo-library/index.html
-demo/streaming.html
-dist/cjs/index.d.ts
-dist/cjs/ndjson-streaming.d.ts
-dist/cjs/ndjson-streaming.js
-dist/cjs/offline-renderer.d.ts
-dist/cjs/offline-renderer.js
-dist/cjs/streaming/event-processor.d.ts
-dist/cjs/streaming/event-processor.js
-dist/cjs/utils/time-parser.d.ts
-dist/esm/index.d.ts
-dist/esm/ndjson-streaming.d.ts
-dist/esm/ndjson-streaming.mjs
-dist/esm/offline-renderer.d.ts
-dist/esm/offline-renderer.mjs
-dist/esm/streaming/event-processor.d.ts
-dist/esm/streaming/event-processor.mjs
-dist/esm/utils/time-parser.d.ts
-dist/index.d.ts
-dist/ndjson-streaming.d.ts
-dist/ndjson-streaming.js
-dist/offline-renderer.d.ts
-dist/offline-renderer.js
-dist/streaming/event-processor.d.ts
-dist/streaming/event-processor.js
-dist/utils/time-parser.d.ts
-issue-notes/122.md
-issue-notes/124.md
-issue-notes/125.md
-issue-notes/127.md
-src/index.ts
-src/ndjson-streaming.ts
-src/offline-renderer.ts
-src/streaming/event-processor.ts
-src/utils/time-parser.ts
+demo/index.html
+demo/styles.css
+dist/demo/main.js
+dist/demo/modules/uiManager.js
+issue-notes/144.md
+issue-notes/148.md
+issue-notes/150.md
+src/demo/main.ts
+src/demo/modules/uiManager.ts
 
 
 ---
-Generated at: 2026-02-07 07:09:12 JST
+Generated at: 2026-02-08 07:10:08 JST

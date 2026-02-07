@@ -1,4 +1,4 @@
-Last updated: 2026-02-07
+Last updated: 2026-02-08
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -691,6 +691,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
 ## ファイル階層ツリー
 📄 .editorconfig
 📄 .gitignore
+📖 AGENTS.md
 📄 LICENSE
 📖 NPM_README.md
 📖 README.ja.md
@@ -745,6 +746,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
       📜 autowah.js
       📜 bitcrusher.js
       📜 chebyshev.js
+      📜 chorus-object-args.js
       📜 chorus.js
       📜 distortion.js
       📜 feedbackdelay.js
@@ -867,6 +869,17 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 124.md
   📖 125.md
   📖 127.md
+  📖 129.md
+  📖 131.md
+  📖 133.md
+  📖 135.md
+  📖 136.md
+  📖 137.md
+  📖 139.md
+  📖 141.md
+  📖 144.md
+  📖 148.md
+  📖 150.md
   📖 62.md
   📖 64.md
   📖 67.md
@@ -902,6 +915,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
       📘 autowah.ts
       📘 bitcrusher.ts
       📘 chebyshev.ts
+      📘 chorus-object-args.ts
       📘 chorus.ts
       📘 distortion.ts
       📘 feedbackdelay.ts
@@ -966,11 +980,11 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
 📊 tsconfig.json
 
 ## ファイル詳細分析
-**demo/index.html** (27行, 813バイト)
+**demo/index.html** (36行, 1337バイト)
   - 関数: なし
   - インポート: なし
 
-**demo/offline-rendering.html** (227行, 5830バイト)
+**demo/offline-rendering.html** (234行, 6172バイト)
   - 関数: なし
   - インポート: なし
 
@@ -978,15 +992,15 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**demo/streaming.html** (118行, 4423バイト)
+**demo/streaming.html** (123行, 4646バイト)
   - 関数: なし
   - インポート: なし
 
-**demo/styles.css** (212行, 4253バイト)
+**demo/styles.css** (318行, 6432バイト)
   - 関数: なし
   - インポート: なし
 
-**demo-library/index.html** (184行, 4823バイト)
+**demo-library/index.html** (206行, 5367バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1002,7 +1016,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: createEffect
   - インポート: tone
 
-**dist/cjs/factories/effect-factory.js** (56行, 2095バイト)
+**dist/cjs/factories/effect-factory.js** (59行, 2336バイト)
   - 関数: createEffect, switch
   - インポート: なし
 
@@ -1026,7 +1040,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: parseNDJSON
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/cjs/ndjson-streaming.js** (419行, 20481バイト)
+**dist/cjs/ndjson-streaming.js** (439行, 21839バイト)
   - 関数: parseNDJSON, if, catch, constructor, debug, isSchedulableEvent, getTimeNotation, generatePredictions, start, initializePlayback, updateEvents, for, processEvents, stop, playing
   - インポート: ./utils/time-parser.js, ./streaming/playback-state.js, ./streaming/event-processor.js
 
@@ -1058,7 +1072,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: tone, ../types.js, ../sequencer-nodes.js
 
-**dist/cjs/streaming/event-processor.js** (192行, 8710バイト)
+**dist/cjs/streaming/event-processor.js** (192行, 8737バイト)
   - 関数: constructor, createNodesAndConnections, forEach, if, catch, processNewCreateAndConnectEvents, scheduleEvent, adjustEventTime, getEventTime, calculateSequenceDuration
   - インポート: ../event-scheduler.js
 
@@ -1107,6 +1121,10 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - インポート: なし
 
 **dist/demo/effect/chebyshev.js** (45行, 939バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/chorus-object-args.js** (45行, 1010バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1174,8 +1192,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/loopend-test.js** (48行, 1449バイト)
-  - 関数: なし
+**dist/demo/instrument/loopend-test.js** (48行, 1483バイト)
+  - 関数: i
   - インポート: なし
 
 **dist/demo/instrument/membranesynth.js** (47行, 1068バイト)
@@ -1234,7 +1252,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/demo/main.js** (71行, 2649バイト)
+**dist/demo/main.js** (74行, 2800バイト)
   - 関数: constructor, initialize, initializeSequenceDataCollection, updateTextareaWithSelectedSequence, if, playWithAudioContext, catch, play
   - インポート: ./sequenceLoader.js, ./modules/uiManager.js, ./modules/audioManager.js
 
@@ -1242,15 +1260,15 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, playSequence, if, catch, ensureAudioContextStarted
   - インポート: ../../../dist/index.mjs
 
-**dist/demo/modules/uiManager.js** (46行, 1637バイト)
-  - 関数: constructor, setupEventListeners, populateSequenceSelector, getTextareaValue, setTextareaValue, getSelectedSequenceName
+**dist/demo/modules/uiManager.js** (82行, 3269バイト)
+  - 関数: constructor, setupEventListeners, toggleErrorLog, populateSequenceSelector, getTextareaValue, setTextareaValue, getSelectedSequenceName, setErrorStatusOk, setErrorStatusNg
   - インポート: なし
 
-**dist/demo/offline-rendering.js** (319行, 13210バイト)
-  - 関数: constructor, initializeUI, if, initializeCollapsibleSections, loadInitialSequence, loadSelectedSequence, sequenceToNDJSON, getNDJSONFromTextarea, debouncedRender, formatTimestamp, render, catch, createAudioPreview, download, clearWaveformOverlay, drawWaveformOverlay, for, updateStatus, updateProgress
+**dist/demo/offline-rendering.js** (310行, 12880バイト)
+  - 関数: constructor, initializeUI, if, initializeCollapsibleSections, loadSelectedSequence, sequenceToNDJSON, getNDJSONFromTextarea, debouncedRender, formatTimestamp, render, catch, createAudioPreview, download, clearWaveformOverlay, drawWaveformOverlay, for, updateStatus, updateProgress
   - インポート: ./sequenceLoader.js, ../../dist/index.mjs
 
-**dist/demo/sequenceLoader.js** (86行, 2912バイト)
+**dist/demo/sequenceLoader.js** (88行, 3002バイト)
   - 関数: loadAllSequences
   - インポート: ./instrument/minimal.js, ./instrument/tempo-test.js, ./instrument/streaming-test-doremi.js
 
@@ -1330,7 +1348,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: createEffect
   - インポート: tone
 
-**dist/factories/effect-factory.js** (56行, 2095バイト)
+**dist/factories/effect-factory.js** (59行, 2336バイト)
   - 関数: createEffect, switch
   - インポート: なし
 
@@ -1354,7 +1372,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: parseNDJSON
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/ndjson-streaming.js** (419行, 20481バイト)
+**dist/ndjson-streaming.js** (439行, 21839バイト)
   - 関数: parseNDJSON, if, catch, constructor, debug, isSchedulableEvent, getTimeNotation, generatePredictions, start, initializePlayback, updateEvents, for, processEvents, stop, playing
   - インポート: ./utils/time-parser.js, ./streaming/playback-state.js, ./streaming/event-processor.js
 
@@ -1386,7 +1404,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: tone, ../types.js, ../sequencer-nodes.js
 
-**dist/streaming/event-processor.js** (192行, 8710バイト)
+**dist/streaming/event-processor.js** (192行, 8737バイト)
   - 関数: constructor, createNodesAndConnections, forEach, if, catch, processNewCreateAndConnectEvents, scheduleEvent, adjustEventTime, getEventTime, calculateSequenceDuration
   - インポート: ../event-scheduler.js
 
@@ -1434,7 +1452,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: renameFiles, updateImports, catch, if
   - インポート: fs, path
 
-**src/demo/demo-types.ts** (50行, 1204バイト)
+**src/demo/demo-types.ts** (50行, 1201バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1455,6 +1473,10 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - インポート: ../demo-types.js
 
 **src/demo/effect/chebyshev.ts** (49行, 1066バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/chorus-object-args.ts** (49行, 1180バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
@@ -1522,8 +1544,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/loopend-test.ts** (52行, 1430バイト)
-  - 関数: なし
+**src/demo/instrument/loopend-test.ts** (52行, 1464バイト)
+  - 関数: i
   - インポート: ../demo-types.js
 
 **src/demo/instrument/membranesynth.ts** (51行, 1159バイト)
@@ -1582,7 +1604,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/main.ts** (91行, 2895バイト)
+**src/demo/main.ts** (94行, 3020バイト)
   - 関数: constructor, if, catch, initialize, playWithAudioContext, play
   - インポート: ./demo-types.js, ./sequenceLoader.js, ./modules/uiManager.js
 
@@ -1590,15 +1612,15 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: if, catch, playSequence, ensureAudioContextStarted
   - インポート: ../demo-types.js, ../../../dist/index.mjs
 
-**src/demo/modules/uiManager.ts** (62行, 1871バイト)
+**src/demo/modules/uiManager.ts** (103行, 3563バイト)
   - 関数: なし
   - インポート: ../sequenceLoader.js
 
-**src/demo/offline-rendering.ts** (374行, 12460バイト)
+**src/demo/offline-rendering.ts** (367行, 12158バイト)
   - 関数: constructor, if, catch, for, render
   - インポート: ./demo-types.js, ./sequenceLoader.js, ../../dist/index.mjs
 
-**src/demo/sequenceLoader.ts** (97行, 3037バイト)
+**src/demo/sequenceLoader.ts** (99行, 3125バイト)
   - 関数: loadAllSequences
   - インポート: ./demo-types.js, ./instrument/minimal.js, ./instrument/tempo-test.js
 
@@ -1626,7 +1648,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: scheduleOrExecuteEvent, playSequence, switch, if, forEach, catch
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**src/factories/effect-factory.ts** (60行, 1881バイト)
+**src/factories/effect-factory.ts** (63行, 2116バイト)
   - 関数: createEffect, switch
   - インポート: tone
 
@@ -1638,7 +1660,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**src/ndjson-streaming.ts** (566行, 20957バイト)
+**src/ndjson-streaming.ts** (584行, 22070バイト)
   - 関数: parseNDJSON, if, catch, constructor, for, start, initializePlayback
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
@@ -1654,7 +1676,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: forEach, catch
   - インポート: なし
 
-**src/streaming/event-processor.ts** (222行, 7980バイト)
+**src/streaming/event-processor.ts** (222行, 8007バイト)
   - 関数: constructor, forEach, if, catch, createNodesAndConnections
   - インポート: tone, ../types.js, ../sequencer-nodes.js
 
@@ -1662,7 +1684,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: startTime, currentEvents, loopCount, cachedSequenceDuration
   - インポート: ../types.js
 
-**src/types.ts** (58行, 1354バイト)
+**src/types.ts** (58行, 1351バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1696,10 +1718,12 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
 - audioBufferToWav (dist/cjs/offline-renderer.d.ts)
   - constructor (undefined)
   - parseNDJSON (dist/cjs/ndjson-streaming.d.ts)
+- i (dist/demo/instrument/loopend-test.js)
 - loadAllSequences (dist/demo/sequenceLoader.js)
 
 
 ## プロジェクト構造（ファイル一覧）
+AGENTS.md
 NPM_README.md
 README.ja.md
 README.md
@@ -1729,8 +1753,6 @@ dist/cjs/offline-renderer.d.ts
 dist/cjs/offline-renderer.js
 dist/cjs/sequencer-nodes.d.ts
 dist/cjs/sequencer-nodes.js
-dist/cjs/streaming/event-processor.d.ts
-dist/cjs/types.d.ts
 dist/demo/demo-types.js
 dist/esm/event-scheduler.d.ts
 dist/event-scheduler.d.ts
@@ -1748,4 +1770,4 @@ googled947dc864c270e07.html
 
 
 ---
-Generated at: 2026-02-07 07:09:12 JST
+Generated at: 2026-02-08 07:10:07 JST
