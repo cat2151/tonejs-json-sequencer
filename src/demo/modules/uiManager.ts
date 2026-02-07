@@ -5,6 +5,9 @@ export class UIManager {
   private textarea: HTMLTextAreaElement;
   private sequenceSelector: HTMLSelectElement;
   private playButton: HTMLButtonElement;
+  private errorStatus: HTMLDivElement;
+  private errorLog: HTMLPreElement;
+  private errorLogToggle: HTMLButtonElement;
 
   constructor(
     private onPlay: () => Promise<void>,
@@ -13,8 +16,12 @@ export class UIManager {
     this.textarea = document.querySelector('textarea') as HTMLTextAreaElement;
     this.sequenceSelector = document.getElementById('sequenceSelector') as HTMLSelectElement;
     this.playButton = document.querySelector('button') as HTMLButtonElement;
+    this.errorStatus = document.getElementById('errorStatus') as HTMLDivElement;
+    this.errorLog = document.getElementById('errorLog') as HTMLPreElement;
+    this.errorLogToggle = document.getElementById('errorLogToggle') as HTMLButtonElement;
 
     this.setupEventListeners();
+    this.setErrorStatusOk(); // Initialize with OK status
   }
 
   private setupEventListeners(): void {
@@ -28,6 +35,19 @@ export class UIManager {
     this.textarea.addEventListener('input', async () => {
       await this.onPlay();
     });
+    this.errorLogToggle.addEventListener('click', () => {
+      this.toggleErrorLog();
+    });
+  }
+
+  private toggleErrorLog(): void {
+    if (this.errorLog.classList.contains('collapsed')) {
+      this.errorLog.classList.remove('collapsed');
+      this.errorLogToggle.textContent = 'エラーログを非表示';
+    } else {
+      this.errorLog.classList.add('collapsed');
+      this.errorLogToggle.textContent = 'エラーログを表示';
+    }
   }
 
   populateSequenceSelector(sequences: SequenceDefinition[]): void {
@@ -57,5 +77,20 @@ export class UIManager {
 
   getSelectedSequenceName(): string {
     return this.sequenceSelector.value;
+  }
+
+  setErrorStatusOk(): void {
+    this.errorStatus.textContent = 'OK';
+    this.errorStatus.className = 'error-status ok';
+    this.errorLog.textContent = '';
+    this.errorLog.classList.add('collapsed');
+    this.errorLogToggle.textContent = 'エラーログを表示';
+  }
+
+  setErrorStatusNg(errorMessage: string): void {
+    this.errorStatus.textContent = 'NG';
+    this.errorStatus.className = 'error-status ng';
+    this.errorLog.textContent = errorMessage;
+    // Don't auto-expand the log - let user click to see it
   }
 }
