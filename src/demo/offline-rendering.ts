@@ -204,7 +204,7 @@ class OfflineRenderingDemo {
       if (audioPlayer) audioPlayer.classList.add('active');
 
       // Auto-play preview after rendering
-      if (this.lastRenderTrigger !== null) {
+      if (this.lastRenderTrigger === 'selector' || this.lastRenderTrigger === 'textarea') {
         const audioElement = document.getElementById('audioElement') as HTMLAudioElement | null;
         if (audioElement) {
           try {
