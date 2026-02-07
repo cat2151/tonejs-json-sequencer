@@ -46,6 +46,7 @@ jobs:
         with:
           tag_name: ${{ steps.package_version.outputs.tag_name }}
           name: Release v${{ steps.package_version.outputs.version }}
+          fail_on_unmatched_files: false
           body: |
             Release version ${{ steps.package_version.outputs.version }}
             
