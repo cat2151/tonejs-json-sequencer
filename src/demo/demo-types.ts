@@ -43,7 +43,7 @@ export interface SetEvent {
 export interface LoopEndEvent {
   eventType: 'loopEnd';
   nodeId: number;
-  args: string[]; // ["", "", time] - e.g., ["", "", "+288i"] for 288 ticks (last element is time, matching other event formats)
+  args: string[]; // [time] - e.g., ["+384i"] for 384 ticks
 }
 
 export type SequenceEvent = CreateNodeEvent | ConnectEvent | TriggerAttackReleaseEvent | DepthRampToEvent | VolumeRampToEvent | SetEvent | LoopEndEvent;

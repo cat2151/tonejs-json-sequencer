@@ -46,6 +46,6 @@ export const sequence: SequenceEvent[] = [
   {
     "eventType": "loopEnd",
     "nodeId": 0,
-    "args": ["", "", "+384i"]
+    "args": ["+384i"]
   }
 ];
