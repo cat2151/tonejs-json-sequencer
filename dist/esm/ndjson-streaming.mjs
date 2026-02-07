@@ -204,6 +204,21 @@ export class NDJSONStreamingPlayer {
             loopEnabled: this.config.loop,
             loopWaitSeconds: this.config.loop ? this.config.loopWaitSeconds : 'N/A'
         });
+        // Log loopEnd event details for verifiability
+        const loopEndEvent = events.find(e => e.eventType === 'loopEnd');
+        if (loopEndEvent && 'args' in loopEndEvent && Array.isArray(loopEndEvent.args)) {
+            const loopEndArg = loopEndEvent.args[loopEndEvent.args.length - 1];
+            const loopEndSeconds = this.eventProcessor.getEventTime(loopEndEvent);
+            this.debug('🔁 loopEnd event', {
+                args: JSON.stringify(loopEndEvent.args),
+                timeArg: loopEndArg,
+                timeSeconds: loopEndSeconds !== null ? loopEndSeconds.toFixed(3) + 's' : 'parse error',
+                formula: `parseTimeToSeconds("${loopEndArg}") = ${loopEndSeconds !== null ? loopEndSeconds.toFixed(3) : 'null'}s → sequenceDuration = ${this.playbackState.cachedSequenceDuration.toFixed(3)}s`
+            });
+        }
+        else {
+            this.debug('🔁 loopEnd event: not found (duration calculated from note events)');
+        }
         // Generate event scheduling predictions
         this.generatePredictions(events, startTime, this.playbackState.cachedSequenceDuration);
         // Start processing loop
