@@ -466,6 +466,17 @@ export class NDJSONStreamingPlayer {
         const previousLoopCount = this.playbackState.loopCount;
         this.playbackState.loopCount = completedLoops;
         
+        // Prune processedEventIndices from old loop iterations to prevent unbounded memory growth.
+        // Keep only entries for the current and next loop (which may be pre-scheduled).
+        const eventsLength = this.playbackState.currentEvents.length;
+        if (eventsLength > 0) {
+          const minKeepKey = this.playbackState.loopCount * eventsLength;
+          for (const key of this.playbackState.processedEventIndices) {
+            if (key < minKeepKey) {
+              this.playbackState.processedEventIndices.delete(key);
+            }
+          }
+        }
         
         this.debug(`🔄 === Loop #${previousLoopCount} → #${this.playbackState.loopCount} ===`, {
           previousLoop: previousLoopCount,
@@ -478,9 +489,6 @@ export class NDJSONStreamingPlayer {
         this.config.onLoopComplete();
       }
     }
-
-    let scheduledInThisLoop = 0;
-    const lookaheadMs = this.config.lookaheadMs;
 
     // Determine the range of loop iterations to schedule
     // When loop mode is enabled, also pre-schedule events for the next loop iteration
@@ -539,7 +547,6 @@ export class NDJSONStreamingPlayer {
 
           this.eventProcessor.scheduleEvent(event, absoluteTime);
           this.playbackState.processedEventIndices.add(eventKey);
-          scheduledInThisLoop++;
         }
       });
     }
