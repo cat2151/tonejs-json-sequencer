@@ -10,7 +10,6 @@ class OfflineRenderingDemo {
         this.debounceTimer = null;
         this.renderStartTime = 0;
         this.isRendering = false;
-        this.lastRenderTrigger = null;
         this.initializeUI();
         this.initializeCollapsibleSections();
     }
@@ -42,7 +41,6 @@ class OfflineRenderingDemo {
                 this.debounceTimer = null;
             }
             this.loadSelectedSequence();
-            this.lastRenderTrigger = 'selector';
             this.render();
         });
         // Textarea change - debounced auto-render
@@ -93,7 +91,6 @@ class OfflineRenderingDemo {
             window.clearTimeout(this.debounceTimer);
         }
         this.debounceTimer = window.setTimeout(() => {
-            this.lastRenderTrigger = 'textarea';
             this.render();
         }, 1000); // 1 second debounce
     }
@@ -169,22 +166,12 @@ class OfflineRenderingDemo {
             // Show audio player
             if (audioPlayer)
                 audioPlayer.classList.add('active');
-            // Auto-play preview (only if user is not actively editing the textarea)
-            const textarea = document.getElementById('sequenceEditor');
-            const isEditing = document.activeElement === textarea;
-            if (!isEditing && this.lastRenderTrigger === 'selector') {
-                const audioElement = document.getElementById('audioElement');
-                if (audioElement) {
-                    try {
-                        await audioElement.play();
-                    }
-                    catch (e) {
-                        console.log('Auto-play was prevented by browser policy', e);
-                    }
-                }
-            }
-            else if (isEditing) {
-                console.log('Skipping auto-play because the user is actively editing the sequence.');
+            // Auto-play preview after rendering
+            const audioElement = document.getElementById('audioElement');
+            if (audioElement) {
+                audioElement.play().catch((e) => {
+                    console.log('Auto-play was prevented by browser policy', e);
+                });
             }
             // Draw waveform overlay on progress bar
             this.drawWaveformOverlay(result.buffer);
