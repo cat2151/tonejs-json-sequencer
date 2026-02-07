@@ -442,7 +442,7 @@ export class NDJSONStreamingPlayer {
       let completedLoops = 0;
       const loopCycleDuration = sequenceDuration + this.config.loopWaitSeconds;
       
-      if (loopCycleDuration > 0 && timeSinceStart > loopCycleDuration) {
+      if (loopCycleDuration > 0 && timeSinceStart >= loopCycleDuration) {
         completedLoops = Math.floor(timeSinceStart / loopCycleDuration);
       }
       

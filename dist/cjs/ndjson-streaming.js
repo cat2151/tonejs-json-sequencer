@@ -309,7 +309,7 @@ class NDJSONStreamingPlayer {
             // Each loop cycle = sequenceDuration + loopWaitSeconds
             let completedLoops = 0;
             const loopCycleDuration = sequenceDuration + this.config.loopWaitSeconds;
-            if (loopCycleDuration > 0 && timeSinceStart > loopCycleDuration) {
+            if (loopCycleDuration > 0 && timeSinceStart >= loopCycleDuration) {
                 completedLoops = Math.floor(timeSinceStart / loopCycleDuration);
             }
             // Guard against multiple increments due to processing delays
