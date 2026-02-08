@@ -5,7 +5,7 @@ export const name = "LPF Q & Cutoff Sweep";
 
 const bassPattern = ["C2", "C2", "G1", "A#1", "C2", "D2", "F2", "G2", "C2", "G1", "A#1", "C2", "D2", "F2", "G2", "A#1"];
 const totalNotes = 160;
-const ticksPerSixteenth = 24;
+const ticksPerSixteenth = 48;
 
 const triggerEvents: SequenceEvent[] = Array.from({ length: totalNotes }, (_value, index) => ({
   eventType: "triggerAttackRelease",
@@ -13,31 +13,31 @@ const triggerEvents: SequenceEvent[] = Array.from({ length: totalNotes }, (_valu
   args: [bassPattern[index % bassPattern.length], "16n", `+${index * ticksPerSixteenth}i`]
 }));
 
-const qCycleStarts = [0, 768, 1536, 2304, 3072];
+const qCycleStarts = [0, 1536, 3072, 4608, 6144];
 const qRampEvents: SequenceEvent[] = qCycleStarts.flatMap((start) => ([
   {
     eventType: "Q.rampTo",
     nodeId: 1,
-    args: ["12", "384i", `+${start}i`]
+    args: ["12", "768i", `+${start}i`]
   },
   {
     eventType: "Q.rampTo",
     nodeId: 1,
-    args: ["0.7", "384i", `+${start + 384}i`]
+    args: ["0.7", "768i", `+${start + 768}i`]
   }
 ]));
 
-const cutoffCycleStarts = [0, 960, 1920, 2880];
+const cutoffCycleStarts = [0, 1920, 3840, 5760];
 const cutoffRampEvents: SequenceEvent[] = cutoffCycleStarts.flatMap((start) => ([
   {
     eventType: "frequency.rampTo",
     nodeId: 1,
-    args: ["2000", "480i", `+${start}i`]
+    args: ["2000", "960i", `+${start}i`]
   },
   {
     eventType: "frequency.rampTo",
     nodeId: 1,
-    args: ["120", "480i", `+${start + 480}i`]
+    args: ["120", "960i", `+${start + 960}i`]
   }
 ]));
 
