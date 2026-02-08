@@ -37,6 +37,7 @@ import * as chebyshev from './effect/chebyshev.js';
 import * as pitchshift from './effect/pitchshift.js';
 import * as frequencyshifter from './effect/frequencyshifter.js';
 import * as stereowidener from './effect/stereowidener.js';
+import * as lpfSweep from './effect/lpf-sweep.js';
 // Aggregate all sequences
 const allSequenceModules = [
     // Instrument demos
@@ -77,7 +78,8 @@ const allSequenceModules = [
     chebyshev,
     pitchshift,
     frequencyshifter,
-    stereowidener
+    stereowidener,
+    lpfSweep
 ];
 export function loadAllSequences() {
     return allSequenceModules.map(module => ({

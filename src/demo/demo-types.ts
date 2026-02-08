@@ -33,6 +33,30 @@ export interface VolumeRampToEvent {
   args: string[];
 }
 
+export interface FrequencyRampToEvent {
+  eventType: 'frequency.rampTo';
+  nodeId: number;
+  args: string[];
+}
+
+export interface QRampToEvent {
+  eventType: 'Q.rampTo';
+  nodeId: number;
+  args: string[];
+}
+
+export interface FilterFrequencyRampToEvent {
+  eventType: 'filter.frequency.rampTo';
+  nodeId: number;
+  args: string[];
+}
+
+export interface FilterQRampToEvent {
+  eventType: 'filter.Q.rampTo';
+  nodeId: number;
+  args: string[];
+}
+
 export interface SetEvent {
   eventType: 'set';
   nodeId: number;
@@ -46,4 +70,15 @@ export interface LoopEndEvent {
   args: string[]; // [time] - e.g., ["+384i"] for 384 ticks
 }
 
-export type SequenceEvent = CreateNodeEvent | ConnectEvent | TriggerAttackReleaseEvent | DepthRampToEvent | VolumeRampToEvent | SetEvent | LoopEndEvent;
+export type SequenceEvent =
+  | CreateNodeEvent
+  | ConnectEvent
+  | TriggerAttackReleaseEvent
+  | DepthRampToEvent
+  | VolumeRampToEvent
+  | FrequencyRampToEvent
+  | QRampToEvent
+  | FilterFrequencyRampToEvent
+  | FilterQRampToEvent
+  | SetEvent
+  | LoopEndEvent;

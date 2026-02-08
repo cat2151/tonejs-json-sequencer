@@ -34,6 +34,30 @@ export interface VolumeRampToEvent {
   args: string[]; // [value, rampTime, time]
 }
 
+export interface FrequencyRampToEvent {
+  eventType: 'frequency.rampTo';
+  nodeId: number;
+  args: string[]; // [value, rampTime, time]
+}
+
+export interface QRampToEvent {
+  eventType: 'Q.rampTo';
+  nodeId: number;
+  args: string[]; // [value, rampTime, time]
+}
+
+export interface FilterFrequencyRampToEvent {
+  eventType: 'filter.frequency.rampTo';
+  nodeId: number;
+  args: string[]; // [value, rampTime, time]
+}
+
+export interface FilterQRampToEvent {
+  eventType: 'filter.Q.rampTo';
+  nodeId: number;
+  args: string[]; // [value, rampTime, time]
+}
+
 export interface SetEvent {
   eventType: 'set';
   nodeId: number;
@@ -53,5 +77,9 @@ export type SequenceEvent =
   | TriggerAttackReleaseEvent
   | DepthRampToEvent
   | VolumeRampToEvent
+  | FrequencyRampToEvent
+  | QRampToEvent
+  | FilterFrequencyRampToEvent
+  | FilterQRampToEvent
   | SetEvent
   | LoopEndEvent;

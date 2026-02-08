@@ -2,6 +2,22 @@
 // Based on tonejs-json-sequencer by cat2151
 // https://github.com/cat2151/tonejs-json-sequencer
 import { createNode, connectNode } from './node-factory.mjs';
+function rampParameter(node, path, args, label, nodeId) {
+    let target = node;
+    for (const key of path) {
+        if (target == null) {
+            console.warn(`Node ${nodeId} not found or doesn't support ${label}`);
+            return;
+        }
+        target = target[key];
+    }
+    if (target && typeof target.rampTo === 'function') {
+        target.rampTo(...args);
+    }
+    else {
+        console.warn(`Node ${nodeId} not found or doesn't support ${label}`);
+    }
+}
 /**
  * Schedule or execute a sequence event
  * @param Tone - Tone.js library instance
@@ -28,22 +44,32 @@ export function scheduleOrExecuteEvent(Tone, nodes, element) {
         }
         case 'depth.rampTo': {
             const node = nodes.get(element.nodeId);
-            if (node && node.depth && typeof node.depth.rampTo === 'function') {
-                node.depth.rampTo(...element.args);
-            }
-            else {
-                console.warn(`Node ${element.nodeId} not found or doesn't support depth.rampTo`);
-            }
+            rampParameter(node, ['depth'], element.args, 'depth.rampTo', element.nodeId);
             break;
         }
         case 'volume.rampTo': {
             const node = nodes.get(element.nodeId);
-            if (node && node.volume && typeof node.volume.rampTo === 'function') {
-                node.volume.rampTo(...element.args);
-            }
-            else {
-                console.warn(`Node ${element.nodeId} not found or doesn't support volume.rampTo`);
-            }
+            rampParameter(node, ['volume'], element.args, 'volume.rampTo', element.nodeId);
+            break;
+        }
+        case 'frequency.rampTo': {
+            const node = nodes.get(element.nodeId);
+            rampParameter(node, ['frequency'], element.args, 'frequency.rampTo', element.nodeId);
+            break;
+        }
+        case 'Q.rampTo': {
+            const node = nodes.get(element.nodeId);
+            rampParameter(node, ['Q'], element.args, 'Q.rampTo', element.nodeId);
+            break;
+        }
+        case 'filter.frequency.rampTo': {
+            const node = nodes.get(element.nodeId);
+            rampParameter(node, ['filter', 'frequency'], element.args, 'filter.frequency.rampTo', element.nodeId);
+            break;
+        }
+        case 'filter.Q.rampTo': {
+            const node = nodes.get(element.nodeId);
+            rampParameter(node, ['filter', 'Q'], element.args, 'filter.Q.rampTo', element.nodeId);
             break;
         }
         case 'set': {
