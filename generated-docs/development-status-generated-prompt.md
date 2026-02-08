@@ -1,4 +1,4 @@
-Last updated: 2026-02-08
+Last updated: 2026-02-09
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -110,6 +110,7 @@ Last updated: 2026-02-08
 - .github/actions-tmp/.github/workflows/call-rust-windows-check.yml
 - .github/actions-tmp/.github/workflows/call-translate-readme.yml
 - .github/actions-tmp/.github/workflows/callgraph.yml
+- .github/actions-tmp/.github/workflows/check-large-files.yml
 - .github/actions-tmp/.github/workflows/check-recent-human-commit.yml
 - .github/actions-tmp/.github/workflows/daily-project-summary.yml
 - .github/actions-tmp/.github/workflows/issue-note.yml
@@ -132,6 +133,9 @@ Last updated: 2026-02-08
 - .github/actions-tmp/.github_automation/callgraph/scripts/find-process-results.cjs
 - .github/actions-tmp/.github_automation/callgraph/scripts/generate-html-graph.cjs
 - .github/actions-tmp/.github_automation/callgraph/scripts/generateHTML.cjs
+- .github/actions-tmp/.github_automation/check-large-files/README.md
+- .github/actions-tmp/.github_automation/check-large-files/check-large-files.toml.example
+- .github/actions-tmp/.github_automation/check-large-files/scripts/check_large_files.py
 - .github/actions-tmp/.github_automation/check_recent_human_commit/scripts/check-recent-human-commit.cjs
 - .github/actions-tmp/.github_automation/project_summary/docs/daily-summary-setup.md
 - .github/actions-tmp/.github_automation/project_summary/prompts/development-status-prompt.md
@@ -188,6 +192,7 @@ Last updated: 2026-02-08
 - .github/actions-tmp/issue-notes/29.md
 - .github/actions-tmp/issue-notes/3.md
 - .github/actions-tmp/issue-notes/30.md
+- .github/actions-tmp/issue-notes/31.md
 - .github/actions-tmp/issue-notes/4.md
 - .github/actions-tmp/issue-notes/7.md
 - .github/actions-tmp/issue-notes/8.md
@@ -258,6 +263,8 @@ Last updated: 2026-02-08
 - dist/demo/effect/freeverb.js
 - dist/demo/effect/frequencyshifter.js
 - dist/demo/effect/jcreverb.js
+- dist/demo/effect/lpf-envelope.js
+- dist/demo/effect/lpf-sweep.js
 - dist/demo/effect/phaser.js
 - dist/demo/effect/pingpongdelay.js
 - dist/demo/effect/pitchshift.js
@@ -372,6 +379,9 @@ Last updated: 2026-02-08
 - issue-notes/144.md
 - issue-notes/148.md
 - issue-notes/150.md
+- issue-notes/152.md
+- issue-notes/154.md
+- issue-notes/155.md
 - issue-notes/62.md
 - issue-notes/64.md
 - issue-notes/67.md
@@ -410,6 +420,8 @@ Last updated: 2026-02-08
 - src/demo/effect/freeverb.ts
 - src/demo/effect/frequencyshifter.ts
 - src/demo/effect/jcreverb.ts
+- src/demo/effect/lpf-envelope.ts
+- src/demo/effect/lpf-sweep.ts
 - src/demo/effect/phaser.ts
 - src/demo/effect/pingpongdelay.ts
 - src/demo/effect/pitchshift.ts
@@ -722,32 +734,45 @@ jobs:
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-dd4e353 Add issue note for #150 [auto]
-bce87d3 Merge pull request #149 from cat2151/codex/investigate-demo-library-404
-2c61a5d fix: align demo-library links and agent instructions
-f2bba57 Initial plan
-871f523 Add issue note for #148 [auto]
-bb194b4 Merge pull request #147 from cat2151/codex/fix-create-release-workflow
-e41a8e9 ci: package release assets as zip
-fb0a769 fix: prevent duplicate release asset deletions
-9c6e086 Initial plan
-2b9f953 Merge pull request #145 from cat2151/codex/fix-build-deploy-errors
+272335d Merge pull request #157 from cat2151/codex/enable-chorus-start-method
+e373242 Start modulation effects automatically
+0a4fbfc Ensure chorus effects start by default
+4148223 Initial plan
+273ae2e Merge pull request #156 from cat2151/codex/add-lpf-cutoff-and-q-envelope
+2b378c4 Add LPF envelope bass demo
+8c99fea Initial plan
+f69527d Merge pull request #153 from cat2151/codex/add-lpf-parameters-demo
+23105a9 fix: correct lpf sweep timing
+5ec0e81 feat: add lpf sweep demo
 
 ### 変更されたファイル:
-.github/workflows/create-issue-on-actions-failure.yml
-.github/workflows/release.yml
-AGENTS.md
-demo-library/index.html
-demo/index.html
-demo/styles.css
-dist/demo/main.js
-dist/demo/modules/uiManager.js
-issue-notes/144.md
-issue-notes/148.md
-issue-notes/150.md
-src/demo/main.ts
-src/demo/modules/uiManager.ts
+dist/cjs/event-scheduler.js
+dist/cjs/factories/effect-factory.js
+dist/cjs/types.d.ts
+dist/demo/effect/lpf-envelope.js
+dist/demo/effect/lpf-sweep.js
+dist/demo/sequenceLoader.js
+dist/esm/event-scheduler.mjs
+dist/esm/factories/effect-factory.mjs
+dist/esm/types.d.ts
+dist/event-scheduler.js
+dist/factories/effect-factory.js
+dist/types.d.ts
+generated-docs/development-status-generated-prompt.md
+generated-docs/development-status.md
+generated-docs/project-overview-generated-prompt.md
+generated-docs/project-overview.md
+issue-notes/152.md
+issue-notes/154.md
+issue-notes/155.md
+src/demo/demo-types.ts
+src/demo/effect/lpf-envelope.ts
+src/demo/effect/lpf-sweep.ts
+src/demo/sequenceLoader.ts
+src/event-scheduler.ts
+src/factories/effect-factory.ts
+src/types.ts
 
 
 ---
-Generated at: 2026-02-08 07:10:08 JST
+Generated at: 2026-02-09 07:10:49 JST

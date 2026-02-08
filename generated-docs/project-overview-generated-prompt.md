@@ -1,4 +1,4 @@
-Last updated: 2026-02-08
+Last updated: 2026-02-09
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -753,6 +753,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
       📜 freeverb.js
       📜 frequencyshifter.js
       📜 jcreverb.js
+      📜 lpf-envelope.js
+      📜 lpf-sweep.js
       📜 phaser.js
       📜 pingpongdelay.js
       📜 pitchshift.js
@@ -880,6 +882,9 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 144.md
   📖 148.md
   📖 150.md
+  📖 152.md
+  📖 154.md
+  📖 155.md
   📖 62.md
   📖 64.md
   📖 67.md
@@ -922,6 +927,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
       📘 freeverb.ts
       📘 frequencyshifter.ts
       📘 jcreverb.ts
+      📘 lpf-envelope.ts
+      📘 lpf-sweep.ts
       📘 phaser.ts
       📘 pingpongdelay.ts
       📘 pitchshift.ts
@@ -1008,16 +1015,16 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: scheduleOrExecuteEvent, playSequence
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/cjs/event-scheduler.js** (116行, 4531バイト)
-  - 関数: scheduleOrExecuteEvent, playSequence, switch, if, forEach, catch
+**dist/cjs/event-scheduler.js** (142行, 5490バイト)
+  - 関数: rampParameter, scheduleOrExecuteEvent, playSequence, for, if, switch, forEach, catch
   - インポート: ./node-factory.js
 
 **dist/cjs/factories/effect-factory.d.ts** (10行, 368バイト)
   - 関数: createEffect
   - インポート: tone
 
-**dist/cjs/factories/effect-factory.js** (59行, 2336バイト)
-  - 関数: createEffect, switch
+**dist/cjs/factories/effect-factory.js** (65行, 2599バイト)
+  - 関数: createEffect, startIfAvailable, switch
   - インポート: なし
 
 **dist/cjs/factories/instrument-factory.d.ts** (10行, 388バイト)
@@ -1084,7 +1091,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, isPlaying, startTime, currentEvents, processedEventIndices, loopCount, cachedSequenceDuration, createdNodeIds, processLoopCount, incrementProcessLoopCount, start, stop, markEventAsProcessed, resetProcessedEvents
   - インポート: なし
 
-**dist/cjs/types.d.ts** (39行, 958バイト)
+**dist/cjs/types.d.ts** (59行, 1508バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1149,6 +1156,14 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - インポート: なし
 
 **dist/demo/effect/jcreverb.js** (45行, 937バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/lpf-envelope.js** (73行, 1998バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/effect/lpf-sweep.js** (66行, 1818バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1268,7 +1283,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, initializeUI, if, initializeCollapsibleSections, loadSelectedSequence, sequenceToNDJSON, getNDJSONFromTextarea, debouncedRender, formatTimestamp, render, catch, createAudioPreview, download, clearWaveformOverlay, drawWaveformOverlay, for, updateStatus, updateProgress
   - インポート: ./sequenceLoader.js, ../../dist/index.mjs
 
-**dist/demo/sequenceLoader.js** (88行, 3002バイト)
+**dist/demo/sequenceLoader.js** (92行, 3141バイト)
   - 関数: loadAllSequences
   - インポート: ./instrument/minimal.js, ./instrument/tempo-test.js, ./instrument/streaming-test-doremi.js
 
@@ -1328,7 +1343,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: ../types.js
 
-**dist/esm/types.d.ts** (39行, 958バイト)
+**dist/esm/types.d.ts** (59行, 1508バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1340,16 +1355,16 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: scheduleOrExecuteEvent, playSequence
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/event-scheduler.js** (116行, 4531バイト)
-  - 関数: scheduleOrExecuteEvent, playSequence, switch, if, forEach, catch
+**dist/event-scheduler.js** (142行, 5490バイト)
+  - 関数: rampParameter, scheduleOrExecuteEvent, playSequence, for, if, switch, forEach, catch
   - インポート: ./node-factory.js
 
 **dist/factories/effect-factory.d.ts** (10行, 368バイト)
   - 関数: createEffect
   - インポート: tone
 
-**dist/factories/effect-factory.js** (59行, 2336バイト)
-  - 関数: createEffect, switch
+**dist/factories/effect-factory.js** (65行, 2599バイト)
+  - 関数: createEffect, startIfAvailable, switch
   - インポート: なし
 
 **dist/factories/instrument-factory.d.ts** (10行, 388バイト)
@@ -1416,7 +1431,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, isPlaying, startTime, currentEvents, processedEventIndices, loopCount, cachedSequenceDuration, createdNodeIds, processLoopCount, incrementProcessLoopCount, start, stop, markEventAsProcessed, resetProcessedEvents
   - インポート: なし
 
-**dist/types.d.ts** (39行, 958バイト)
+**dist/types.d.ts** (59行, 1508バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1452,7 +1467,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: renameFiles, updateImports, catch, if
   - インポート: fs, path
 
-**src/demo/demo-types.ts** (50行, 1201バイト)
+**src/demo/demo-types.ts** (85行, 1755バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1501,6 +1516,14 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - インポート: ../demo-types.js
 
 **src/demo/effect/jcreverb.ts** (49行, 1063バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/lpf-envelope.ts** (82行, 1983バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/effect/lpf-sweep.ts** (74行, 1830バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
@@ -1620,7 +1643,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, if, catch, for, render
   - インポート: ./demo-types.js, ./sequenceLoader.js, ../../dist/index.mjs
 
-**src/demo/sequenceLoader.ts** (99行, 3125バイト)
+**src/demo/sequenceLoader.ts** (103行, 3260バイト)
   - 関数: loadAllSequences
   - インポート: ./demo-types.js, ./instrument/minimal.js, ./instrument/tempo-test.js
 
@@ -1644,12 +1667,12 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: tone
 
-**src/event-scheduler.ts** (123行, 4112バイト)
-  - 関数: scheduleOrExecuteEvent, playSequence, switch, if, forEach, catch
+**src/event-scheduler.ts** (158行, 5057バイト)
+  - 関数: rampParameter, scheduleOrExecuteEvent, playSequence, for, if, switch, forEach, catch
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**src/factories/effect-factory.ts** (63行, 2116バイト)
-  - 関数: createEffect, switch
+**src/factories/effect-factory.ts** (69行, 2362バイト)
+  - 関数: createEffect, startIfAvailable, switch
   - インポート: tone
 
 **src/factories/instrument-factory.ts** (128行, 3796バイト)
@@ -1684,7 +1707,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: startTime, currentEvents, loopCount, cachedSequenceDuration
   - インポート: ../types.js
 
-**src/types.ts** (58行, 1351バイト)
+**src/types.ts** (86行, 1997バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1693,9 +1716,10 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - インポート: なし
 
 ## 関数呼び出し階層
-- switch (dist/cjs/event-scheduler.js)
+- for (dist/cjs/event-scheduler.js)
   - scheduleOrExecuteEvent (dist/cjs/event-scheduler.d.ts)
     - playSequence ()
+      - rampParameter (dist/cjs/event-scheduler.js)
       - forEach ()
       - defineProperty ()
       - stop ()
@@ -1705,15 +1729,17 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
       - ensureAudioContextStarted ()
       - createNode (dist/cjs/node-factory.d.ts)
       - connectNode ()
-  - createEffect (dist/cjs/factories/effect-factory.d.ts)
+- if (dist/cjs/event-scheduler.js)
   - createInstrument (dist/cjs/factories/instrument-factory.d.ts)
     - createPolySynth ()
       - createSampler ()
-- if (dist/cjs/event-scheduler.js)
   - set ()
   - copyRecursive (scripts/copy-to-dist.js)
   - renameFiles (scripts/rename-to-mjs.js)
     - updateImports ()
+  - createEffect (dist/cjs/factories/effect-factory.d.ts)
+    - startIfAvailable ()
+- switch (dist/cjs/event-scheduler.js)
 - catch (dist/cjs/event-scheduler.js)
 - audioBufferToWav (dist/cjs/offline-renderer.d.ts)
   - constructor (undefined)
@@ -1770,4 +1796,4 @@ googled947dc864c270e07.html
 
 
 ---
-Generated at: 2026-02-08 07:10:07 JST
+Generated at: 2026-02-09 07:10:49 JST
