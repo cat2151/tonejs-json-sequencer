@@ -30,6 +30,8 @@ function createEffect(Tone, nodeType, args) {
             return new Tone.Chorus(...effectArgs);
         case 'Distortion':
             return new Tone.Distortion(...effectArgs);
+        case 'Filter':
+            return new Tone.Filter(...effectArgs);
         case 'FeedbackDelay':
             return new Tone.FeedbackDelay(...effectArgs);
         case 'Freeverb':
