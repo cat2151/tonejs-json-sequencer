@@ -9,14 +9,18 @@
  * @returns Created effect node or null if unknown type
  */
 export function createEffect(Tone, nodeType, args) {
+    const startIfAvailable = (effect) => {
+        effect.start?.();
+        return effect;
+    };
     // When args is a non-array value (including primitives), treat it as a single constructor argument.
     // When args is an array, spread it as positional arguments (backward compatible).
     const effectArgs = args != null && !Array.isArray(args) ? [args] : (args || []);
     switch (nodeType) {
         case 'AutoFilter':
-            return new Tone.AutoFilter(...effectArgs);
+            return startIfAvailable(new Tone.AutoFilter(...effectArgs));
         case 'AutoPanner':
-            return new Tone.AutoPanner(...effectArgs);
+            return startIfAvailable(new Tone.AutoPanner(...effectArgs));
         case 'AutoWah':
             return new Tone.AutoWah(...effectArgs);
         case 'BitCrusher':
@@ -24,7 +28,7 @@ export function createEffect(Tone, nodeType, args) {
         case 'Chebyshev':
             return new Tone.Chebyshev(...effectArgs);
         case 'Chorus':
-            return new Tone.Chorus(...effectArgs).start();
+            return startIfAvailable(new Tone.Chorus(...effectArgs));
         case 'Distortion':
             return new Tone.Distortion(...effectArgs);
         case 'Filter':
@@ -48,9 +52,9 @@ export function createEffect(Tone, nodeType, args) {
         case 'StereoWidener':
             return new Tone.StereoWidener(...effectArgs);
         case 'Tremolo':
-            return new Tone.Tremolo(...effectArgs);
+            return startIfAvailable(new Tone.Tremolo(...effectArgs));
         case 'Vibrato':
-            return new Tone.Vibrato(...effectArgs);
+            return startIfAvailable(new Tone.Vibrato(...effectArgs));
         default:
             return null;
     }
