@@ -24,7 +24,7 @@ export function createEffect(Tone, nodeType, args) {
         case 'Chebyshev':
             return new Tone.Chebyshev(...effectArgs);
         case 'Chorus':
-            return new Tone.Chorus(...effectArgs);
+            return new Tone.Chorus(...effectArgs).start();
         case 'Distortion':
             return new Tone.Distortion(...effectArgs);
         case 'Filter':
