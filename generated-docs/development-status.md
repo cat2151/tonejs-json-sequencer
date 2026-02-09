@@ -1,56 +1,55 @@
-Last updated: 2026-02-09
+Last updated: 2026-02-10
 
 # Development Status
 
 ## 現在のIssues
-- 現在、デモライブラリの動作確認 ([Issue #124](../issue-notes/124.md)) が必要です。
-- ストリーミング機能のテスト ([Issue #89](../issue-notes/89.md)) が残っています。
-- これらのタスクは主に手動での検証作業が中心となっています。
+- 現在オープン中の主要なタスクとして、[Issue #124](../issue-notes/124.md)でdemo-libの動作確認、[Issue #89](../issue-notes/89.md)でstreaming機能のテストがそれぞれ人力での実施を必要としています。
+- 最近のコミットでは、デモライブラリの404エラー修正やエフェクト（chorus, LPFなど）の機能改善が進められ、コードベースの品質が向上しています。
+- これらの進捗を踏まえ、残る人力テストを効率的に実施しつつ、さらなる自動化と品質保証の強化が次の焦点となります。
 
 ## 次の一手候補
-1.  既存のデモコード構造を分析し、整理の方向性を提案 [Issue #124](../issue-notes/124.md)
-    -   最初の小さな一歩: `src/demo/` ディレクトリ内の全TypeScriptファイルをリストアップし、それぞれのファイルがどのようなTone.jsコンポーネントやエフェクトを使用しているかを概要レベルで特定する。
-    -   Agent実行プロンプ:
-        ```
-        対象ファイル: `src/demo/**/*.ts`
+1.  [Issue #124](../issue-notes/124.md) demo-libの動作確認を完了する
+    - 最初の小さな一歩: `demo/index.html`、`demo/offline-rendering.html`、`demo/streaming.html` の各デモページをブラウザで開き、最近修正された `demo-library` への相対リンクが正しく機能しているか、およびデモが意図通りに動作しているかを目視で確認する。
+    - Agent実行プロンプ:
+      ```
+      対象ファイル: `demo/index.html`, `demo/offline-rendering.html`, `demo/streaming.html`, `demo-library/index.html`, `issue-notes/124.md`
 
-        実行内容: `src/demo/` ディレクトリ内のTypeScriptファイルについて、以下の観点から構造を分析し、整理の必要性や重複を洗い出してください：
-        1) 各デモが依存するTone.jsの主要コンポーネント（Instrument, Effectなど）
-        2) デモ間で共通して使われているユーティリティやパターン
-        3) ファイル名と内容の整合性
+      実行内容: `issue-notes/124.md` に記載されている「demo-libの動作確認」の現状を把握するため、最近のコミット `5bfb766` (`Fix demo-library 404: correct relative link paths in demo HTML files`) による変更と、`demo/` ディレクトリ内のHTMLファイルから `demo-library/` ディレクトリ内のリソースへの参照が正しい相対パスになっているかを分析してください。
 
-        確認事項: 分析対象ファイルが多数にわたるため、共通パターンや主要な構造に焦点を当て、詳細なコードレビューではなく、高レベルな構造分析に留めること。
+      確認事項: `_config.yml` がGitHub PagesのベースURL設定に影響を与える可能性があるため、その内容も確認し、相対パスの解決に影響がないかを考慮してください。ブラウザでの手動確認をサポートするための具体的な確認項目をリストアップしてください。
 
-        期待する出力: Markdown形式で、デモコードの現状の構造と、[Issue #124](../issue-notes/124.md) の人力テストを効率化するための整理提案（例: 共通ユーティリティの抽出、命名規則の統一など）を記述してください。
-        ```
+      期待する出力: 現在のデモHTMLファイル (`demo/*.html`) から `demo-library` 内のリソース (`demo-library/*.html`) への相対パスが正しいかを評価したレポートをmarkdown形式で出力してください。また、もし問題があれば具体的な修正案、または手動テストのためのチェックリストを提示してください。
+      ```
 
-2.  ストリーミング関連コードの構造を分析し、テスト容易性向上のための改善点を提案 [Issue #89](../issue-notes/89.md)
-    -   最初の小さな一歩: `src/streaming/` ディレクトリ内のファイルを特定し、ストリーミング再生のイベント処理フローの概要を把握する。
-    -   Agent実行プロンプト:
-        ```
-        対象ファイル: `src/streaming/event-processor.ts`, `src/streaming/playback-state.ts`, `src/ndjson-streaming.ts`, `src/demo/streaming.ts`
+2.  [Issue #89](../issue-notes/89.md) streaming機能のテスト計画を具体化し、実行する
+    - 最初の小さな一歩: `demo/streaming.html` をブラウザで開き、Streaming Demomの基本的な再生、停止、NDJSONストリームからのイベント処理が機能しているかを目視で確認し、問題点をメモする。
+    - Agent実行プロンプ:
+      ```
+      対象ファイル: `src/streaming/event-processor.ts`, `src/streaming/playback-state.ts`, `src/ndjson-streaming.ts`, `demo/streaming.html`, `issue-notes/89.md`
 
-        実行内容: 上記ファイル群を分析し、ストリーミング機能のイベント処理、状態管理、NDJSONデータの利用方法について、以下の観点から構造を分析してください：
-        1) 主要なクラスや関数の役割と相互作用
-        2) テストハーネスの導入を考慮した際の、モジュール間の依存関係やインターフェース
-        3) [Issue #89](../issue-notes/89.md) のテストを効率化するための改善点（例: 疎結合化、モック化しやすい設計）
+      実行内容: `issue-notes/89.md` にある「streamingのtest」タスクの実行を支援するため、`src/streaming` 関連ファイルおよび `demo/streaming.html` の構造を分析し、どのようなテストケースが考えられるかをリストアップしてください。特に、イベントの正確な処理、再生状態の管理、NDJSONストリームのパースにおける潜在的な課題に焦点を当ててください。
 
-        確認事項: 既存のストリーミングデモ (`demo/streaming.html`) が期待通りに動作することを前提とし、機能変更を伴わない構造改善の提案に焦点を当てること。
+      確認事項: `package.json` のスクリプトや既存のテストフレームワーク（もしあれば）を確認し、追加テストの導入が容易であるか、またはどのようなアプローチでテストを進めるべきかを検討してください。`dist/demo/streaming.js` が `src/demo/streaming.ts` からビルドされている点も考慮し、ビルド後の挙動に影響がないか確認してください。
 
-        期待する出力: Markdown形式で、ストリーミング関連コードの現状の構造と、テスト容易性向上に向けた具体的な改善提案を記述してください。
-        ```
+      期待する出力: streaming機能の包括的なテスト計画案をmarkdown形式で出力してください。これには、主要なテスト項目（例: シーク、ループ、速度変更）、手動で確認すべき詳細な手順、および将来的に自動テストとして導入を検討できる点を具体的に含めてください。
+      ```
 
-3.  開発状況生成プロンプトのレビューと改善点の洗い出し [Issue #4](../issue-notes/4.md)
-    -   最初の小さな一歩: `.github/actions-tmp/.github_automation/project_summary/prompts/development-status-prompt.md` の内容を読み込み、現在の`generated-docs/development-status.md`の出力と比較して、生成内容と指示のギャップを特定する。
-    -   Agent実行プロンプト:
-        ```
-        対象ファイル: `.github/actions-tmp/.github_automation/project_summary/prompts/development-status-prompt.md` と `generated-docs/development-status.md`
+3.  GitHub Pagesデプロイ後のデモページリンク切れを自動チェックするワークフローを導入する
+    - 最初の小さな一歩: プロジェクト内の `demo/**/*.html` および `_config.yml` を分析し、GitHub Pagesにデプロイされた際に生成されるデモページのURL構造と、そこに含まれる内部・外部リンクのパターンを特定する。
+    - Agent実行プロンプ:
+      ```
+      対象ファイル: `.github/workflows/deploy-pages.yml`, `demo/**/*.html`, `_config.yml`, `package.json`
 
-        実行内容: `development-status-prompt.md` の指示が `development-status.md` の生成にどれだけ効果的に機能しているかを分析し、プロンプトの明確性、具体性、ハルシネーション抑制、および[Issue #4](../issue-notes/4.md)で言及された共通ワークフローの目的に沿った出力になっているかの観点から改善点を3点提案してください。
+      実行内容: GitHub Pagesにデプロイされているデモページ (`demo/` ディレクトリ配下のHTMLファイル) の内部リンクおよび外部リソースリンク (`src`, `href`) が有効であるかを自動でチェックするGitHub Actionsワークフローの草案を作成してください。このワークフローは、既存の `deploy-pages.yml` とは独立して、定期的に実行されることを想定します。
 
-        確認事項: プロンプトの変更が意図しない出力を生み出さないよう、既存の出力フォーマットガイドラインとの整合性を確認してください。
+      確認事項:
+      1.  GitHub PagesのURL構造 (`_config.yml`の `baseurl` 設定など) を正しく考慮し、絶対パス/相対パスの解決を適切に行えるツール（例: `lychee-link-checker`や`htmltest`など）を選定すること。
+      2.  外部CDNやJavaScriptファイルへのリンク切れチェックも可能であること。
+      3.  既にデプロイされている公開ページに対して実行可能であること（デプロイ後のチェック）。
+      4.  必要なnpmパッケージやGitHub Actionsのステップを適切に含めること。
 
-        期待する出力: Markdown形式で、現在のプロンプトの問題点と具体的な改善提案を記述してください。
+      期待する出力: 提案されたリンクチェックワークフローの `yml` ファイルの内容をmarkdown形式で出力してください。このファイルは `.github/workflows/check-demo-links.yml` として配置することを想定します。また、ワークフロー内で使用する可能性のある追加のスクリプトやツールの選定理由と、その使用方法についても簡潔に記述してください。
+      ```
 
 ---
-Generated at: 2026-02-09 07:11:11 JST
+Generated at: 2026-02-10 07:18:17 JST

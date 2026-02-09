@@ -1,4 +1,4 @@
-Last updated: 2026-02-09
+Last updated: 2026-02-10
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -885,6 +885,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 152.md
   📖 154.md
   📖 155.md
+  📖 158.md
   📖 62.md
   📖 64.md
   📖 67.md
@@ -987,11 +988,11 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
 📊 tsconfig.json
 
 ## ファイル詳細分析
-**demo/index.html** (36行, 1337バイト)
+**demo/index.html** (36行, 1334バイト)
   - 関数: なし
   - インポート: なし
 
-**demo/offline-rendering.html** (234行, 6172バイト)
+**demo/offline-rendering.html** (234行, 6169バイト)
   - 関数: なし
   - インポート: なし
 
@@ -999,7 +1000,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**demo/streaming.html** (123行, 4646バイト)
+**demo/streaming.html** (123行, 4643バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1796,4 +1797,4 @@ googled947dc864c270e07.html
 
 
 ---
-Generated at: 2026-02-09 07:10:49 JST
+Generated at: 2026-02-10 07:17:49 JST

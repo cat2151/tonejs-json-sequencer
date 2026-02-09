@@ -1,4 +1,4 @@
-Last updated: 2026-02-09
+Last updated: 2026-02-10
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -382,6 +382,7 @@ Last updated: 2026-02-09
 - issue-notes/152.md
 - issue-notes/154.md
 - issue-notes/155.md
+- issue-notes/158.md
 - issue-notes/62.md
 - issue-notes/64.md
 - issue-notes/67.md
@@ -734,18 +735,21 @@ jobs:
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
+4231359 Merge pull request #159 from cat2151/copilot/fix-demo-library-404-error
+5bfb766 Fix demo-library 404: correct relative link paths in demo HTML files
+f1bf3a9 Initial plan
+0f74bdf Add issue note for #158 [auto]
+b0a4c94 Update project summaries (overview & development status) [auto]
 272335d Merge pull request #157 from cat2151/codex/enable-chorus-start-method
 e373242 Start modulation effects automatically
 0a4fbfc Ensure chorus effects start by default
 4148223 Initial plan
 273ae2e Merge pull request #156 from cat2151/codex/add-lpf-cutoff-and-q-envelope
-2b378c4 Add LPF envelope bass demo
-8c99fea Initial plan
-f69527d Merge pull request #153 from cat2151/codex/add-lpf-parameters-demo
-23105a9 fix: correct lpf sweep timing
-5ec0e81 feat: add lpf sweep demo
 
 ### 変更されたファイル:
+demo/index.html
+demo/offline-rendering.html
+demo/streaming.html
 dist/cjs/event-scheduler.js
 dist/cjs/factories/effect-factory.js
 dist/cjs/types.d.ts
@@ -762,9 +766,8 @@ generated-docs/development-status-generated-prompt.md
 generated-docs/development-status.md
 generated-docs/project-overview-generated-prompt.md
 generated-docs/project-overview.md
-issue-notes/152.md
-issue-notes/154.md
 issue-notes/155.md
+issue-notes/158.md
 src/demo/demo-types.ts
 src/demo/effect/lpf-envelope.ts
 src/demo/effect/lpf-sweep.ts
@@ -775,4 +778,4 @@ src/types.ts
 
 
 ---
-Generated at: 2026-02-09 07:10:49 JST
+Generated at: 2026-02-10 07:17:50 JST
