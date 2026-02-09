@@ -9,7 +9,7 @@ export const sequence = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "Vibrato",
-        "args": [5, 0.1]
+        "args": { "wet": 1, "maxDelay": 0.005, "frequency": 5, "depth": 0.1, "type": "sine" }
     },
     {
         "eventType": "connect",

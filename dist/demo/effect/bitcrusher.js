@@ -9,7 +9,7 @@ export const sequence = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "BitCrusher",
-        "args": [4]
+        "args": { "wet": 1, "bits": 4 }
     },
     {
         "eventType": "connect",

@@ -9,7 +9,7 @@ export const sequence = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "FrequencyShifter",
-        "args": [42]
+        "args": { "wet": 1, "frequency": 42 }
     },
     {
         "eventType": "connect",

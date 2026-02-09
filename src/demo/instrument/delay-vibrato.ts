@@ -30,7 +30,7 @@ export const sequence: SequenceEvent[] = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "Vibrato",
-        "args": [7, 0]
+        "args": {"wet": 1, "maxDelay": 0.005, "frequency": 7, "depth": 0, "type": "sine"}
       },
       {
         "eventType": "connect",

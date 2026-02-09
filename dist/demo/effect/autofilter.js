@@ -9,7 +9,7 @@ export const sequence = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "AutoFilter",
-        "args": [4]
+        "args": { "wet": 1, "frequency": 4, "type": "sine", "depth": 1, "baseFrequency": 200, "octaves": 2.6, "filter": { "type": "lowpass", "rolloff": -12, "Q": 1 } }
     },
     {
         "eventType": "connect",

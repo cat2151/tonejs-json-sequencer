@@ -13,7 +13,7 @@ export const sequence: SequenceEvent[] = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "Chorus",
-        "args": [4, 2.5, 0.5]
+        "args": {"wet": 0.5, "feedback": 0.4, "frequency": 4, "delayTime": 2.5, "depth": 0.5, "type": "sine", "spread": 180}
       },
       {
         "eventType": "connect",

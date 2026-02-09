@@ -13,7 +13,7 @@ export const sequence: SequenceEvent[] = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "AutoPanner",
-        "args": [4]
+        "args": {"wet": 1, "frequency": 4, "type": "sine", "depth": 1, "channelCount": 1}
       },
       {
         "eventType": "connect",
