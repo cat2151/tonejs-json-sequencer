@@ -9,7 +9,7 @@ export const sequence = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "PingPongDelay",
-        "args": ["8n", 0.3]
+        "args": { "wet": 1, "feedback": 0.3, "delayTime": "8n", "maxDelay": 1 }
     },
     {
         "eventType": "connect",

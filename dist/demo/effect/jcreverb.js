@@ -9,7 +9,7 @@ export const sequence = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "JCReverb",
-        "args": [0.5]
+        "args": { "wet": 1, "roomSize": 0.5 }
     },
     {
         "eventType": "connect",

@@ -9,7 +9,7 @@ export const sequence = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "PitchShift",
-        "args": [4]
+        "args": { "wet": 1, "feedback": 0, "pitch": 4, "windowSize": 0.1, "delayTime": 0 }
     },
     {
         "eventType": "connect",

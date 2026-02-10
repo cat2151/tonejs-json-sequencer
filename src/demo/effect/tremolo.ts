@@ -13,7 +13,7 @@ export const sequence: SequenceEvent[] = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "Tremolo",
-        "args": [9, 0.75]
+        "args": {"wet": 1, "frequency": 9, "type": "sine", "depth": 0.75, "spread": 180}
       },
       {
         "eventType": "connect",

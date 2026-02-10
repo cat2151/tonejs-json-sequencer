@@ -13,7 +13,7 @@ export const sequence: SequenceEvent[] = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "Distortion",
-        "args": [0.8]
+        "args": {"wet": 1, "distortion": 0.8, "oversample": "none"}
       },
       {
         "eventType": "connect",

@@ -9,7 +9,7 @@ export const sequence = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "Freeverb",
-        "args": [0.8, 5000]
+        "args": { "wet": 1, "roomSize": 0.8, "dampening": 5000 }
     },
     {
         "eventType": "connect",

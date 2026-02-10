@@ -9,7 +9,7 @@ export const sequence = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "AutoWah",
-        "args": [50, 6, -30]
+        "args": { "wet": 1, "baseFrequency": 50, "octaves": 6, "sensitivity": -30, "Q": 2, "gain": 2, "follower": 0.2 }
     },
     {
         "eventType": "connect",

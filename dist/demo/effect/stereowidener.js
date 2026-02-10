@@ -9,7 +9,7 @@ export const sequence = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "StereoWidener",
-        "args": [0.5]
+        "args": { "wet": 1, "width": 0.5 }
     },
     {
         "eventType": "connect",

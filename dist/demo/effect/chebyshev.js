@@ -9,7 +9,7 @@ export const sequence = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "Chebyshev",
-        "args": [50]
+        "args": { "wet": 1, "order": 50, "oversample": "none" }
     },
     {
         "eventType": "connect",
