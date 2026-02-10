@@ -1,4 +1,4 @@
-Last updated: 2026-02-10
+Last updated: 2026-02-11
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -886,6 +886,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 154.md
   📖 155.md
   📖 158.md
+  📖 160.md
+  📖 162.md
   📖 62.md
   📖 64.md
   📖 67.md
@@ -1112,51 +1114,51 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/autofilter.js** (40行, 823バイト)
+**dist/demo/effect/autofilter.js** (40行, 971バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/autopanner.js** (40行, 823バイト)
+**dist/demo/effect/autopanner.js** (40行, 895バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/autowah.js** (45行, 942バイト)
+**dist/demo/effect/autowah.js** (45行, 1033バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/bitcrusher.js** (45行, 939バイト)
+**dist/demo/effect/bitcrusher.js** (45行, 959バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/chebyshev.js** (45行, 939バイト)
+**dist/demo/effect/chebyshev.js** (45行, 982バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/chorus-object-args.js** (45行, 1010バイト)
+**dist/demo/effect/chorus-object-args.js** (45行, 1064バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/chorus.js** (45行, 942バイト)
+**dist/demo/effect/chorus.js** (45行, 1039バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/distortion.js** (45行, 942バイト)
+**dist/demo/effect/distortion.js** (45行, 990バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/feedbackdelay.js** (45行, 954バイト)
+**dist/demo/effect/feedbackdelay.js** (45行, 1006バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/freeverb.js** (45行, 943バイト)
+**dist/demo/effect/freeverb.js** (45行, 980バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/frequencyshifter.js** (40行, 836バイト)
+**dist/demo/effect/frequencyshifter.js** (40行, 861バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/jcreverb.js** (45行, 937バイト)
+**dist/demo/effect/jcreverb.js** (45行, 961バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1168,31 +1170,31 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/phaser.js** (45行, 942バイト)
+**dist/demo/effect/phaser.js** (45行, 1018バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/pingpongdelay.js** (45行, 954バイト)
+**dist/demo/effect/pingpongdelay.js** (45行, 1006バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/pitchshift.js** (45行, 940バイト)
+**dist/demo/effect/pitchshift.js** (45行, 1011バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/reverb.js** (45行, 931バイト)
+**dist/demo/effect/reverb.js** (45行, 970バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/stereowidener.js** (45行, 948バイト)
+**dist/demo/effect/stereowidener.js** (45行, 969バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/tremolo.js** (40行, 823バイト)
+**dist/demo/effect/tremolo.js** (40行, 888バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/vibrato.js** (40行, 822バイト)
+**dist/demo/effect/vibrato.js** (40行, 891バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1200,7 +1202,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/delay-vibrato.js** (67行, 1510バイト)
+**dist/demo/instrument/delay-vibrato.js** (67行, 1579バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1472,51 +1474,51 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**src/demo/effect/autofilter.ts** (44行, 947バイト)
+**src/demo/effect/autofilter.ts** (44行, 1091バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/autopanner.ts** (44行, 947バイト)
+**src/demo/effect/autopanner.ts** (44行, 1017バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/autowah.ts** (49行, 1067バイト)
+**src/demo/effect/autowah.ts** (49行, 1156バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/bitcrusher.ts** (49行, 1067バイト)
+**src/demo/effect/bitcrusher.ts** (49行, 1085バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/chebyshev.ts** (49行, 1066バイト)
+**src/demo/effect/chebyshev.ts** (49行, 1107バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/chorus-object-args.ts** (49行, 1180バイト)
+**src/demo/effect/chorus-object-args.ts** (49行, 1234バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/chorus.ts** (49行, 1066バイト)
+**src/demo/effect/chorus.ts** (49行, 1161バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/distortion.ts** (49行, 1070バイト)
+**src/demo/effect/distortion.ts** (49行, 1116バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/feedbackdelay.ts** (49行, 1085バイト)
+**src/demo/effect/feedbackdelay.ts** (49行, 1135バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/freeverb.ts** (49行, 1069バイト)
+**src/demo/effect/freeverb.ts** (49行, 1104バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/frequencyshifter.ts** (44行, 966バイト)
+**src/demo/effect/frequencyshifter.ts** (44行, 989バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/jcreverb.ts** (49行, 1063バイト)
+**src/demo/effect/jcreverb.ts** (49行, 1085バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
@@ -1528,31 +1530,31 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/phaser.ts** (49行, 1066バイト)
+**src/demo/effect/phaser.ts** (49行, 1140バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/pingpongdelay.ts** (49行, 1085バイト)
+**src/demo/effect/pingpongdelay.ts** (49行, 1135バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/pitchshift.ts** (49行, 1068バイト)
+**src/demo/effect/pitchshift.ts** (49行, 1137バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/reverb.ts** (49行, 1055バイト)
+**src/demo/effect/reverb.ts** (49行, 1092バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/stereowidener.ts** (49行, 1079バイト)
+**src/demo/effect/stereowidener.ts** (49行, 1098バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/tremolo.ts** (44行, 944バイト)
+**src/demo/effect/tremolo.ts** (44行, 1007バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/vibrato.ts** (44行, 943バイト)
+**src/demo/effect/vibrato.ts** (44行, 1010バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
@@ -1560,7 +1562,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/delay-vibrato.ts** (71行, 1595バイト)
+**src/demo/instrument/delay-vibrato.ts** (71行, 1662バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
@@ -1797,4 +1799,4 @@ googled947dc864c270e07.html
 
 
 ---
-Generated at: 2026-02-10 07:17:49 JST
+Generated at: 2026-02-11 07:20:25 JST
