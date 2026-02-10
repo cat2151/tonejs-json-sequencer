@@ -1,4 +1,4 @@
-export const name = "Chorus (object args)";
+export const name = "Chorus (alternate settings)";
 export const sequence = [
     {
         "eventType": "createNode",
@@ -9,7 +9,7 @@ export const sequence = [
         "eventType": "createNode",
         "nodeId": 1,
         "nodeType": "Chorus",
-        "args": { "wet": 0.5, "feedback": 0.4, "frequency": 4, "delayTime": 2.5, "depth": 0.5, "type": "sine", "spread": 180 }
+        "args": { "wet": 0.7, "feedback": 0.2, "frequency": 0.8, "delayTime": 8, "depth": 0.7, "type": "triangle", "spread": 120 }
     },
     {
         "eventType": "connect",
