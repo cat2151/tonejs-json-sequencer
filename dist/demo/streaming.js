@@ -292,17 +292,23 @@ class StreamingDemo {
         if (!this.lineHighlightContainer) {
             return;
         }
-        this.resetLineHighlights();
         const source = ndjson ?? this.getNDJSONFromTextarea();
         const lines = source.split('\n');
-        this.lineHighlightContainer.innerHTML = '';
-        this.lineHighlightElements = lines.map(() => {
-            const lineEl = document.createElement('div');
-            lineEl.className = 'sequence-line-highlight';
-            lineEl.textContent = '\u00A0';
-            this.lineHighlightContainer.appendChild(lineEl);
-            return lineEl;
-        });
+        const needsRebuild = this.lineHighlightElements.length !== lines.length;
+        if (needsRebuild) {
+            this.resetLineHighlights();
+            this.lineHighlightContainer.innerHTML = '';
+            this.lineHighlightElements = lines.map(() => {
+                const lineEl = document.createElement('div');
+                lineEl.className = 'sequence-line-highlight';
+                lineEl.textContent = '\u00A0';
+                this.lineHighlightContainer.appendChild(lineEl);
+                return lineEl;
+            });
+        }
+        else {
+            this.clearHighlightState();
+        }
         const textarea = document.getElementById('sequenceEditor');
         if (textarea) {
             this.syncOverlayScroll(textarea);
@@ -334,8 +340,14 @@ class StreamingDemo {
         this.lineHighlightTimers.set(lineIndex, timerId);
     }
     resetLineHighlights() {
-        this.lineHighlightElements.forEach(el => el.classList.remove('active'));
+        this.clearHighlightState();
+        if (this.lineHighlightContainer) {
+            this.lineHighlightContainer.innerHTML = '';
+        }
         this.lineHighlightElements = [];
+    }
+    clearHighlightState() {
+        this.lineHighlightElements.forEach(el => el.classList.remove('active'));
         this.clearLineHighlightTimers();
     }
     clearLineHighlightTimers() {
