@@ -109,7 +109,10 @@
   </div>
 
   <h3>シーケンス（NDJSON形式 - 1行につき1イベント）:</h3>
-  <textarea id="sequenceEditor" rows="30" cols="80"></textarea>
+  <div class="sequence-editor-wrapper">
+    <div id="sequenceHighlightOverlay" aria-hidden="true"></div>
+    <textarea id="sequenceEditor" rows="30" cols="80"></textarea>
+  </div>
 
   <div class="repo-link-footer">
     <a href="https://github.com/cat2151/tonejs-json-sequencer" target="_blank" rel="noopener noreferrer">Repository</a> |
