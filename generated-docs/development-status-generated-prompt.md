@@ -1,4 +1,4 @@
-Last updated: 2026-02-11
+Last updated: 2026-02-12
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -192,9 +192,8 @@ Last updated: 2026-02-11
 - .github/actions-tmp/issue-notes/29.md
 - .github/actions-tmp/issue-notes/3.md
 - .github/actions-tmp/issue-notes/30.md
-- .github/actions-tmp/issue-notes/31.md
-- .github/actions-tmp/issue-notes/33.md
 - .github/actions-tmp/issue-notes/35.md
+- .github/actions-tmp/issue-notes/38.md
 - .github/actions-tmp/issue-notes/4.md
 - .github/actions-tmp/issue-notes/7.md
 - .github/actions-tmp/issue-notes/8.md
@@ -479,22 +478,6 @@ Last updated: 2026-02-11
 - tsconfig.json
 
 ## 現在のオープンIssues
-## [Issue #162](../issue-notes/162.md): streaming demoで、NDJSONの1行ごとに、「予約処理した瞬間から200msの間は、そこをgreenに点灯」する
-[issue-notes/162.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/162.md)
-
-...
-ラベル: good first issue
---- issue-notes/162.md の内容 ---
-
-```markdown
-# issue streaming demoで、NDJSONの1行ごとに、「予約処理した瞬間から200msの間は、そこをgreenに点灯」する #162
-[issues #162](https://github.com/cat2151/tonejs-json-sequencer/issues/162)
-
-- これまでの課題
-    - 実際にどこを予約処理したのか？をuserがより直感的に把握したい、というニーズがあった
-
-```
-
 ## [Issue #124](../issue-notes/124.md): （人力）demo-libの動作確認をする
 [issue-notes/124.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/124.md)
 
@@ -526,181 +509,6 @@ Last updated: 2026-02-11
 ```
 
 ## ドキュメントで言及されているファイルの内容
-### .github/actions-tmp/issue-notes/2.md
-```md
-{% raw %}
-# issue GitHub Actions「関数コールグラフhtmlビジュアライズ生成」を共通ワークフロー化する #2
-[issues #2](https://github.com/cat2151/github-actions/issues/2)
-
-
-# prompt
-```
-あなたはGitHub Actionsと共通ワークフローのスペシャリストです。
-このymlファイルを、以下の2つのファイルに分割してください。
-1. 共通ワークフロー       cat2151/github-actions/.github/workflows/callgraph_enhanced.yml
-2. 呼び出し元ワークフロー cat2151/github-actions/.github/workflows/call-callgraph_enhanced.yml
-まずplanしてください
-```
-
-# 結果
-- indent
-    - linter？がindentのエラーを出しているがyml内容は見た感じOK
-    - テキストエディタとagentの相性問題と判断する
-    - 別のテキストエディタでsaveしなおし、テキストエディタをreload
-    - indentのエラーは解消した
-- LLMレビュー
-    - agent以外の複数のLLMにレビューさせる
-    - prompt
-```
-あなたはGitHub Actionsと共通ワークフローのスペシャリストです。
-以下の2つのファイルをレビューしてください。最優先で、エラーが発生するかどうかだけレビューしてください。エラー以外の改善事項のチェックをするかわりに、エラー発生有無チェックに最大限注力してください。
-
---- 共通ワークフロー
-
-# GitHub Actions Reusable Workflow for Call Graph Generation
-name: Generate Call Graph
-
-# TODO Windowsネイティブでのtestをしていた名残が残っているので、今後整理していく。今はWSL act でtestしており、Windowsネイティブ環境依存問題が解決した
-#  ChatGPTにレビューさせるとそこそこ有用そうな提案が得られたので、今後それをやる予定
-#  agentに自己チェックさせる手も、セカンドオピニオンとして選択肢に入れておく
-
-on:
-  workflow_call:
-
-jobs:
-  check-commits:
-    runs-on: ubuntu-latest
-    outputs:
-      should-run: ${{ steps.check.outputs.should-run }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 50 # 過去のコミットを取得
-
-      - name: Check for user commits in last 24 hours
-        id: check
-        run: |
-          node .github/scripts/callgraph_enhanced/check-commits.cjs
-
-  generate-callgraph:
-    needs: check-commits
-    if: needs.check-commits.outputs.should-run == 'true'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      security-events: write
-      actions: read
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set Git identity
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      - name: Remove old CodeQL packages cache
-        run: rm -rf ~/.codeql/packages
-
-      - name: Check Node.js version
-        run: |
-          node .github/scripts/callgraph_enhanced/check-node-version.cjs
-
-      - name: Install CodeQL CLI
-        run: |
-          wget https://github.com/github/codeql-cli-binaries/releases/download/v2.22.1/codeql-linux64.zip
-          unzip codeql-linux64.zip
-          sudo mv codeql /opt/codeql
-          echo "/opt/codeql" >> $GITHUB_PATH
-
-      - name: Install CodeQL query packs
-        run: |
-          /opt/codeql/codeql pack install .github/codeql-queries
-
-      - name: Check CodeQL exists
-        run: |
-          node .github/scripts/callgraph_enhanced/check-codeql-exists.cjs
-
-      - name: Verify CodeQL Configuration
-        run: |
-          node .github/scripts/callgraph_enhanced/analyze-codeql.cjs verify-config
-
-      - name: Remove existing CodeQL DB (if any)
-        run: |
-          rm -rf codeql-db
-
-      - name: Perform CodeQL Analysis
-        run: |
-          node .github/scripts/callgraph_enhanced/analyze-codeql.cjs analyze
-
-      - name: Check CodeQL Analysis Results
-        run: |
-          node .github/scripts/callgraph_enhanced/analyze-codeql.cjs check-results
-
-      - name: Debug CodeQL execution
-        run: |
-          node .github/scripts/callgraph_enhanced/analyze-codeql.cjs debug
-
-      - name: Wait for CodeQL results
-        run: |
-          node -e "setTimeout(()=>{}, 10000)"
-
-      - name: Find and process CodeQL results
-        run: |
-          node .github/scripts/callgraph_enhanced/find-process-results.cjs
-
-      - name: Generate HTML graph
-        run: |
-          node .github/scripts/callgraph_enhanced/generate-html-graph.cjs
-
-      - name: Copy files to generated-docs and commit results
-        run: |
-          node .github/scripts/callgraph_enhanced/copy-commit-results.cjs
-
---- 呼び出し元
-# 呼び出し元ワークフロー: call-callgraph_enhanced.yml
-name: Call Call Graph Enhanced
-
-on:
-  schedule:
-    # 毎日午前5時(JST) = UTC 20:00前日
-    - cron: '0 20 * * *'
-  workflow_dispatch:
-
-jobs:
-  call-callgraph-enhanced:
-    # uses: cat2151/github-actions/.github/workflows/callgraph_enhanced.yml
-    uses: ./.github/workflows/callgraph_enhanced.yml # ローカルでのテスト用
-```
-
-# レビュー結果OKと判断する
-- レビュー結果を人力でレビューした形になった
-
-# test
-- #4 同様にローカル WSL + act でtestする
-- エラー。userのtest設計ミス。
-  - scriptの挙動 : src/ がある前提
-  - 今回の共通ワークフローのリポジトリ : src/ がない
-  - 今回testで実現したいこと
-    - 仮のソースでよいので、関数コールグラフを生成させる
-  - 対策
-    - src/ にダミーを配置する
-- test green
-  - ただしcommit pushはしてないので、html内容が0件NG、といったケースの検知はできない
-  - もしそうなったら別issueとしよう
-
-# test green
-
-# commit用に、yml 呼び出し元 uses をlocal用から本番用に書き換える
-
-# closeとする
-- もしhtml内容が0件NG、などになったら、別issueとするつもり
-
-{% endraw %}
-```
-
 ### .github/actions-tmp/issue-notes/24.md
 ```md
 {% raw %}
@@ -917,29 +725,6 @@ jobs:
 {% endraw %}
 ```
 
-### issue-notes/162.md
-```md
-{% raw %}
-# issue streaming demoで、NDJSONの1行ごとに、「予約処理した瞬間から200msの間は、そこをgreenに点灯」する #162
-[issues #162](https://github.com/cat2151/tonejs-json-sequencer/issues/162)
-
-- これまでの課題
-    - 実際にどこを予約処理したのか？をuserがより直感的に把握したい、というニーズがあった
-
-{% endraw %}
-```
-
-### issue-notes/62.md
-```md
-{% raw %}
-# issue 陳腐化したドキュメントを削除し、project全体の可読性を向上する #62
-[issues #62](https://github.com/cat2151/tonejs-json-sequencer/issues/62)
-
-
-
-{% endraw %}
-```
-
 ### issue-notes/89.md
 ```md
 {% raw %}
@@ -953,21 +738,22 @@ jobs:
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
+2c479bd Merge pull request #163 from cat2151/codex/add-green-indicator-for-ndjson
+44f9df1 chore: address review feedback
+e2236e9 feat: highlight scheduled ndjson lines
+bc96769 Initial plan
+e8a0e59 Update project summaries (overview & development status) [auto]
 201f818 Clarify user needs in issue 162 notes
 7729a76 Add issue note for #162 [auto]
 e857cf2 Merge pull request #161 from cat2151/codex/update-instrument-effect-args
 8f3fc70 chore: differentiate chorus object demo
 dda3d4d chore: use object options in demo effects
-16059e4 Initial plan
-384546d Add issue note for #160 [auto]
-483aff1 Update project summaries (overview & development status) [auto]
-4231359 Merge pull request #159 from cat2151/copilot/fix-demo-library-404-error
-5bfb766 Fix demo-library 404: correct relative link paths in demo HTML files
 
 ### 変更されたファイル:
-demo/index.html
-demo/offline-rendering.html
+demo/streaming-demo.css
 demo/streaming.html
+dist/cjs/ndjson-streaming.d.ts
+dist/cjs/ndjson-streaming.js
 dist/demo/effect/autofilter.js
 dist/demo/effect/autopanner.js
 dist/demo/effect/autowah.js
@@ -988,11 +774,15 @@ dist/demo/effect/stereowidener.js
 dist/demo/effect/tremolo.js
 dist/demo/effect/vibrato.js
 dist/demo/instrument/delay-vibrato.js
+dist/demo/streaming.js
+dist/esm/ndjson-streaming.d.ts
+dist/esm/ndjson-streaming.mjs
+dist/ndjson-streaming.d.ts
+dist/ndjson-streaming.js
 generated-docs/development-status-generated-prompt.md
 generated-docs/development-status.md
 generated-docs/project-overview-generated-prompt.md
 generated-docs/project-overview.md
-issue-notes/158.md
 issue-notes/160.md
 issue-notes/162.md
 src/demo/effect/autofilter.ts
@@ -1015,7 +805,9 @@ src/demo/effect/stereowidener.ts
 src/demo/effect/tremolo.ts
 src/demo/effect/vibrato.ts
 src/demo/instrument/delay-vibrato.ts
+src/demo/streaming.ts
+src/ndjson-streaming.ts
 
 
 ---
-Generated at: 2026-02-11 07:20:26 JST
+Generated at: 2026-02-12 07:13:44 JST

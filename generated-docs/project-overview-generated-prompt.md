@@ -1,4 +1,4 @@
-Last updated: 2026-02-11
+Last updated: 2026-02-12
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -998,11 +998,11 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**demo/streaming-demo.css** (169行, 2905バイト)
+**demo/streaming-demo.css** (229行, 4060バイト)
   - 関数: なし
   - インポート: なし
 
-**demo/streaming.html** (123行, 4643バイト)
+**demo/streaming.html** (126行, 4759バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1046,11 +1046,11 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: defineProperty
   - インポート: ./sequencer-nodes.js, ./event-scheduler.js, ./ndjson-streaming.js
 
-**dist/cjs/ndjson-streaming.d.ts** (115行, 3716バイト)
+**dist/cjs/ndjson-streaming.d.ts** (126行, 4029バイト)
   - 関数: parseNDJSON
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/cjs/ndjson-streaming.js** (439行, 21839バイト)
+**dist/cjs/ndjson-streaming.js** (446行, 22145バイト)
   - 関数: parseNDJSON, if, catch, constructor, debug, isSchedulableEvent, getTimeNotation, generatePredictions, start, initializePlayback, updateEvents, for, processEvents, stop, playing
   - インポート: ./utils/time-parser.js, ./streaming/playback-state.js, ./streaming/event-processor.js
 
@@ -1302,8 +1302,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/demo/streaming.js** (364行, 14572バイト)
-  - 関数: constructor, createInitialTimingStats, initializeUI, if, catch, initializeCollapsibleSections, loadInitialSequence, loadSelectedSequence, sequenceToNDJSON, getNDJSONFromTextarea, play, stop, onSequenceEdit, onSequenceEditDebounced, clearDebounceTimer, updateStatus, handleDebugMessage, updateDebugOutput, updateTimingVisualization, clearDebugOutput
+**dist/demo/streaming.js** (467行, 18601バイト)
+  - 関数: constructor, createInitialTimingStats, initializeUI, if, catch, initializeCollapsibleSections, loadInitialSequence, loadSelectedSequence, sequenceToNDJSON, getNDJSONFromTextarea, play, stop, onSequenceEdit, onSequenceEditDebounced, clearDebounceTimer, buildEventLineMap, syncHighlightLines, syncOverlayScroll, highlightEventLine, resetLineHighlights, clearHighlightState, clearLineHighlightTimers, handleEventScheduled, updateStatus, handleDebugMessage, updateDebugOutput, updateTimingVisualization, clearDebugOutput
   - インポート: ./sequenceLoader.js, ../../dist/index.mjs
 
 **dist/esm/event-scheduler.d.ts** (18行, 710バイト)
@@ -1322,7 +1322,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/esm/ndjson-streaming.d.ts** (115行, 3716バイト)
+**dist/esm/ndjson-streaming.d.ts** (126行, 4029バイト)
   - 関数: parseNDJSON
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
@@ -1386,11 +1386,11 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: defineProperty
   - インポート: ./sequencer-nodes.js, ./event-scheduler.js, ./ndjson-streaming.js
 
-**dist/ndjson-streaming.d.ts** (115行, 3716バイト)
+**dist/ndjson-streaming.d.ts** (126行, 4029バイト)
   - 関数: parseNDJSON
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/ndjson-streaming.js** (439行, 21839バイト)
+**dist/ndjson-streaming.js** (446行, 22145バイト)
   - 関数: parseNDJSON, if, catch, constructor, debug, isSchedulableEvent, getTimeNotation, generatePredictions, start, initializePlayback, updateEvents, for, processEvents, stop, playing
   - インポート: ./utils/time-parser.js, ./streaming/playback-state.js, ./streaming/event-processor.js
 
@@ -1662,7 +1662,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: ../demo-types.js, ../sequenceLoader.js
 
-**src/demo/streaming.ts** (415行, 13698バイト)
+**src/demo/streaming.ts** (535行, 17639バイト)
   - 関数: constructor, createInitialTimingStats, if, catch, play
   - インポート: ./demo-types.js, ./sequenceLoader.js, ../../dist/index.mjs
 
@@ -1686,7 +1686,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**src/ndjson-streaming.ts** (584行, 22070バイト)
+**src/ndjson-streaming.ts** (603行, 22603バイト)
   - 関数: parseNDJSON, if, catch, constructor, for, start, initializePlayback
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
@@ -1799,4 +1799,4 @@ googled947dc864c270e07.html
 
 
 ---
-Generated at: 2026-02-11 07:20:25 JST
+Generated at: 2026-02-12 07:13:44 JST
