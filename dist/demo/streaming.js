@@ -17,6 +17,8 @@ class StreamingDemo {
         this.lineHighlightTimers = new Map();
         this.eventLineMap = [];
         this.LINE_HIGHLIGHT_DURATION_MS = 200;
+        this.currentLineIndicator = null;
+        this.numberedNDJSONTextarea = null;
         this.initializeUI();
         this.initializeCollapsibleSections();
         this.loadInitialSequence();
@@ -112,6 +114,9 @@ class StreamingDemo {
         // Textarea change (live editing)
         const textarea = document.getElementById('sequenceEditor');
         this.lineHighlightContainer = document.getElementById('sequenceHighlightOverlay');
+        this.currentLineIndicator = document.getElementById('currentLineIndicator');
+        this.numberedNDJSONTextarea = document.getElementById('sequenceEditorDebug');
+        this.updateCurrentLineIndicator(null);
         this.syncHighlightLines();
         // Input event handler for debounce mode
         textarea.addEventListener('input', () => {
@@ -289,10 +294,11 @@ class StreamingDemo {
         return map;
     }
     syncHighlightLines(ndjson) {
+        const source = ndjson ?? this.getNDJSONFromTextarea();
+        this.updateNumberedNDJSON(source);
         if (!this.lineHighlightContainer) {
             return;
         }
-        const source = ndjson ?? this.getNDJSONFromTextarea();
         const lines = source.split('\n');
         const needsRebuild = this.lineHighlightElements.length !== lines.length;
         if (needsRebuild) {
@@ -319,13 +325,35 @@ class StreamingDemo {
             this.lineHighlightContainer.style.transform = `translateY(-${textarea.scrollTop}px)`;
         }
     }
+    updateNumberedNDJSON(ndjson) {
+        if (!this.numberedNDJSONTextarea) {
+            return;
+        }
+        const source = ndjson ?? this.getNDJSONFromTextarea();
+        const lines = source.split('\n');
+        const padding = Math.max(1, lines.length.toString().length);
+        const numbered = lines
+            .map((line, index) => `${String(index + 1).padStart(padding, ' ')}: ${line}`)
+            .join('\n');
+        this.numberedNDJSONTextarea.value = numbered;
+    }
+    updateCurrentLineIndicator(lineIndex) {
+        if (!this.currentLineIndicator) {
+            return;
+        }
+        this.currentLineIndicator.textContent = lineIndex === null
+            ? '現在の演奏行: -'
+            : `現在の演奏行: ${lineIndex + 1}`;
+    }
     highlightEventLine(eventIndex) {
         const lineIndex = this.eventLineMap[eventIndex];
         if (lineIndex === undefined) {
+            this.updateCurrentLineIndicator(null);
             return;
         }
         const lineElement = this.lineHighlightElements[lineIndex];
         if (!lineElement) {
+            this.updateCurrentLineIndicator(null);
             return;
         }
         lineElement.classList.add('active');
@@ -338,6 +366,7 @@ class StreamingDemo {
             this.lineHighlightTimers.delete(lineIndex);
         }, this.LINE_HIGHLIGHT_DURATION_MS);
         this.lineHighlightTimers.set(lineIndex, timerId);
+        this.updateCurrentLineIndicator(lineIndex);
     }
     resetLineHighlights() {
         this.clearHighlightState();
@@ -345,10 +374,12 @@ class StreamingDemo {
             this.lineHighlightContainer.innerHTML = '';
         }
         this.lineHighlightElements = [];
+        this.updateCurrentLineIndicator(null);
     }
     clearHighlightState() {
         this.lineHighlightElements.forEach(el => el.classList.remove('active'));
         this.clearLineHighlightTimers();
+        this.updateCurrentLineIndicator(null);
     }
     clearLineHighlightTimers() {
         this.lineHighlightTimers.forEach(timerId => window.clearTimeout(timerId));
