@@ -2,7 +2,7 @@
 import type { SequenceEvent } from './demo-types.js';
 import { loadAllSequences } from './sequenceLoader.js';
 // @ts-ignore - Using built library
-import { SequencerNodes, NDJSONStreamingPlayer } from '../../dist/index.mjs';
+import { SequencerNodes, NDJSONStreamingPlayer, parseNDJSON } from '../../dist/index.mjs';
 
 class StreamingDemo {
   private player: NDJSONStreamingPlayer | null = null;
@@ -14,6 +14,11 @@ class StreamingDemo {
   private updateMode: 'manual' | 'debounce' = 'debounce';
   private readonly DEBOUNCE_DELAY_MS = 1000;
   private timingStats = this.createInitialTimingStats();
+  private lineHighlightContainer: HTMLDivElement | null = null;
+  private lineHighlightElements: HTMLDivElement[] = [];
+  private lineHighlightTimers: Map<number, number> = new Map();
+  private eventLineMap: number[] = [];
+  private readonly LINE_HIGHLIGHT_DURATION_MS = 200;
 
   constructor() {
     this.initializeUI();
@@ -120,13 +125,17 @@ class StreamingDemo {
 
     // Textarea change (live editing)
     const textarea = document.getElementById('sequenceEditor') as HTMLTextAreaElement;
+    this.lineHighlightContainer = document.getElementById('sequenceHighlightOverlay') as HTMLDivElement | null;
+    this.syncHighlightLines();
     
     // Input event handler for debounce mode
     textarea.addEventListener('input', () => {
+      this.syncHighlightLines();
       if (this.updateMode === 'debounce') {
         this.onSequenceEditDebounced();
       }
     });
+    textarea.addEventListener('scroll', () => this.syncOverlayScroll(textarea));
 
     // Keyboard shortcuts for manual mode (CTRL+S and SHIFT+ENTER)
     textarea.addEventListener('keydown', (e) => {
@@ -182,6 +191,9 @@ class StreamingDemo {
       const ndjson = this.sequenceToNDJSON(sequence.data);
       const textarea = document.getElementById('sequenceEditor') as HTMLTextAreaElement;
       textarea.value = ndjson;
+      this.eventLineMap = this.buildEventLineMap(ndjson);
+      this.syncHighlightLines(ndjson);
+      this.syncOverlayScroll(textarea);
     }
   }
 
@@ -220,6 +232,7 @@ class StreamingDemo {
           loopWaitSeconds: loopWaitSeconds,
           debug: debug,
           onDebug: (message: string, data?: any) => this.handleDebugMessage(message, data),
+          onEventScheduled: (info: { eventIndex: number }) => this.handleEventScheduled(info),
           onLoopComplete: () => {
             this.updateStatus('再生中（ループ）');
           }
@@ -228,9 +241,12 @@ class StreamingDemo {
 
       // Get NDJSON from textarea
       const ndjson = this.getNDJSONFromTextarea();
+      this.eventLineMap = this.buildEventLineMap(ndjson);
+      this.syncHighlightLines(ndjson);
+      const events = parseNDJSON(ndjson);
 
       // Start playback
-      await this.player.start(ndjson);
+      await this.player.start(events);
       
       this.updateStatus(loop ? '再生中（ループ有効）' : '再生中');
       
@@ -253,6 +269,9 @@ class StreamingDemo {
     // Clear any pending debounce timer
     this.clearDebounceTimer();
     
+    // Clear highlights
+    this.resetLineHighlights();
+    
     // Dispose all nodes on stop
     this.nodes.disposeAll();
     
@@ -268,7 +287,10 @@ class StreamingDemo {
     if (this.player && this.player.playing) {
       try {
         const ndjson = this.getNDJSONFromTextarea();
-        this.player.start(ndjson);
+        this.eventLineMap = this.buildEventLineMap(ndjson);
+        this.syncHighlightLines(ndjson);
+        const events = parseNDJSON(ndjson);
+        this.player.start(events);
         this.updateStatus('再生中（ライブ編集）');
       } catch (error) {
         console.error('Error updating sequence:', error);
@@ -293,6 +315,104 @@ class StreamingDemo {
       window.clearTimeout(this.debounceTimer);
       this.debounceTimer = null;
     }
+  }
+
+  private buildEventLineMap(ndjson: string): number[] {
+    const lines = ndjson.split('\n');
+    const map: number[] = [];
+    let eventIndex = 0;
+    
+    lines.forEach((line, index) => {
+      if (line.trim().length === 0) {
+        return;
+      }
+      map[eventIndex] = index;
+      eventIndex++;
+    });
+
+    return map;
+  }
+
+  private syncHighlightLines(ndjson?: string): void {
+    if (!this.lineHighlightContainer) {
+      return;
+    }
+
+    const source = ndjson ?? this.getNDJSONFromTextarea();
+    const lines = source.split('\n');
+    const needsRebuild = this.lineHighlightElements.length !== lines.length;
+
+    if (needsRebuild) {
+      this.resetLineHighlights();
+      this.lineHighlightContainer.innerHTML = '';
+      this.lineHighlightElements = lines.map(() => {
+        const lineEl = document.createElement('div');
+        lineEl.className = 'sequence-line-highlight';
+        lineEl.textContent = '\u00A0';
+        this.lineHighlightContainer!.appendChild(lineEl);
+        return lineEl;
+      });
+    } else {
+      this.clearHighlightState();
+    }
+
+    const textarea = document.getElementById('sequenceEditor') as HTMLTextAreaElement | null;
+    if (textarea) {
+      this.syncOverlayScroll(textarea);
+    }
+  }
+
+  private syncOverlayScroll(textarea: HTMLTextAreaElement): void {
+    if (this.lineHighlightContainer) {
+      this.lineHighlightContainer.style.transform = `translateY(-${textarea.scrollTop}px)`;
+    }
+  }
+
+  private highlightEventLine(eventIndex: number): void {
+    const lineIndex = this.eventLineMap[eventIndex];
+    if (lineIndex === undefined) {
+      return;
+    }
+
+    const lineElement = this.lineHighlightElements[lineIndex];
+    if (!lineElement) {
+      return;
+    }
+
+    lineElement.classList.add('active');
+    const existingTimer = this.lineHighlightTimers.get(lineIndex);
+    if (existingTimer !== undefined) {
+      window.clearTimeout(existingTimer);
+    }
+
+    const timerId = window.setTimeout(() => {
+      lineElement.classList.remove('active');
+      this.lineHighlightTimers.delete(lineIndex);
+    }, this.LINE_HIGHLIGHT_DURATION_MS);
+
+    this.lineHighlightTimers.set(lineIndex, timerId);
+  }
+
+  private resetLineHighlights(): void {
+    this.clearHighlightState();
+    if (this.lineHighlightContainer) {
+      this.lineHighlightContainer.innerHTML = '';
+    }
+    this.lineHighlightElements = [];
+  }
+
+  private clearHighlightState(): void {
+    this.lineHighlightElements.forEach(el => el.classList.remove('active'));
+    this.clearLineHighlightTimers();
+  }
+
+  private clearLineHighlightTimers(): void {
+    this.lineHighlightTimers.forEach(timerId => window.clearTimeout(timerId));
+    this.lineHighlightTimers.clear();
+  }
+
+  private handleEventScheduled(info: { eventIndex: number }): void {
+    this.highlightEventLine(info.eventIndex);
   }
 
   private updateStatus(status: string): void {

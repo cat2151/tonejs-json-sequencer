@@ -58,7 +58,8 @@ export class NDJSONStreamingPlayer {
             subdivisionsPerBeat: config.subdivisionsPerBeat ?? 4,
             endBufferSeconds: config.endBufferSeconds ?? 1,
             debug: config.debug ?? false,
-            onDebug: config.onDebug ?? ((msg, data) => console.log(`[DEBUG] ${msg}`, data ?? ''))
+            onDebug: config.onDebug ?? ((msg, data) => console.log(`[DEBUG] ${msg}`, data ?? '')),
+            onEventScheduled: config.onEventScheduled ?? (() => { })
         };
         this.playbackState = new PlaybackState();
         this.timeParser = new TimeParser({
@@ -399,6 +400,12 @@ export class NDJSONStreamingPlayer {
                         }
                     }
                     this.eventProcessor.scheduleEvent(event, absoluteTime);
+                    this.config.onEventScheduled({
+                        eventIndex: index,
+                        loopIteration: checkLoop,
+                        absoluteTime,
+                        event
+                    });
                     this.playbackState.processedEventIndices.add(eventKey);
                 }
             });

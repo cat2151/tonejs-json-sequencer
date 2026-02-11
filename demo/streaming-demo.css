@@ -166,3 +166,63 @@
   margin: 10px 0;
   padding-left: 20px;
 }
+
+.sequence-editor-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  background: var(--textarea-bg);
+  border: 1px solid var(--textarea-border);
+  border-radius: 6px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+#sequenceEditor {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  background: transparent;
+  color: var(--text-color);
+  border: none;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+#sequenceEditor:focus {
+  outline: 2px solid var(--button-bg);
+  outline-offset: 0;
+}
+
+#sequenceHighlightOverlay {
+  position: absolute;
+  /* Fallback for browsers that do not support `inset` */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  inset: 0;
+  padding: 12px;
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.sequence-line-highlight {
+  height: 1.5em;
+  width: 100%;
+  border-radius: 4px;
+  background: transparent;
+  transition: background-color 0.05s ease, opacity 0.05s ease;
+  opacity: 0;
+}
+
+.sequence-line-highlight.active {
+  background: rgba(46, 204, 113, 0.35);
+  opacity: 1;
+}

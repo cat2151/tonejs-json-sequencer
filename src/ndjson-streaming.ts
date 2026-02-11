@@ -64,6 +64,16 @@ export interface EventPrediction {
 }
 
 /**
+ * Information about a scheduled event
+ */
+export interface EventScheduledInfo {
+  eventIndex: number;
+  loopIteration: number;
+  absoluteTime: number;
+  event: SequenceEvent;
+}
+
+/**
  * Debug callback function type
  */
 export type DebugCallback = (message: string, data?: any) => void;
@@ -98,6 +108,8 @@ export interface NDJSONStreamingConfig {
   debug?: boolean;
   /** Callback for debug messages (default: console.log) */
   onDebug?: DebugCallback;
+  /** Callback when an event is scheduled (default: no-op) */
+  onEventScheduled?: (info: EventScheduledInfo) => void;
 }
 
 /**
@@ -134,7 +146,8 @@ export class NDJSONStreamingPlayer {
       subdivisionsPerBeat: config.subdivisionsPerBeat ?? 4,
       endBufferSeconds: config.endBufferSeconds ?? 1,
       debug: config.debug ?? false,
-      onDebug: config.onDebug ?? ((msg, data) => console.log(`[DEBUG] ${msg}`, data ?? ''))
+      onDebug: config.onDebug ?? ((msg, data) => console.log(`[DEBUG] ${msg}`, data ?? '')),
+      onEventScheduled: config.onEventScheduled ?? (() => {})
     };
 
     this.playbackState = new PlaybackState();
@@ -546,6 +559,12 @@ export class NDJSONStreamingPlayer {
           }
 
           this.eventProcessor.scheduleEvent(event, absoluteTime);
+          this.config.onEventScheduled({
+            eventIndex: index,
+            loopIteration: checkLoop,
+            absoluteTime,
+            event
+          });
           this.playbackState.processedEventIndices.add(eventKey);
         }
       });
