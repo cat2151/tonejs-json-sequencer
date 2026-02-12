@@ -12,15 +12,41 @@ const sequence = [
     args: {
       harmonicity: 3,
       modulationIndex: 10,
-      oscillator: { type: 'sine' },
-      envelope: { attack: 0.01, decay: 0.1, sustain: 0.2, release: 0.5 },
-      modulation: { type: 'square' },
+      detune: 0,
+      portamento: 0,
+      volume: 0,
+      oscillator: { type: 'sine', phase: 0 },
+      envelope: {
+        attack: 0.01,
+        attackCurve: 'linear',
+        decay: 0.1,
+        decayCurve: 'exponential',
+        sustain: 0.2,
+        release: 0.5,
+        releaseCurve: 'exponential'
+      },
+      modulation: { type: 'square', phase: 0 },
       modulationEnvelope: { attack: 0.5, decay: 0, sustain: 1, release: 0.5 }
+    }
+  },
+  {
+    eventType: 'createNode',
+    nodeId: 1,
+    nodeType: 'Reverb',
+    args: {
+      decay: 2.5,
+      preDelay: 0.01,
+      wet: 0.25
     }
   },
   {
     eventType: 'connect',
     nodeId: 0,
+    connectTo: 1
+  },
+  {
+    eventType: 'connect',
+    nodeId: 1,
     connectTo: 'toDestination'
   },
   {
@@ -47,6 +73,11 @@ const sequence = [
     eventType: 'triggerAttackRelease',
     nodeId: 0,
     args: ['A4', '4n', '0:2:0']
+  },
+  {
+    eventType: 'loopEnd',
+    nodeId: 0,
+    args: ['0:5:0']
   }
 ];
 
