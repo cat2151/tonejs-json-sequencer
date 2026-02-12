@@ -1,4 +1,4 @@
-Last updated: 2026-02-12
+Last updated: 2026-02-13
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -357,56 +357,18 @@ Last updated: 2026-02-12
 - generated-docs/project-overview-generated-prompt.md
 - googled947dc864c270e07.html
 - issue-notes/100.md
-- issue-notes/106.md
 - issue-notes/108.md
 - issue-notes/109.md
 - issue-notes/110.md
 - issue-notes/111.md
 - issue-notes/112.md
-- issue-notes/118.md
 - issue-notes/120.md
-- issue-notes/122.md
 - issue-notes/124.md
-- issue-notes/125.md
-- issue-notes/127.md
-- issue-notes/129.md
-- issue-notes/131.md
-- issue-notes/133.md
-- issue-notes/135.md
-- issue-notes/136.md
 - issue-notes/137.md
 - issue-notes/139.md
-- issue-notes/141.md
-- issue-notes/144.md
-- issue-notes/148.md
-- issue-notes/150.md
-- issue-notes/152.md
-- issue-notes/154.md
-- issue-notes/155.md
-- issue-notes/158.md
-- issue-notes/160.md
 - issue-notes/162.md
-- issue-notes/62.md
-- issue-notes/64.md
-- issue-notes/67.md
-- issue-notes/69.md
-- issue-notes/70.md
-- issue-notes/71.md
-- issue-notes/72.md
-- issue-notes/73.md
-- issue-notes/74.md
-- issue-notes/77.md
-- issue-notes/80.md
-- issue-notes/84.md
-- issue-notes/87.md
-- issue-notes/88.md
+- issue-notes/166.md
 - issue-notes/89.md
-- issue-notes/90.md
-- issue-notes/91.md
-- issue-notes/93.md
-- issue-notes/94.md
-- issue-notes/97.md
-- issue-notes/98.md
 - package-lock.json
 - package.json
 - scripts/copy-to-dist.js
@@ -738,76 +700,82 @@ jobs:
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-2c479bd Merge pull request #163 from cat2151/codex/add-green-indicator-for-ndjson
-44f9df1 chore: address review feedback
-e2236e9 feat: highlight scheduled ndjson lines
-bc96769 Initial plan
-e8a0e59 Update project summaries (overview & development status) [auto]
-201f818 Clarify user needs in issue 162 notes
-7729a76 Add issue note for #162 [auto]
-e857cf2 Merge pull request #161 from cat2151/codex/update-instrument-effect-args
-8f3fc70 chore: differentiate chorus object demo
-dda3d4d chore: use object options in demo effects
+f2ee763 Merge pull request #167 from cat2151/codex/add-instrument-effect-parameters
+2e5a4b4 Use loopEnd for reverb tails in examples
+756429f Extend offline render tail duration
+201d2e6 Add explicit instrument and effect params to examples
+b4f2865 Add issue note for #166 [auto]
+624baef Initial plan
+4bff7c4 Merge pull request #165 from cat2151/codex/fix-streaming-display-issue
+69e645a Tweak streaming indicator accessibility and typography
+9cbcf29 Improve streaming demo highlighting visibility
+080da29 Initial plan
 
 ### 変更されたファイル:
+demo-library/index.html
 demo/streaming-demo.css
 demo/streaming.html
+dist/cjs/event-scheduler.js
 dist/cjs/ndjson-streaming.d.ts
 dist/cjs/ndjson-streaming.js
-dist/demo/effect/autofilter.js
-dist/demo/effect/autopanner.js
-dist/demo/effect/autowah.js
-dist/demo/effect/bitcrusher.js
-dist/demo/effect/chebyshev.js
-dist/demo/effect/chorus-object-args.js
-dist/demo/effect/chorus.js
-dist/demo/effect/distortion.js
-dist/demo/effect/feedbackdelay.js
-dist/demo/effect/freeverb.js
-dist/demo/effect/frequencyshifter.js
-dist/demo/effect/jcreverb.js
-dist/demo/effect/phaser.js
-dist/demo/effect/pingpongdelay.js
-dist/demo/effect/pitchshift.js
-dist/demo/effect/reverb.js
-dist/demo/effect/stereowidener.js
-dist/demo/effect/tremolo.js
-dist/demo/effect/vibrato.js
-dist/demo/instrument/delay-vibrato.js
 dist/demo/streaming.js
+dist/esm/event-scheduler.mjs
 dist/esm/ndjson-streaming.d.ts
 dist/esm/ndjson-streaming.mjs
+dist/event-scheduler.js
 dist/ndjson-streaming.d.ts
 dist/ndjson-streaming.js
+examples/cdn-example.html
+examples/npm-example.mjs
+examples/offline-rendering-example.html
 generated-docs/development-status-generated-prompt.md
 generated-docs/development-status.md
 generated-docs/project-overview-generated-prompt.md
 generated-docs/project-overview.md
+issue-notes/106.md
+issue-notes/118.md
+issue-notes/122.md
+issue-notes/125.md
+issue-notes/127.md
+issue-notes/129.md
+issue-notes/131.md
+issue-notes/133.md
+issue-notes/135.md
+issue-notes/136.md
+issue-notes/141.md
+issue-notes/144.md
+issue-notes/148.md
+issue-notes/150.md
+issue-notes/152.md
+issue-notes/154.md
+issue-notes/155.md
+issue-notes/158.md
 issue-notes/160.md
-issue-notes/162.md
-src/demo/effect/autofilter.ts
-src/demo/effect/autopanner.ts
-src/demo/effect/autowah.ts
-src/demo/effect/bitcrusher.ts
-src/demo/effect/chebyshev.ts
-src/demo/effect/chorus-object-args.ts
-src/demo/effect/chorus.ts
-src/demo/effect/distortion.ts
-src/demo/effect/feedbackdelay.ts
-src/demo/effect/freeverb.ts
-src/demo/effect/frequencyshifter.ts
-src/demo/effect/jcreverb.ts
-src/demo/effect/phaser.ts
-src/demo/effect/pingpongdelay.ts
-src/demo/effect/pitchshift.ts
-src/demo/effect/reverb.ts
-src/demo/effect/stereowidener.ts
-src/demo/effect/tremolo.ts
-src/demo/effect/vibrato.ts
-src/demo/instrument/delay-vibrato.ts
+issue-notes/166.md
+issue-notes/62.md
+issue-notes/64.md
+issue-notes/67.md
+issue-notes/69.md
+issue-notes/70.md
+issue-notes/71.md
+issue-notes/72.md
+issue-notes/73.md
+issue-notes/74.md
+issue-notes/77.md
+issue-notes/80.md
+issue-notes/84.md
+issue-notes/87.md
+issue-notes/88.md
+issue-notes/90.md
+issue-notes/91.md
+issue-notes/93.md
+issue-notes/94.md
+issue-notes/97.md
+issue-notes/98.md
 src/demo/streaming.ts
+src/event-scheduler.ts
 src/ndjson-streaming.ts
 
 
 ---
-Generated at: 2026-02-12 07:13:44 JST
+Generated at: 2026-02-13 07:13:31 JST

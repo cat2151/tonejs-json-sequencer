@@ -1,4 +1,4 @@
-Last updated: 2026-02-12
+Last updated: 2026-02-13
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -859,56 +859,18 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
 🌐 googled947dc864c270e07.html
 📁 issue-notes/
   📖 100.md
-  📖 106.md
   📖 108.md
   📖 109.md
   📖 110.md
   📖 111.md
   📖 112.md
-  📖 118.md
   📖 120.md
-  📖 122.md
   📖 124.md
-  📖 125.md
-  📖 127.md
-  📖 129.md
-  📖 131.md
-  📖 133.md
-  📖 135.md
-  📖 136.md
   📖 137.md
   📖 139.md
-  📖 141.md
-  📖 144.md
-  📖 148.md
-  📖 150.md
-  📖 152.md
-  📖 154.md
-  📖 155.md
-  📖 158.md
-  📖 160.md
   📖 162.md
-  📖 62.md
-  📖 64.md
-  📖 67.md
-  📖 69.md
-  📖 70.md
-  📖 71.md
-  📖 72.md
-  📖 73.md
-  📖 74.md
-  📖 77.md
-  📖 80.md
-  📖 84.md
-  📖 87.md
-  📖 88.md
+  📖 166.md
   📖 89.md
-  📖 90.md
-  📖 91.md
-  📖 93.md
-  📖 94.md
-  📖 97.md
-  📖 98.md
 📊 package-lock.json
 📊 package.json
 📁 scripts/
@@ -998,11 +960,11 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**demo/streaming-demo.css** (229行, 4060バイト)
+**demo/streaming-demo.css** (269行, 4748バイト)
   - 関数: なし
   - インポート: なし
 
-**demo/streaming.html** (126行, 4759バイト)
+**demo/streaming.html** (133行, 5094バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1010,7 +972,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**demo-library/index.html** (206行, 5367バイト)
+**demo-library/index.html** (241行, 6180バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1018,7 +980,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: scheduleOrExecuteEvent, playSequence
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/cjs/event-scheduler.js** (142行, 5490バイト)
+**dist/cjs/event-scheduler.js** (143行, 5601バイト)
   - 関数: rampParameter, scheduleOrExecuteEvent, playSequence, for, if, switch, forEach, catch
   - インポート: ./node-factory.js
 
@@ -1302,8 +1264,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/demo/streaming.js** (467行, 18601バイト)
-  - 関数: constructor, createInitialTimingStats, initializeUI, if, catch, initializeCollapsibleSections, loadInitialSequence, loadSelectedSequence, sequenceToNDJSON, getNDJSONFromTextarea, play, stop, onSequenceEdit, onSequenceEditDebounced, clearDebounceTimer, buildEventLineMap, syncHighlightLines, syncOverlayScroll, highlightEventLine, resetLineHighlights, clearHighlightState, clearLineHighlightTimers, handleEventScheduled, updateStatus, handleDebugMessage, updateDebugOutput, updateTimingVisualization, clearDebugOutput
+**dist/demo/streaming.js** (498行, 19942バイト)
+  - 関数: constructor, createInitialTimingStats, initializeUI, if, catch, initializeCollapsibleSections, loadInitialSequence, loadSelectedSequence, sequenceToNDJSON, getNDJSONFromTextarea, play, stop, onSequenceEdit, onSequenceEditDebounced, clearDebounceTimer, buildEventLineMap, syncHighlightLines, syncOverlayScroll, updateNumberedNDJSON, updateCurrentLineIndicator, highlightEventLine, resetLineHighlights, clearHighlightState, clearLineHighlightTimers, handleEventScheduled, updateStatus, handleDebugMessage, updateDebugOutput, updateTimingVisualization, clearDebugOutput
   - インポート: ./sequenceLoader.js, ../../dist/index.mjs
 
 **dist/esm/event-scheduler.d.ts** (18行, 710バイト)
@@ -1358,7 +1320,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: scheduleOrExecuteEvent, playSequence
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/event-scheduler.js** (142行, 5490バイト)
+**dist/event-scheduler.js** (143行, 5601バイト)
   - 関数: rampParameter, scheduleOrExecuteEvent, playSequence, for, if, switch, forEach, catch
   - インポート: ./node-factory.js
 
@@ -1450,11 +1412,11 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, parseTimeToSeconds, parseTickTime, isToneNotation, parseToneNotation, if, parseBarBeatTime
   - インポート: なし
 
-**examples/cdn-example.html** (105行, 2646バイト)
+**examples/cdn-example.html** (140行, 3459バイト)
   - 関数: なし
   - インポート: なし
 
-**examples/offline-rendering-example.html** (57行, 1916バイト)
+**examples/offline-rendering-example.html** (60行, 2468バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1662,7 +1624,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: ../demo-types.js, ../sequenceLoader.js
 
-**src/demo/streaming.ts** (535行, 17639バイト)
+**src/demo/streaming.ts** (572行, 18986バイト)
   - 関数: constructor, createInitialTimingStats, if, catch, play
   - インポート: ./demo-types.js, ./sequenceLoader.js, ../../dist/index.mjs
 
@@ -1670,7 +1632,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: tone
 
-**src/event-scheduler.ts** (158行, 5057バイト)
+**src/event-scheduler.ts** (159行, 5162バイト)
   - 関数: rampParameter, scheduleOrExecuteEvent, playSequence, for, if, switch, forEach, catch
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
@@ -1799,4 +1761,4 @@ googled947dc864c270e07.html
 
 
 ---
-Generated at: 2026-02-12 07:13:44 JST
+Generated at: 2026-02-13 07:13:30 JST
