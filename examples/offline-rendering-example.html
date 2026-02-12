@@ -22,6 +22,7 @@
 {"eventType":"triggerAttackRelease","nodeId":0,"args":["E4","4n","0:1:0"]}
 {"eventType":"triggerAttackRelease","nodeId":0,"args":["G4","4n","0:2:0"]}
 {"eventType":"triggerAttackRelease","nodeId":0,"args":["C5","4n","0:3:0"]}
+{"eventType":"loopEnd","nodeId":0,"args":["0:5:0"]}
 `;
 
     document.getElementById('renderButton').addEventListener('click', async () => {
@@ -33,7 +34,7 @@
         // Create renderer
         const renderer = new OfflineRenderer(Tone, {
           sampleRate: 44100,
-          endBufferSeconds: 3,
+          endBufferSeconds: 1,
           onProgress: (progress) => {
             statusEl.textContent = `Rendering: ${progress.toFixed(0)}%`;
           }

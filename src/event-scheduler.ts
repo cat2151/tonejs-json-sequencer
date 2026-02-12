@@ -103,6 +103,7 @@ export function scheduleOrExecuteEvent(
     }
     case 'loopEnd': {
       // loopEnd is a metadata event that marks the explicit loop boundary
+      // Also usable as an explicit song-end marker to leave space for effect tails (e.g., reverb decay)
       // It's used by streaming players to calculate proper loop duration
       // No action needed during scheduling - handled by EventProcessor
       break;

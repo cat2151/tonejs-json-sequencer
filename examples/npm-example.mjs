@@ -73,6 +73,11 @@ const sequence = [
     eventType: 'triggerAttackRelease',
     nodeId: 0,
     args: ['A4', '4n', '0:2:0']
+  },
+  {
+    eventType: 'loopEnd',
+    nodeId: 0,
+    args: ['0:5:0']
   }
 ];
 
