@@ -109,9 +109,16 @@
   </div>
 
   <h3>シーケンス（NDJSON形式 - 1行につき1イベント）:</h3>
+  <div class="sequence-meta">
+    <div id="currentLineIndicator" aria-live="off">現在の演奏行: -</div>
+  </div>
   <div class="sequence-editor-wrapper">
     <div id="sequenceHighlightOverlay" aria-hidden="true"></div>
     <textarea id="sequenceEditor" rows="30" cols="80"></textarea>
+  </div>
+  <div class="sequence-debug-wrapper">
+    <label for="sequenceEditorDebug" class="sequence-debug-label">デバッグ用NDJSON（行番号付き・読み取り専用）:</label>
+    <textarea id="sequenceEditorDebug" rows="30" cols="80" readonly></textarea>
   </div>
 
   <div class="repo-link-footer">

@@ -178,6 +178,15 @@
   overflow: hidden;
 }
 
+#sequenceEditor,
+#sequenceHighlightOverlay,
+#sequenceEditorDebug,
+.sequence-meta {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
 #sequenceEditor {
   position: relative;
   z-index: 2;
@@ -187,15 +196,17 @@
   background: transparent;
   color: var(--text-color);
   border: none;
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-  line-height: 1.5;
   resize: vertical;
 }
 
 #sequenceEditor:focus {
   outline: 2px solid var(--button-bg);
   outline-offset: 0;
+}
+
+.sequence-meta {
+  margin: 8px 0 6px 0;
+  color: var(--text-color);
 }
 
 #sequenceHighlightOverlay {
@@ -215,6 +226,7 @@
 
 .sequence-line-highlight {
   height: 1.5em;
+  line-height: 1.5;
   width: 100%;
   border-radius: 4px;
   background: transparent;
@@ -225,4 +237,32 @@
 .sequence-line-highlight.active {
   background: rgba(46, 204, 113, 0.35);
   opacity: 1;
+}
+
+.sequence-debug-wrapper {
+  margin-top: 12px;
+  max-width: 900px;
+}
+
+.sequence-debug-label {
+  display: block;
+  margin: 10px 0 6px 0;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+#sequenceEditorDebug {
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  background: var(--textarea-bg);
+  color: var(--text-color);
+  border: 1px solid var(--textarea-border);
+  border-radius: 6px;
+  resize: vertical;
+}
+
+#sequenceEditorDebug:focus {
+  outline: 2px solid var(--button-bg);
+  outline-offset: 0;
 }
