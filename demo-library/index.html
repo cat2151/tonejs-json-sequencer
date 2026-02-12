@@ -146,15 +146,45 @@ npm install tone</code></pre>
       {
         eventType: 'createNode',
         nodeId: 0,
-        nodeType: 'Synth',
+        nodeType: 'FMSynth',
         args: {
-          oscillator: { type: 'sine' },
-          envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 }
+          harmonicity: 3,
+          modulationIndex: 10,
+          detune: 0,
+          portamento: 0,
+          volume: 0,
+          oscillator: { type: 'sine', phase: 0 },
+          envelope: {
+            attack: 0.01,
+            attackCurve: 'linear',
+            decay: 0.1,
+            decayCurve: 'exponential',
+            sustain: 0.2,
+            release: 0.5,
+            releaseCurve: 'exponential'
+          },
+          modulation: { type: 'square', phase: 0 },
+          modulationEnvelope: { attack: 0.5, decay: 0, sustain: 1, release: 0.5 }
+        }
+      },
+      {
+        eventType: 'createNode',
+        nodeId: 1,
+        nodeType: 'Reverb',
+        args: {
+          decay: 2.5,
+          preDelay: 0.01,
+          wet: 0.25
         }
       },
       {
         eventType: 'connect',
         nodeId: 0,
+        connectTo: 1
+      },
+      {
+        eventType: 'connect',
+        nodeId: 1,
         connectTo: 'toDestination'
       },
       {
