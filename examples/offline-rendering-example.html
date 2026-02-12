@@ -33,7 +33,7 @@
         // Create renderer
         const renderer = new OfflineRenderer(Tone, {
           sampleRate: 44100,
-          endBufferSeconds: 1,
+          endBufferSeconds: 3,
           onProgress: (progress) => {
             statusEl.textContent = `Rendering: ${progress.toFixed(0)}%`;
           }
