@@ -178,6 +178,15 @@
   overflow: hidden;
 }
 
+#sequenceEditor,
+#sequenceHighlightOverlay,
+#sequenceEditorDebug,
+.sequence-meta {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
 #sequenceEditor {
   position: relative;
   z-index: 2;
@@ -187,9 +196,6 @@
   background: transparent;
   color: var(--text-color);
   border: none;
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-  line-height: 1.5;
   resize: vertical;
 }
 
@@ -200,7 +206,6 @@
 
 .sequence-meta {
   margin: 8px 0 6px 0;
-  font-family: 'Courier New', monospace;
   color: var(--text-color);
 }
 
@@ -214,9 +219,6 @@
   inset: 0;
   padding: 12px;
   box-sizing: border-box;
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-  line-height: 1.5;
   pointer-events: none;
   z-index: 1;
   overflow: hidden;
@@ -257,9 +259,6 @@
   color: var(--text-color);
   border: 1px solid var(--textarea-border);
   border-radius: 6px;
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-  line-height: 1.5;
   resize: vertical;
 }
 
