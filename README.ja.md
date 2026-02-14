@@ -335,6 +335,7 @@ tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記
 - `triggerAttackRelease` - 音符の発音
 - `depth.rampTo` - depthパラメータの滑らかな変更
 - `volume.rampTo` - volumeパラメータの滑らかな変更
+- `rampTo` - 汎用パラメータramp（ドット区切り文字列/配列のパス指定）。引数は `[value, targetPath]` または `[value, rampTime, targetPath, time?]`
 - `LFO` - 指定したパスのパラメータにLFOを作成してモジュレーションを開始（開始時刻は任意、Tone.Transport時間で指定）
 - `set` - グローバル設定（現在は `Transport.bpm.value` のみ対応）
 - `loopEnd` - ストリーミング再生用の明示的なループ境界のマーク（メタデータイベント）
@@ -350,6 +351,16 @@ tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記
     "filter.Q",
     "0:0:0"
   ]
+}
+```
+
+### rampTo Event例
+
+```json
+{
+  "eventType": "rampTo",
+  "nodeId": 1,
+  "args": [0.75, "4n", "filter.Q", "0:0:0"]
 }
 ```
 

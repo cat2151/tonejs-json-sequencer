@@ -58,6 +58,20 @@ export interface FilterQRampToEvent {
   args: string[]; // [value, rampTime, time]
 }
 
+export interface GenericRampToEvent {
+  eventType: 'rampTo';
+  nodeId: number;
+  /**
+   * Arguments for rampTo:
+   * - [value, targetPath]
+   * - [value, rampTime, targetPath]
+   * - [value, rampTime, targetPath, time]
+   * targetPath: dot-delimited string (e.g., "filter.Q") or string[]
+   * time: optional start time for rampTo
+   */
+  args: any[];
+}
+
 export interface SetEvent {
   eventType: 'set';
   nodeId: number;
@@ -93,6 +107,7 @@ export type SequenceEvent =
   | QRampToEvent
   | FilterFrequencyRampToEvent
   | FilterQRampToEvent
+  | GenericRampToEvent
   | SetEvent
   | LoopEndEvent
   | LFOEvent;

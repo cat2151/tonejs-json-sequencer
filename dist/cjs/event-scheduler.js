@@ -95,6 +95,32 @@ function scheduleOrExecuteEvent(Tone, nodes, element) {
             rampParameter(node, ['filter', 'Q'], element.args, 'filter.Q.rampTo', element.nodeId);
             break;
         }
+        case 'rampTo': {
+            const node = nodes.get(element.nodeId);
+            if (!node) {
+                console.warn(`Node ${element.nodeId} not found for rampTo event`);
+                break;
+            }
+            const args = Array.isArray(element.args) ? element.args : [];
+            if (args.length < 2) {
+                console.warn(`rampTo event for node ${element.nodeId} requires at least value and target path`);
+                break;
+            }
+            const targetPath = args.length >= 3 ? args[2] : args[1];
+            const rampArgs = [args[0]];
+            if (args.length >= 3) {
+                rampArgs.push(args[1]);
+            }
+            if (args.length >= 4) {
+                rampArgs.push(args[3]);
+            }
+            if (targetPath === undefined) {
+                console.warn(`rampTo event for node ${element.nodeId} is missing target path`);
+                break;
+            }
+            rampParameter(node, targetPath, rampArgs, `rampTo(${String(targetPath)})`, element.nodeId);
+            break;
+        }
         case 'LFO': {
             const node = nodes.get(element.nodeId);
             if (!node) {
