@@ -8,6 +8,7 @@ This demo is stripped down to the minimum implementation that can verify:
 - Library installation from GitHub
 - Basic build process
 - Simple usage example
+- Selecting from the same set of demo sequences used on the main page via a dropdown, plus an extra minimal library example
 
 This serves as a reference for developers who want to use `tonejs-json-sequencer` in their own projects.
 
