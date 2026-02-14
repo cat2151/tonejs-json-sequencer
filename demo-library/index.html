@@ -38,6 +38,21 @@
       margin-top: 0;
       color: #1976D2;
     }
+    .controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .controls select {
+      padding: 10px 12px;
+      font-size: 15px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      min-width: 240px;
+      background-color: #fff;
+    }
     button {
       padding: 12px 24px;
       font-size: 16px;
@@ -112,7 +127,10 @@ npm install cat2151/tonejs-json-sequencer
 npm install tone</code></pre>
     </div>
 
-    <button id="playButton">▶ Play Simple Melody</button>
+    <div class="controls">
+      <button id="playButton">▶ Play Sequence</button>
+      <select id="sequenceSelector" aria-label="Select demo sequence"></select>
+    </div>
 
     <h2>Sequence Data:</h2>
     <pre id="sequenceDisplay"></pre>
@@ -140,9 +158,10 @@ npm install tone</code></pre>
     // In your own project after npm install, you would use:
     // import { SequencerNodes, playSequence } from 'tonejs-json-sequencer';
     import { SequencerNodes, playSequence } from '../dist/index.mjs';
+    import { loadAllSequences } from '../dist/demo/sequenceLoader.js';
 
     // Define a minimal sequence - creates a synth and plays a simple melody
-    const sequence = [
+    const baseSequence = [
       {
         eventType: 'createNode',
         nodeId: 0,
@@ -214,8 +233,36 @@ npm install tone</code></pre>
       }
     ];
 
-    // Display the sequence data
-    document.getElementById('sequenceDisplay').textContent = JSON.stringify(sequence, null, 2);
+    const sequenceOptions = [
+      { name: 'Library Minimal Example', data: baseSequence },
+      ...loadAllSequences()
+    ];
+
+    const selector = document.getElementById('sequenceSelector');
+    const sequenceDisplay = document.getElementById('sequenceDisplay');
+
+    sequenceOptions.forEach(option => {
+      const optionElement = document.createElement('option');
+      optionElement.value = option.name;
+      optionElement.textContent = option.name;
+      selector.appendChild(optionElement);
+    });
+
+    let currentSequence = sequenceOptions[0].data;
+
+    function updateSequenceDisplay(sequence) {
+      sequenceDisplay.textContent = JSON.stringify(sequence, null, 2);
+    }
+
+    selector.addEventListener('change', () => {
+      const selected = sequenceOptions.find(option => option.name === selector.value);
+      if (selected) {
+        currentSequence = selected.data;
+        updateSequenceDisplay(currentSequence);
+      }
+    });
+
+    updateSequenceDisplay(currentSequence);
 
     // Create a node manager
     const nodes = new SequencerNodes();
@@ -228,7 +275,8 @@ npm install tone</code></pre>
         console.log('Audio context started');
         
         // Play the sequence
-        await playSequence(Tone, nodes, sequence);
+        await playSequence(Tone, nodes, currentSequence);
+        Tone.Transport.start();
         console.log('Sequence playing');
       } catch (error) {
         console.error('Error playing sequence:', error);
