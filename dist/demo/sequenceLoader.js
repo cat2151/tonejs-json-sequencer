@@ -39,6 +39,7 @@ import * as frequencyshifter from './effect/frequencyshifter.js';
 import * as stereowidener from './effect/stereowidener.js';
 import * as lpfSweep from './effect/lpf-sweep.js';
 import * as lpfEnvelope from './effect/lpf-envelope.js';
+import * as lpfQLfo from './effect/lpf-q-lfo.js';
 // Aggregate all sequences
 const allSequenceModules = [
     // Instrument demos
@@ -81,7 +82,8 @@ const allSequenceModules = [
     frequencyshifter,
     stereowidener,
     lpfSweep,
-    lpfEnvelope
+    lpfEnvelope,
+    lpfQLfo
 ];
 export function loadAllSequences() {
     return allSequenceModules.map(module => ({
