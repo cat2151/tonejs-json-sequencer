@@ -1,4 +1,4 @@
-Last updated: 2026-02-13
+Last updated: 2026-02-15
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -195,6 +195,8 @@ Last updated: 2026-02-13
 - .github/actions-tmp/issue-notes/35.md
 - .github/actions-tmp/issue-notes/38.md
 - .github/actions-tmp/issue-notes/4.md
+- .github/actions-tmp/issue-notes/40.md
+- .github/actions-tmp/issue-notes/42.md
 - .github/actions-tmp/issue-notes/7.md
 - .github/actions-tmp/issue-notes/8.md
 - .github/actions-tmp/issue-notes/9.md
@@ -263,8 +265,10 @@ Last updated: 2026-02-13
 - dist/demo/effect/feedbackdelay.js
 - dist/demo/effect/freeverb.js
 - dist/demo/effect/frequencyshifter.js
+- dist/demo/effect/generic-ramp-to.js
 - dist/demo/effect/jcreverb.js
 - dist/demo/effect/lpf-envelope.js
+- dist/demo/effect/lpf-q-lfo.js
 - dist/demo/effect/lpf-sweep.js
 - dist/demo/effect/phaser.js
 - dist/demo/effect/pingpongdelay.js
@@ -367,7 +371,9 @@ Last updated: 2026-02-13
 - issue-notes/137.md
 - issue-notes/139.md
 - issue-notes/162.md
-- issue-notes/166.md
+- issue-notes/170.md
+- issue-notes/176.md
+- issue-notes/178.md
 - issue-notes/89.md
 - package-lock.json
 - package.json
@@ -385,8 +391,10 @@ Last updated: 2026-02-13
 - src/demo/effect/feedbackdelay.ts
 - src/demo/effect/freeverb.ts
 - src/demo/effect/frequencyshifter.ts
+- src/demo/effect/generic-ramp-to.ts
 - src/demo/effect/jcreverb.ts
 - src/demo/effect/lpf-envelope.ts
+- src/demo/effect/lpf-q-lfo.ts
 - src/demo/effect/lpf-sweep.ts
 - src/demo/effect/phaser.ts
 - src/demo/effect/pingpongdelay.ts
@@ -700,82 +708,119 @@ jobs:
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-f2ee763 Merge pull request #167 from cat2151/codex/add-instrument-effect-parameters
-2e5a4b4 Use loopEnd for reverb tails in examples
-756429f Extend offline render tail duration
-201d2e6 Add explicit instrument and effect params to examples
-b4f2865 Add issue note for #166 [auto]
-624baef Initial plan
-4bff7c4 Merge pull request #165 from cat2151/codex/fix-streaming-display-issue
-69e645a Tweak streaming indicator accessibility and typography
-9cbcf29 Improve streaming demo highlighting visibility
-080da29 Initial plan
+7c28e06 Merge pull request #179 from cat2151/codex/fix-demo-library-sound-issue
+4ba0f3c Lazy-load demo sequences in demo-library
+720128a Add dropdown playback fixes to demo library
+02ed93c Initial plan
+d150f9f Merge pull request #177 from cat2151/codex/add-loopend-to-examples
+7c4afc4 Adjust supersaw envelope release for loopEnd
+337e50d Add loopEnd markers to demo sequences
+f337bb0 Add issue note for #178 [auto]
+260a5d0 Initial plan
+8376d5a Add issue note for #176 [auto]
 
 ### 変更されたファイル:
+README.ja.md
+README.md
+demo-library/README.md
 demo-library/index.html
-demo/streaming-demo.css
-demo/streaming.html
 dist/cjs/event-scheduler.js
-dist/cjs/ndjson-streaming.d.ts
-dist/cjs/ndjson-streaming.js
-dist/demo/streaming.js
+dist/cjs/index.d.ts
+dist/cjs/types.d.ts
+dist/demo/effect/autofilter.js
+dist/demo/effect/autopanner.js
+dist/demo/effect/autowah.js
+dist/demo/effect/bitcrusher.js
+dist/demo/effect/chebyshev.js
+dist/demo/effect/chorus-object-args.js
+dist/demo/effect/chorus.js
+dist/demo/effect/distortion.js
+dist/demo/effect/feedbackdelay.js
+dist/demo/effect/freeverb.js
+dist/demo/effect/frequencyshifter.js
+dist/demo/effect/generic-ramp-to.js
+dist/demo/effect/jcreverb.js
+dist/demo/effect/lpf-envelope.js
+dist/demo/effect/lpf-sweep.js
+dist/demo/effect/phaser.js
+dist/demo/effect/pingpongdelay.js
+dist/demo/effect/pitchshift.js
+dist/demo/effect/reverb.js
+dist/demo/effect/stereowidener.js
+dist/demo/effect/tremolo.js
+dist/demo/effect/vibrato.js
+dist/demo/instrument/amsynth.js
+dist/demo/instrument/delay-vibrato.js
+dist/demo/instrument/duosynth.js
+dist/demo/instrument/membranesynth.js
+dist/demo/instrument/metalsynth.js
+dist/demo/instrument/minimal.js
+dist/demo/instrument/monosynth.js
+dist/demo/instrument/multitimbral.js
+dist/demo/instrument/noisesynth.js
+dist/demo/instrument/plucksynth.js
+dist/demo/instrument/polysynth-fm.js
+dist/demo/instrument/portamento.js
+dist/demo/instrument/sampler-piano.js
+dist/demo/instrument/streaming-test-doremi.js
+dist/demo/instrument/supersaw.js
+dist/demo/instrument/tempo-test.js
+dist/demo/instrument/volume-control.js
+dist/demo/sequenceLoader.js
 dist/esm/event-scheduler.mjs
-dist/esm/ndjson-streaming.d.ts
-dist/esm/ndjson-streaming.mjs
+dist/esm/index.d.ts
+dist/esm/types.d.ts
 dist/event-scheduler.js
-dist/ndjson-streaming.d.ts
-dist/ndjson-streaming.js
-examples/cdn-example.html
-examples/npm-example.mjs
-examples/offline-rendering-example.html
-generated-docs/development-status-generated-prompt.md
-generated-docs/development-status.md
-generated-docs/project-overview-generated-prompt.md
-generated-docs/project-overview.md
-issue-notes/106.md
-issue-notes/118.md
-issue-notes/122.md
-issue-notes/125.md
-issue-notes/127.md
-issue-notes/129.md
-issue-notes/131.md
-issue-notes/133.md
-issue-notes/135.md
-issue-notes/136.md
-issue-notes/141.md
-issue-notes/144.md
-issue-notes/148.md
-issue-notes/150.md
-issue-notes/152.md
-issue-notes/154.md
-issue-notes/155.md
-issue-notes/158.md
-issue-notes/160.md
-issue-notes/166.md
-issue-notes/62.md
-issue-notes/64.md
-issue-notes/67.md
-issue-notes/69.md
-issue-notes/70.md
-issue-notes/71.md
-issue-notes/72.md
-issue-notes/73.md
-issue-notes/74.md
-issue-notes/77.md
-issue-notes/80.md
-issue-notes/84.md
-issue-notes/87.md
-issue-notes/88.md
-issue-notes/90.md
-issue-notes/91.md
-issue-notes/93.md
-issue-notes/94.md
-issue-notes/97.md
-issue-notes/98.md
-src/demo/streaming.ts
+dist/index.d.ts
+dist/types.d.ts
+issue-notes/172.md
+issue-notes/176.md
+issue-notes/178.md
+src/demo/demo-types.ts
+src/demo/effect/autofilter.ts
+src/demo/effect/autopanner.ts
+src/demo/effect/autowah.ts
+src/demo/effect/bitcrusher.ts
+src/demo/effect/chebyshev.ts
+src/demo/effect/chorus-object-args.ts
+src/demo/effect/chorus.ts
+src/demo/effect/distortion.ts
+src/demo/effect/feedbackdelay.ts
+src/demo/effect/freeverb.ts
+src/demo/effect/frequencyshifter.ts
+src/demo/effect/generic-ramp-to.ts
+src/demo/effect/jcreverb.ts
+src/demo/effect/lpf-envelope.ts
+src/demo/effect/lpf-sweep.ts
+src/demo/effect/phaser.ts
+src/demo/effect/pingpongdelay.ts
+src/demo/effect/pitchshift.ts
+src/demo/effect/reverb.ts
+src/demo/effect/stereowidener.ts
+src/demo/effect/tremolo.ts
+src/demo/effect/vibrato.ts
+src/demo/instrument/amsynth.ts
+src/demo/instrument/delay-vibrato.ts
+src/demo/instrument/duosynth.ts
+src/demo/instrument/membranesynth.ts
+src/demo/instrument/metalsynth.ts
+src/demo/instrument/minimal.ts
+src/demo/instrument/monosynth.ts
+src/demo/instrument/multitimbral.ts
+src/demo/instrument/noisesynth.ts
+src/demo/instrument/plucksynth.ts
+src/demo/instrument/polysynth-fm.ts
+src/demo/instrument/portamento.ts
+src/demo/instrument/sampler-piano.ts
+src/demo/instrument/streaming-test-doremi.ts
+src/demo/instrument/supersaw.ts
+src/demo/instrument/tempo-test.ts
+src/demo/instrument/volume-control.ts
+src/demo/sequenceLoader.ts
 src/event-scheduler.ts
-src/ndjson-streaming.ts
+src/index.ts
+src/types.ts
 
 
 ---
-Generated at: 2026-02-13 07:13:31 JST
+Generated at: 2026-02-15 07:08:53 JST

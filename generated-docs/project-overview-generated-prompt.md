@@ -1,4 +1,4 @@
-Last updated: 2026-02-13
+Last updated: 2026-02-15
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -398,8 +398,34 @@ tonejs-json-sequencerは、Tone.jsの主要なコンポーネントをJSONで記
 - `triggerAttackRelease` - 音符の発音
 - `depth.rampTo` - depthパラメータの滑らかな変更
 - `volume.rampTo` - volumeパラメータの滑らかな変更
+- `rampTo` - 汎用パラメータramp（ドット区切り文字列/配列のパス指定）。引数は `[value, targetPath]` または `[value, rampTime, targetPath, time?]`
+- `LFO` - 指定したパスのパラメータにLFOを作成してモジュレーションを開始（開始時刻は任意、Tone.Transport時間で指定）
 - `set` - グローバル設定（現在は `Transport.bpm.value` のみ対応）
 - `loopEnd` - ストリーミング再生用の明示的なループ境界のマーク（メタデータイベント）
+
+### LFO Event例
+
+```json
+{
+  "eventType": "LFO",
+  "nodeId": 1,
+  "args": [
+    { "frequency": "4n", "min": 0, "max": 10, "type": "sine" },
+    "filter.Q",
+    "0:0:0"
+  ]
+}
+```
+
+### rampTo Event例
+
+```json
+{
+  "eventType": "rampTo",
+  "nodeId": 1,
+  "args": [0.75, "4n", "filter.Q", "0:0:0"]
+}
+```
 
 ## 未実装機能リスト
 
@@ -752,8 +778,10 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
       📜 feedbackdelay.js
       📜 freeverb.js
       📜 frequencyshifter.js
+      📜 generic-ramp-to.js
       📜 jcreverb.js
       📜 lpf-envelope.js
+      📜 lpf-q-lfo.js
       📜 lpf-sweep.js
       📜 phaser.js
       📜 pingpongdelay.js
@@ -869,7 +897,9 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 137.md
   📖 139.md
   📖 162.md
-  📖 166.md
+  📖 170.md
+  📖 176.md
+  📖 178.md
   📖 89.md
 📊 package-lock.json
 📊 package.json
@@ -891,8 +921,10 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
       📘 feedbackdelay.ts
       📘 freeverb.ts
       📘 frequencyshifter.ts
+      📘 generic-ramp-to.ts
       📘 jcreverb.ts
       📘 lpf-envelope.ts
+      📘 lpf-q-lfo.ts
       📘 lpf-sweep.ts
       📘 phaser.ts
       📘 pingpongdelay.ts
@@ -960,11 +992,11 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**demo/streaming-demo.css** (269行, 4748バイト)
+**demo/streaming-demo.css** (348行, 5948バイト)
   - 関数: なし
   - インポート: なし
 
-**demo/streaming.html** (133行, 5094バイト)
+**demo/streaming.html** (144行, 5471バイト)
   - 関数: なし
   - インポート: なし
 
@@ -972,7 +1004,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**demo-library/index.html** (241行, 6180バイト)
+**demo-library/index.html** (305行, 8140バイト)
   - 関数: なし
   - インポート: なし
 
@@ -980,8 +1012,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: scheduleOrExecuteEvent, playSequence
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/cjs/event-scheduler.js** (143行, 5601バイト)
-  - 関数: rampParameter, scheduleOrExecuteEvent, playSequence, for, if, switch, forEach, catch
+**dist/cjs/event-scheduler.js** (224行, 8708バイト)
+  - 関数: resolveTarget, rampParameter, scheduleOrExecuteEvent, playSequence, if, for, switch, forEach, catch
   - インポート: ./node-factory.js
 
 **dist/cjs/factories/effect-factory.d.ts** (10行, 368バイト)
@@ -1000,7 +1032,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: createInstrument, createPolySynth, createSampler, switch, if
   - インポート: なし
 
-**dist/cjs/index.d.ts** (6行, 564バイト)
+**dist/cjs/index.d.ts** (6行, 619バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1036,8 +1068,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/cjs/sequencer-nodes.js** (35行, 909バイト)
-  - 関数: constructor, get, set, disposeAll, forEach, catch
+**dist/cjs/sequencer-nodes.js** (47行, 1331バイト)
+  - 関数: constructor, get, set, disposeAll, catch, if
   - インポート: なし
 
 **dist/cjs/streaming/event-processor.d.ts** (41行, 1513バイト)
@@ -1056,7 +1088,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, isPlaying, startTime, currentEvents, processedEventIndices, loopCount, cachedSequenceDuration, createdNodeIds, processLoopCount, incrementProcessLoopCount, start, stop, markEventAsProcessed, resetProcessedEvents
   - インポート: なし
 
-**dist/cjs/types.d.ts** (59行, 1508バイト)
+**dist/cjs/types.d.ts** (83行, 2298バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1076,99 +1108,107 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/autofilter.js** (40行, 971バイト)
+**dist/demo/effect/autofilter.js** (45行, 1064バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/autopanner.js** (40行, 895バイト)
+**dist/demo/effect/autopanner.js** (45行, 988バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/autowah.js** (45行, 1033バイト)
+**dist/demo/effect/autowah.js** (50行, 1125バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/bitcrusher.js** (45行, 959バイト)
+**dist/demo/effect/bitcrusher.js** (50行, 1051バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/chebyshev.js** (45行, 982バイト)
+**dist/demo/effect/chebyshev.js** (50行, 1074バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/chorus-object-args.js** (45行, 1064バイト)
+**dist/demo/effect/chorus-object-args.js** (50行, 1157バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/chorus.js** (45行, 1039バイト)
+**dist/demo/effect/chorus.js** (50行, 1132バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/distortion.js** (45行, 990バイト)
+**dist/demo/effect/distortion.js** (50行, 1082バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/feedbackdelay.js** (45行, 1006バイト)
+**dist/demo/effect/feedbackdelay.js** (50行, 1098バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/freeverb.js** (45行, 980バイト)
+**dist/demo/effect/freeverb.js** (50行, 1073バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/frequencyshifter.js** (40行, 861バイト)
+**dist/demo/effect/frequencyshifter.js** (45行, 954バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/jcreverb.js** (45行, 961バイト)
+**dist/demo/effect/generic-ramp-to.js** (62行, 1487バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/lpf-envelope.js** (73行, 1998バイト)
+**dist/demo/effect/jcreverb.js** (50行, 1054バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/lpf-sweep.js** (66行, 1818バイト)
+**dist/demo/effect/lpf-envelope.js** (78行, 2085バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/phaser.js** (45行, 1018バイト)
+**dist/demo/effect/lpf-q-lfo.js** (55行, 1462バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/pingpongdelay.js** (45行, 1006バイト)
+**dist/demo/effect/lpf-sweep.js** (71行, 1905バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/pitchshift.js** (45行, 1011バイト)
+**dist/demo/effect/phaser.js** (50行, 1111バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/reverb.js** (45行, 970バイト)
+**dist/demo/effect/pingpongdelay.js** (50行, 1098バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/stereowidener.js** (45行, 969バイト)
+**dist/demo/effect/pitchshift.js** (50行, 1103バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/tremolo.js** (40行, 888バイト)
+**dist/demo/effect/reverb.js** (50行, 1063バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/effect/vibrato.js** (40行, 891バイト)
+**dist/demo/effect/stereowidener.js** (50行, 1061バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/amsynth.js** (55行, 1275バイト)
+**dist/demo/effect/tremolo.js** (45行, 981バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/delay-vibrato.js** (67行, 1579バイト)
+**dist/demo/effect/vibrato.js** (45行, 984バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/duosynth.js** (60行, 1453バイト)
+**dist/demo/instrument/amsynth.js** (60行, 1367バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/instrument/delay-vibrato.js** (72行, 1672バイト)
+  - 関数: なし
+  - インポート: なし
+
+**dist/demo/instrument/duosynth.js** (65行, 1545バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1176,59 +1216,59 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: i
   - インポート: なし
 
-**dist/demo/instrument/membranesynth.js** (47行, 1068バイト)
+**dist/demo/instrument/membranesynth.js** (52行, 1160バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/metalsynth.js** (46行, 1051バイト)
+**dist/demo/instrument/metalsynth.js** (51行, 1143バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/minimal.js** (19行, 373バイト)
+**dist/demo/instrument/minimal.js** (24行, 464バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/monosynth.js** (45行, 1000バイト)
+**dist/demo/instrument/monosynth.js** (50行, 1092バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/multitimbral.js** (56行, 1235バイト)
+**dist/demo/instrument/multitimbral.js** (61行, 1328バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/noisesynth.js** (44行, 939バイト)
+**dist/demo/instrument/noisesynth.js** (49行, 1031バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/plucksynth.js** (39行, 851バイト)
+**dist/demo/instrument/plucksynth.js** (44行, 944バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/polysynth-fm.js** (59行, 1472バイト)
+**dist/demo/instrument/polysynth-fm.js** (64行, 1564バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/portamento.js** (61行, 1387バイト)
+**dist/demo/instrument/portamento.js** (66行, 1480バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/sampler-piano.js** (43行, 1126バイト)
+**dist/demo/instrument/sampler-piano.js** (48行, 1219バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/streaming-test-doremi.js** (60行, 1359バイト)
+**dist/demo/instrument/streaming-test-doremi.js** (65行, 1452バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/supersaw.js** (52行, 1212バイト)
+**dist/demo/instrument/supersaw.js** (57行, 1296バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/tempo-test.js** (40行, 865バイト)
+**dist/demo/instrument/tempo-test.js** (45行, 957バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/demo/instrument/volume-control.js** (62行, 1507バイト)
+**dist/demo/instrument/volume-control.js** (67行, 1599バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1248,7 +1288,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, initializeUI, if, initializeCollapsibleSections, loadSelectedSequence, sequenceToNDJSON, getNDJSONFromTextarea, debouncedRender, formatTimestamp, render, catch, createAudioPreview, download, clearWaveformOverlay, drawWaveformOverlay, for, updateStatus, updateProgress
   - インポート: ./sequenceLoader.js, ../../dist/index.mjs
 
-**dist/demo/sequenceLoader.js** (92行, 3141バイト)
+**dist/demo/sequenceLoader.js** (96行, 3285バイト)
   - 関数: loadAllSequences
   - インポート: ./instrument/minimal.js, ./instrument/tempo-test.js, ./instrument/streaming-test-doremi.js
 
@@ -1264,8 +1304,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/demo/streaming.js** (498行, 19942バイト)
-  - 関数: constructor, createInitialTimingStats, initializeUI, if, catch, initializeCollapsibleSections, loadInitialSequence, loadSelectedSequence, sequenceToNDJSON, getNDJSONFromTextarea, play, stop, onSequenceEdit, onSequenceEditDebounced, clearDebounceTimer, buildEventLineMap, syncHighlightLines, syncOverlayScroll, updateNumberedNDJSON, updateCurrentLineIndicator, highlightEventLine, resetLineHighlights, clearHighlightState, clearLineHighlightTimers, handleEventScheduled, updateStatus, handleDebugMessage, updateDebugOutput, updateTimingVisualization, clearDebugOutput
+**dist/demo/streaming.js** (692行, 28334バイト)
+  - 関数: constructor, createInitialTimingStats, initializeUI, if, catch, initializeCollapsibleSections, loadInitialSequence, loadSelectedSequence, sequenceToNDJSON, getNDJSONFromTextarea, play, stop, onSequenceEdit, onSequenceEditDebounced, clearDebounceTimer, buildEventLineMap, syncHighlightLines, updateNumberedNDJSON, updateCurrentLineIndicator, updateCurrentLineFromEvent, handleEventScheduled, rebuildPlaybackViewer, buildPlaybackTracks, forEach, parseNoteNumber, parseTimeValue, getEventStartTime, startPlaybackPositionUpdates, stopPlaybackPositionUpdates, updatePlaybackProgressLineFromNow, updatePlaybackPositionLine, flashPlaybackEvent, updateStatus, handleDebugMessage, updateDebugOutput, updateTimingVisualization, clearDebugOutput
   - インポート: ./sequenceLoader.js, ../../dist/index.mjs
 
 **dist/esm/event-scheduler.d.ts** (18行, 710バイト)
@@ -1280,7 +1320,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: createInstrument
   - インポート: tone
 
-**dist/esm/index.d.ts** (6行, 564バイト)
+**dist/esm/index.d.ts** (6行, 619バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1308,7 +1348,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: ../types.js
 
-**dist/esm/types.d.ts** (59行, 1508バイト)
+**dist/esm/types.d.ts** (83行, 2298バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1320,8 +1360,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: scheduleOrExecuteEvent, playSequence
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**dist/event-scheduler.js** (143行, 5601バイト)
-  - 関数: rampParameter, scheduleOrExecuteEvent, playSequence, for, if, switch, forEach, catch
+**dist/event-scheduler.js** (224行, 8708バイト)
+  - 関数: resolveTarget, rampParameter, scheduleOrExecuteEvent, playSequence, if, for, switch, forEach, catch
   - インポート: ./node-factory.js
 
 **dist/factories/effect-factory.d.ts** (10行, 368バイト)
@@ -1340,7 +1380,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: createInstrument, createPolySynth, createSampler, switch, if
   - インポート: なし
 
-**dist/index.d.ts** (6行, 564バイト)
+**dist/index.d.ts** (6行, 619バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1376,8 +1416,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/sequencer-nodes.js** (35行, 909バイト)
-  - 関数: constructor, get, set, disposeAll, forEach, catch
+**dist/sequencer-nodes.js** (47行, 1331バイト)
+  - 関数: constructor, get, set, disposeAll, catch, if
   - インポート: なし
 
 **dist/streaming/event-processor.d.ts** (41行, 1513バイト)
@@ -1396,7 +1436,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, isPlaying, startTime, currentEvents, processedEventIndices, loopCount, cachedSequenceDuration, createdNodeIds, processLoopCount, incrementProcessLoopCount, start, stop, markEventAsProcessed, resetProcessedEvents
   - インポート: なし
 
-**dist/types.d.ts** (59行, 1508バイト)
+**dist/types.d.ts** (83行, 2298バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1432,103 +1472,111 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: renameFiles, updateImports, catch, if
   - インポート: fs, path
 
-**src/demo/demo-types.ts** (85行, 1755バイト)
+**src/demo/demo-types.ts** (101行, 2181バイト)
   - 関数: なし
   - インポート: なし
 
-**src/demo/effect/autofilter.ts** (44行, 1091バイト)
+**src/demo/effect/autofilter.ts** (49行, 1188バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/autopanner.ts** (44行, 1017バイト)
+**src/demo/effect/autopanner.ts** (49行, 1114バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/autowah.ts** (49行, 1156バイト)
+**src/demo/effect/autowah.ts** (54行, 1252バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/bitcrusher.ts** (49行, 1085バイト)
+**src/demo/effect/bitcrusher.ts** (54行, 1181バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/chebyshev.ts** (49行, 1107バイト)
+**src/demo/effect/chebyshev.ts** (54行, 1203バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/chorus-object-args.ts** (49行, 1234バイト)
+**src/demo/effect/chorus-object-args.ts** (54行, 1331バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/chorus.ts** (49行, 1161バイト)
+**src/demo/effect/chorus.ts** (54行, 1258バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/distortion.ts** (49行, 1116バイト)
+**src/demo/effect/distortion.ts** (54行, 1212バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/feedbackdelay.ts** (49行, 1135バイト)
+**src/demo/effect/feedbackdelay.ts** (54行, 1231バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/freeverb.ts** (49行, 1104バイト)
+**src/demo/effect/freeverb.ts** (54行, 1201バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/frequencyshifter.ts** (44行, 989バイト)
+**src/demo/effect/frequencyshifter.ts** (49行, 1086バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/jcreverb.ts** (49行, 1085バイト)
+**src/demo/effect/generic-ramp-to.ts** (69行, 1490バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/lpf-envelope.ts** (82行, 1983バイト)
+**src/demo/effect/jcreverb.ts** (54行, 1182バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/lpf-sweep.ts** (74行, 1830バイト)
+**src/demo/effect/lpf-envelope.ts** (87行, 2054バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/phaser.ts** (49行, 1140バイト)
+**src/demo/effect/lpf-q-lfo.ts** (61行, 1452バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/pingpongdelay.ts** (49行, 1135バイト)
+**src/demo/effect/lpf-sweep.ts** (79行, 1901バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/pitchshift.ts** (49行, 1137バイト)
+**src/demo/effect/phaser.ts** (54行, 1237バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/reverb.ts** (49行, 1092バイト)
+**src/demo/effect/pingpongdelay.ts** (54行, 1231バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/stereowidener.ts** (49行, 1098バイト)
+**src/demo/effect/pitchshift.ts** (54行, 1233バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/tremolo.ts** (44行, 1007バイト)
+**src/demo/effect/reverb.ts** (54行, 1189バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/effect/vibrato.ts** (44行, 1010バイト)
+**src/demo/effect/stereowidener.ts** (54行, 1194バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/amsynth.ts** (59行, 1334バイト)
+**src/demo/effect/tremolo.ts** (49行, 1104バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/delay-vibrato.ts** (71行, 1662バイト)
+**src/demo/effect/vibrato.ts** (49行, 1107バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/duosynth.ts** (64行, 1467バイト)
+**src/demo/instrument/amsynth.ts** (64行, 1430バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/instrument/delay-vibrato.ts** (76行, 1759バイト)
+  - 関数: なし
+  - インポート: ../demo-types.js
+
+**src/demo/instrument/duosynth.ts** (69行, 1563バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
@@ -1536,59 +1584,59 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: i
   - インポート: ../demo-types.js
 
-**src/demo/instrument/membranesynth.ts** (51行, 1159バイト)
+**src/demo/instrument/membranesynth.ts** (56行, 1255バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/metalsynth.ts** (50行, 1145バイト)
+**src/demo/instrument/metalsynth.ts** (55行, 1241バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/minimal.ts** (23行, 475バイト)
+**src/demo/instrument/minimal.ts** (28行, 570バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/monosynth.ts** (49行, 1091バイト)
+**src/demo/instrument/monosynth.ts** (54行, 1187バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/multitimbral.ts** (60行, 1340バイト)
+**src/demo/instrument/multitimbral.ts** (65行, 1437バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/noisesynth.ts** (48行, 1035バイト)
+**src/demo/instrument/noisesynth.ts** (53行, 1131バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/plucksynth.ts** (43行, 965バイト)
+**src/demo/instrument/plucksynth.ts** (48行, 1062バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/polysynth-fm.ts** (63行, 1496バイト)
+**src/demo/instrument/polysynth-fm.ts** (68行, 1592バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/portamento.ts** (65行, 1489バイト)
+**src/demo/instrument/portamento.ts** (70行, 1586バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/sampler-piano.ts** (47行, 1229バイト)
+**src/demo/instrument/sampler-piano.ts** (52行, 1326バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/streaming-test-doremi.ts** (64行, 1256バイト)
+**src/demo/instrument/streaming-test-doremi.ts** (69行, 1333バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/supersaw.ts** (56行, 1284バイト)
+**src/demo/instrument/supersaw.ts** (61行, 1372バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/tempo-test.ts** (44行, 851バイト)
+**src/demo/instrument/tempo-test.ts** (49行, 927バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
-**src/demo/instrument/volume-control.ts** (66行, 1425バイト)
+**src/demo/instrument/volume-control.ts** (71行, 1501バイト)
   - 関数: なし
   - インポート: ../demo-types.js
 
@@ -1608,7 +1656,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: constructor, if, catch, for, render
   - インポート: ./demo-types.js, ./sequenceLoader.js, ../../dist/index.mjs
 
-**src/demo/sequenceLoader.ts** (103行, 3260バイト)
+**src/demo/sequenceLoader.ts** (107行, 3400バイト)
   - 関数: loadAllSequences
   - インポート: ./demo-types.js, ./instrument/minimal.js, ./instrument/tempo-test.js
 
@@ -1624,16 +1672,16 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: ../demo-types.js, ../sequenceLoader.js
 
-**src/demo/streaming.ts** (572行, 18986バイト)
-  - 関数: constructor, createInitialTimingStats, if, catch, play
+**src/demo/streaming.ts** (818行, 26981バイト)
+  - 関数: constructor, createInitialTimingStats, if, catch, forEach, play
   - インポート: ./demo-types.js, ./sequenceLoader.js, ../../dist/index.mjs
 
 **src/demo/tone-global.d.ts** (9行, 166バイト)
   - 関数: なし
   - インポート: tone
 
-**src/event-scheduler.ts** (159行, 5162バイト)
-  - 関数: rampParameter, scheduleOrExecuteEvent, playSequence, for, if, switch, forEach, catch
+**src/event-scheduler.ts** (260行, 7920バイト)
+  - 関数: resolveTarget, rampParameter, scheduleOrExecuteEvent, playSequence, if, for, switch, forEach, catch
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
 **src/factories/effect-factory.ts** (69行, 2362バイト)
@@ -1644,7 +1692,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: createInstrument, createPolySynth, createSampler, switch, if
   - インポート: tone
 
-**src/index.ts** (38行, 903バイト)
+**src/index.ts** (41行, 964バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1660,8 +1708,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: audioBufferToWav, writeString, downloadWav, constructor, if, for, forEach, render
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**src/sequencer-nodes.ts** (32行, 681バイト)
-  - 関数: forEach, catch
+**src/sequencer-nodes.ts** (44行, 1006バイト)
+  - 関数: catch, if
   - インポート: なし
 
 **src/streaming/event-processor.ts** (222行, 8007バイト)
@@ -1672,7 +1720,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: startTime, currentEvents, loopCount, cachedSequenceDuration
   - インポート: ../types.js
 
-**src/types.ts** (86行, 1997バイト)
+**src/types.ts** (114行, 2753バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1681,20 +1729,20 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - インポート: なし
 
 ## 関数呼び出し階層
-- for (dist/cjs/event-scheduler.js)
+- if (dist/cjs/event-scheduler.js)
   - scheduleOrExecuteEvent (dist/cjs/event-scheduler.d.ts)
     - playSequence ()
-      - rampParameter (dist/cjs/event-scheduler.js)
+      - resolveTarget (dist/cjs/event-scheduler.js)
+      - rampParameter ()
       - forEach ()
       - defineProperty ()
+      - start ()
       - stop ()
       - get ()
       - disposeAll ()
-      - start ()
       - ensureAudioContextStarted ()
       - createNode (dist/cjs/node-factory.d.ts)
       - connectNode ()
-- if (dist/cjs/event-scheduler.js)
   - createInstrument (dist/cjs/factories/instrument-factory.d.ts)
     - createPolySynth ()
       - createSampler ()
@@ -1704,6 +1752,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
     - updateImports ()
   - createEffect (dist/cjs/factories/effect-factory.d.ts)
     - startIfAvailable ()
+- for (dist/cjs/event-scheduler.js)
 - switch (dist/cjs/event-scheduler.js)
 - catch (dist/cjs/event-scheduler.js)
 - audioBufferToWav (dist/cjs/offline-renderer.d.ts)
@@ -1761,4 +1810,4 @@ googled947dc864c270e07.html
 
 
 ---
-Generated at: 2026-02-13 07:13:30 JST
+Generated at: 2026-02-15 07:08:53 JST
