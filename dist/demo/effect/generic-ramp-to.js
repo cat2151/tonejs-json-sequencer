@@ -52,5 +52,10 @@ export const sequence = [
         connectTo: "toDestination"
     },
     ...wetAutomation,
-    ...triggerEvents
+    ...triggerEvents,
+    {
+        eventType: "loopEnd",
+        nodeId: 0,
+        args: ["+1728i"]
+    }
 ];

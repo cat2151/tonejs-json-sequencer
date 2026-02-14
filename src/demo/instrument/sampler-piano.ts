@@ -42,5 +42,10 @@ export const sequence: SequenceEvent[] = [
         "eventType": "triggerAttackRelease",
         "nodeId": 0,
         "args": ["B4", "1n", "+288i"]
+      },
+      {
+        "eventType": "loopEnd",
+        "nodeId": 0,
+        "args": ["+1056i"]
       }
 ];

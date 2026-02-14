@@ -66,5 +66,10 @@ export const sequence: SequenceEvent[] = [
         "eventType": "depth.rampTo",
         "nodeId": 1,
         "args": ["0.2", "192i", "+960i"]
+      },
+      {
+        "eventType": "loopEnd",
+        "nodeId": 0,
+        "args": ["+1526i"]
       }
 ];
