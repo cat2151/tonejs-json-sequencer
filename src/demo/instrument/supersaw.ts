@@ -17,7 +17,7 @@ export const sequence: SequenceEvent[] = [
               "attack": 0.1,
               "decay": 0.05,
               "sustain": 0.8,
-              "release": 9999999999
+              "release": 2
             },
           }
         }
@@ -51,5 +51,10 @@ export const sequence: SequenceEvent[] = [
         "eventType": "triggerAttackRelease",
         "nodeId": 0,
         "args": ["B5", "192i", "+96i"]
+      },
+      {
+        "eventType": "loopEnd",
+        "nodeId": 0,
+        "args": ["+3840i"]
       },
 ];

@@ -69,5 +69,10 @@ export const sequence: SequenceEvent[] = [
   },
   ...qRampEvents,
   ...cutoffRampEvents,
-  ...triggerEvents
+  ...triggerEvents,
+  {
+    eventType: "loopEnd",
+    nodeId: 0,
+    args: ["+7680i"]
+  }
 ];

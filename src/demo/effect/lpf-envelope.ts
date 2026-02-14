@@ -77,5 +77,10 @@ export const sequence: SequenceEvent[] = [
   },
   ...filterQEnvelopes,
   ...filterCutoffEnvelopes,
-  ...triggerEvents
+  ...triggerEvents,
+  {
+    eventType: "loopEnd",
+    nodeId: 0,
+    args: ["+1920i"]
+  }
 ];
