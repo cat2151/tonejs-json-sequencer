@@ -9,6 +9,7 @@ export type {
   TriggerAttackReleaseEvent,
   DepthRampToEvent,
   VolumeRampToEvent,
+  LFOEvent,
   SequenceEvent
 } from './types.js';
 

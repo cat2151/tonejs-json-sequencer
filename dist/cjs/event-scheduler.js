@@ -6,16 +6,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.scheduleOrExecuteEvent = scheduleOrExecuteEvent;
 exports.playSequence = playSequence;
 const node_factory_js_1 = require("./node-factory.js");
-function rampParameter(node, path, args, label, nodeId) {
+function resolveTarget(node, path, label, nodeId) {
+    const segments = Array.isArray(path)
+        ? path
+        : String(path)
+            .split('.')
+            .filter(part => part.length > 0);
+    if (segments.length === 0) {
+        console.warn(`Node ${nodeId} has an empty path for ${label}; expected at least one property segment`);
+        return null;
+    }
     let target = node;
-    for (const key of path) {
+    for (const key of segments) {
         if (target == null) {
             console.warn(`Node ${nodeId} not found or doesn't support ${label}`);
-            return;
+            return null;
         }
         target = target[key];
     }
-    if (target && typeof target.rampTo === 'function') {
+    if (target == null) {
+        console.warn(`Node ${nodeId} not found or doesn't support ${label}`);
+        return null;
+    }
+    return target;
+}
+function rampParameter(node, path, args, label, nodeId) {
+    const target = resolveTarget(node, path, label, nodeId);
+    if (!target)
+        return;
+    if (typeof target.rampTo === 'function') {
         target.rampTo(...args);
     }
     else {
@@ -74,6 +93,42 @@ function scheduleOrExecuteEvent(Tone, nodes, element) {
         case 'filter.Q.rampTo': {
             const node = nodes.get(element.nodeId);
             rampParameter(node, ['filter', 'Q'], element.args, 'filter.Q.rampTo', element.nodeId);
+            break;
+        }
+        case 'LFO': {
+            const node = nodes.get(element.nodeId);
+            if (!node) {
+                console.warn(`Node ${element.nodeId} not found for LFO event`);
+                break;
+            }
+            const args = Array.isArray(element.args) ? element.args : [];
+            if (args.length < 1) {
+                console.warn(`LFO event for node ${element.nodeId} requires a target path`);
+                break;
+            }
+            const hasStartTime = args.length >= 2;
+            const targetPath = hasStartTime ? args[args.length - 2] : args[args.length - 1];
+            const startTime = hasStartTime ? args[args.length - 1] : undefined;
+            const lfoArgs = hasStartTime ? args.slice(0, -2) : args.slice(0, -1);
+            const target = resolveTarget(node, targetPath, 'LFO target', element.nodeId);
+            if (!target) {
+                break;
+            }
+            const lfo = new Tone.LFO(...lfoArgs);
+            lfo.connect(target);
+            if (startTime !== undefined) {
+                lfo.start(startTime);
+            }
+            else {
+                lfo.start();
+            }
+            const lfoBucket = node.__sequencerLFOs;
+            if (Array.isArray(lfoBucket)) {
+                lfoBucket.push(lfo);
+            }
+            else {
+                node.__sequencerLFOs = [lfo];
+            }
             break;
         }
         case 'set': {

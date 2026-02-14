@@ -71,6 +71,18 @@ export interface LoopEndEvent {
   args: string[]; // [time] - e.g., ["+384i"] for 384 ticks
 }
 
+export interface LFOEvent {
+  eventType: 'LFO';
+  nodeId: number;
+  /**
+   * Arguments for the LFO event: [options, targetPath, time?]
+   * - options: Tone.LFO options object (Tone time values are relative to Transport start)
+   * - targetPath: dot-delimited string (e.g., "filter.Q") or string[]
+   * - time: optional start time for the LFO
+   */
+  args: any[];
+}
+
 export type SequenceEvent =
   | CreateNodeEvent
   | ConnectEvent
@@ -82,4 +94,5 @@ export type SequenceEvent =
   | FilterFrequencyRampToEvent
   | FilterQRampToEvent
   | SetEvent
-  | LoopEndEvent;
+  | LoopEndEvent
+  | LFOEvent;
