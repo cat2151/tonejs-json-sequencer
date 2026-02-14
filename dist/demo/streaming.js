@@ -555,8 +555,8 @@ class StreamingDemo {
             return;
         }
         const eventStartTime = this.getEventStartTime(info.event);
-        const nodeId = 'nodeId' in info.event ? info.event.nodeId : null;
-        if (eventStartTime === null || nodeId === null) {
+        const nodeId = info.event.nodeId;
+        if (eventStartTime === null) {
             return;
         }
         const targetBody = this.playbackTrackBodies.get(nodeId);
