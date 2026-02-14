@@ -209,34 +209,113 @@
   color: var(--text-color);
 }
 
-#sequenceHighlightOverlay {
-  position: absolute;
-  /* Fallback for browsers that do not support `inset` */
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  inset: 0;
-  padding: 12px;
-  box-sizing: border-box;
-  pointer-events: none;
-  z-index: 1;
+.playback-viewer {
+  margin: 20px 0;
+  padding: 14px;
+  background: var(--status-bg);
+  border: 1px solid var(--textarea-border);
+  border-radius: 8px;
+}
+
+.playback-viewer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.playback-viewer-title {
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.playback-viewer-legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-color);
+  font-size: 13px;
+}
+
+.legend-box {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.legend-current {
+  background: #ff9800;
+}
+
+.legend-flash {
+  background: #2ecc71;
+}
+
+.playback-track-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.playback-track {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.playback-track-label {
+  font-size: 13px;
+  color: var(--text-color);
+  opacity: 0.9;
+}
+
+.playback-track-body {
+  position: relative;
+  background: var(--textarea-bg);
+  border: 1px solid var(--textarea-border);
+  border-radius: 6px;
+  height: 140px;
   overflow: hidden;
 }
 
-.sequence-line-highlight {
-  height: 1.5em;
-  line-height: 1.5;
-  width: 100%;
+.playback-note {
+  position: absolute;
+  height: 10px;
+  background: var(--button-bg);
   border-radius: 4px;
-  background: transparent;
-  transition: background-color 0.05s ease, opacity 0.05s ease;
-  opacity: 0;
+  transform: translateY(-50%);
+  opacity: 0.85;
 }
 
-.sequence-line-highlight.active {
-  background: rgba(46, 204, 113, 0.35);
-  opacity: 1;
+.playback-progress-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #ff9800;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.playback-flash-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #2ecc71;
+  pointer-events: none;
+}
+
+.playback-viewer-empty {
+  color: var(--text-color);
+  font-size: 13px;
+  background: var(--status-bg);
+  border: 1px dashed var(--textarea-border);
+  padding: 10px;
+  border-radius: 6px;
 }
 
 .sequence-debug-wrapper {

@@ -2,7 +2,22 @@
 import type { SequenceEvent } from './demo-types.js';
 import { loadAllSequences } from './sequenceLoader.js';
 // @ts-ignore - Using built library
-import { SequencerNodes, NDJSONStreamingPlayer, parseNDJSON } from '../../dist/index.mjs';
+import { SequencerNodes, NDJSONStreamingPlayer, parseNDJSON, type EventScheduledInfo } from '../../dist/index.mjs';
+
+interface PlaybackNoteBlock {
+  start: number;
+  duration: number;
+  noteNumber: number;
+  nodeId: number;
+}
+
+interface PlaybackTrackData {
+  nodeId: number;
+  nodeLabel: string;
+  minNote: number;
+  maxNote: number;
+  notes: PlaybackNoteBlock[];
+}
 
 class StreamingDemo {
   private player: NDJSONStreamingPlayer | null = null;
@@ -14,13 +29,19 @@ class StreamingDemo {
   private updateMode: 'manual' | 'debounce' = 'debounce';
   private readonly DEBOUNCE_DELAY_MS = 1000;
   private timingStats = this.createInitialTimingStats();
-  private lineHighlightContainer: HTMLDivElement | null = null;
-  private lineHighlightElements: HTMLDivElement[] = [];
-  private lineHighlightTimers: Map<number, number> = new Map();
   private eventLineMap: number[] = [];
-  private readonly LINE_HIGHLIGHT_DURATION_MS = 200;
   private currentLineIndicator: HTMLElement | null = null;
   private numberedNDJSONTextarea: HTMLTextAreaElement | null = null;
+  private playbackTrackContainer: HTMLDivElement | null = null;
+  private playbackTrackLines: Map<number, HTMLDivElement> = new Map();
+  private playbackTrackBodies: Map<number, HTMLDivElement> = new Map();
+  private playbackDurationSeconds = 0;
+  private playbackLoopEnabled = false;
+  private playbackLoopWaitSeconds = 0;
+  private playbackStartTime: number | null = null;
+  private playbackAnimationFrameId: number | null = null;
+  private readonly EVENT_FLASH_DURATION_MS = 200;
+  private readonly PLAYBACK_LOOKAHEAD_SECONDS = 0.05;
 
   constructor() {
     this.initializeUI();
@@ -76,13 +97,16 @@ class StreamingDemo {
     });
 
     // Loop checkbox change
-    document.getElementById('loopCheckbox')?.addEventListener('change', () => {
+    const loopCheckboxElement = document.getElementById('loopCheckbox') as HTMLInputElement | null;
+    loopCheckboxElement?.addEventListener('change', () => {
+      this.playbackLoopEnabled = loopCheckboxElement.checked;
       // If playing, restart with new loop setting
       if (this.player && this.player.playing) {
         this.stop();
         this.play();
       }
     });
+    this.playbackLoopEnabled = loopCheckboxElement?.checked ?? false;
 
     // Debug checkbox change
     document.getElementById('debugCheckbox')?.addEventListener('change', (e) => {
@@ -127,9 +151,9 @@ class StreamingDemo {
 
     // Textarea change (live editing)
     const textarea = document.getElementById('sequenceEditor') as HTMLTextAreaElement;
-    this.lineHighlightContainer = document.getElementById('sequenceHighlightOverlay') as HTMLDivElement | null;
     this.currentLineIndicator = document.getElementById('currentLineIndicator');
     this.numberedNDJSONTextarea = document.getElementById('sequenceEditorDebug') as HTMLTextAreaElement | null;
+    this.playbackTrackContainer = document.getElementById('playbackTrackContainer') as HTMLDivElement | null;
     this.updateCurrentLineIndicator(null);
     this.syncHighlightLines();
     
@@ -140,7 +164,6 @@ class StreamingDemo {
         this.onSequenceEditDebounced();
       }
     });
-    textarea.addEventListener('scroll', () => this.syncOverlayScroll(textarea));
 
     // Keyboard shortcuts for manual mode (CTRL+S and SHIFT+ENTER)
     textarea.addEventListener('keydown', (e) => {
@@ -198,7 +221,6 @@ class StreamingDemo {
       textarea.value = ndjson;
       this.eventLineMap = this.buildEventLineMap(ndjson);
       this.syncHighlightLines(ndjson);
-      this.syncOverlayScroll(textarea);
     }
   }
 
@@ -218,12 +240,14 @@ class StreamingDemo {
 
       const loopCheckbox = document.getElementById('loopCheckbox') as HTMLInputElement;
       const loop = loopCheckbox.checked;
+      this.playbackLoopEnabled = loop;
       
       const debugCheckbox = document.getElementById('debugCheckbox') as HTMLInputElement;
       const debug = debugCheckbox.checked;
 
       // Loop wait is fixed to 0 seconds
       const loopWaitSeconds = 0;
+      this.playbackLoopWaitSeconds = loopWaitSeconds;
 
       // Create player only if it doesn't exist or isn't playing
       if (!this.player || !this.player.playing) {
@@ -237,7 +261,7 @@ class StreamingDemo {
           loopWaitSeconds: loopWaitSeconds,
           debug: debug,
           onDebug: (message: string, data?: any) => this.handleDebugMessage(message, data),
-          onEventScheduled: (info: { eventIndex: number }) => this.handleEventScheduled(info),
+          onEventScheduled: (info: EventScheduledInfo) => this.handleEventScheduled(info),
           onLoopComplete: () => {
             this.updateStatus('再生中（ループ）');
           }
@@ -252,6 +276,7 @@ class StreamingDemo {
 
       // Start playback
       await this.player.start(events);
+      this.startPlaybackPositionUpdates();
       
       this.updateStatus(loop ? '再生中（ループ有効）' : '再生中');
       
@@ -270,17 +295,17 @@ class StreamingDemo {
       this.player.stop();
       this.player = null;
     }
+
+    this.stopPlaybackPositionUpdates();
     
     // Clear any pending debounce timer
     this.clearDebounceTimer();
-    
-    // Clear highlights
-    this.resetLineHighlights();
     
     // Dispose all nodes on stop
     this.nodes.disposeAll();
     
     this.updateStatus('停止中');
+    this.updateCurrentLineIndicator(null);
     
     // Enable play button, disable stop button
     (document.getElementById('playButton') as HTMLButtonElement).disabled = false;
@@ -341,38 +366,7 @@ class StreamingDemo {
   private syncHighlightLines(ndjson?: string): void {
     const source = ndjson ?? this.getNDJSONFromTextarea();
     this.updateNumberedNDJSON(source);
-
-    if (!this.lineHighlightContainer) {
-      return;
-    }
-
-    const lines = source.split('\n');
-    const needsRebuild = this.lineHighlightElements.length !== lines.length;
-
-    if (needsRebuild) {
-      this.resetLineHighlights();
-      this.lineHighlightContainer.innerHTML = '';
-      this.lineHighlightElements = lines.map(() => {
-        const lineEl = document.createElement('div');
-        lineEl.className = 'sequence-line-highlight';
-        lineEl.textContent = '\u00A0';
-        this.lineHighlightContainer!.appendChild(lineEl);
-        return lineEl;
-      });
-    } else {
-      this.clearHighlightState();
-    }
-
-    const textarea = document.getElementById('sequenceEditor') as HTMLTextAreaElement | null;
-    if (textarea) {
-      this.syncOverlayScroll(textarea);
-    }
-  }
-
-  private syncOverlayScroll(textarea: HTMLTextAreaElement): void {
-    if (this.lineHighlightContainer) {
-      this.lineHighlightContainer.style.transform = `translateY(-${textarea.scrollTop}px)`;
-    }
+    this.rebuildPlaybackViewer(source);
   }
 
   private updateNumberedNDJSON(ndjson?: string): void {
@@ -400,56 +394,308 @@ class StreamingDemo {
       : `現在の演奏行: ${lineIndex + 1}`;
   }
 
-  private highlightEventLine(eventIndex: number): void {
+  private updateCurrentLineFromEvent(eventIndex: number): void {
     const lineIndex = this.eventLineMap[eventIndex];
-    if (lineIndex === undefined) {
-      this.updateCurrentLineIndicator(null);
+    this.updateCurrentLineIndicator(lineIndex ?? null);
+  }
+
+  private handleEventScheduled(info: EventScheduledInfo): void {
+    this.updateCurrentLineFromEvent(info.eventIndex);
+    this.flashPlaybackEvent(info);
+  }
+
+  private rebuildPlaybackViewer(ndjson: string): void {
+    const container = this.playbackTrackContainer;
+    if (!container) {
       return;
     }
 
-    const lineElement = this.lineHighlightElements[lineIndex];
-    if (!lineElement) {
-      this.updateCurrentLineIndicator(null);
+    let events: SequenceEvent[];
+    try {
+      events = parseNDJSON(ndjson);
+    } catch {
+      container.innerHTML = '<div class="playback-viewer-empty">NDJSONのパースに失敗しました</div>';
+      this.playbackTrackLines.clear();
+      this.playbackTrackBodies.clear();
+      this.playbackDurationSeconds = 0;
       return;
     }
 
-    lineElement.classList.add('active');
-    const existingTimer = this.lineHighlightTimers.get(lineIndex);
-    if (existingTimer !== undefined) {
-      window.clearTimeout(existingTimer);
+    const { tracks, totalDuration } = this.buildPlaybackTracks(events);
+    this.playbackDurationSeconds = totalDuration;
+    container.innerHTML = '';
+    this.playbackTrackLines.clear();
+    this.playbackTrackBodies.clear();
+
+    if (tracks.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'playback-viewer-empty';
+      empty.textContent = 'triggerAttackReleaseイベントがありません';
+      container.appendChild(empty);
+      return;
     }
 
-    const timerId = window.setTimeout(() => {
-      lineElement.classList.remove('active');
-      this.lineHighlightTimers.delete(lineIndex);
-    }, this.LINE_HIGHLIGHT_DURATION_MS);
+    tracks.forEach(track => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'playback-track';
 
-    this.lineHighlightTimers.set(lineIndex, timerId);
-    this.updateCurrentLineIndicator(lineIndex);
+      const label = document.createElement('div');
+      label.className = 'playback-track-label';
+      label.textContent = track.nodeLabel;
+      wrapper.appendChild(label);
+
+      const body = document.createElement('div');
+      body.className = 'playback-track-body';
+
+      const progressLine = document.createElement('div');
+      progressLine.className = 'playback-progress-line';
+      body.appendChild(progressLine);
+      this.playbackTrackLines.set(track.nodeId, progressLine);
+      this.playbackTrackBodies.set(track.nodeId, body);
+
+      track.notes.forEach(note => {
+        const noteEl = document.createElement('div');
+        noteEl.className = 'playback-note';
+
+        const leftPercent = this.playbackDurationSeconds > 0
+          ? Math.max(0, Math.min(100, (note.start / this.playbackDurationSeconds) * 100))
+          : 0;
+        const widthPercent = this.playbackDurationSeconds > 0
+          ? Math.max((note.duration / this.playbackDurationSeconds) * 100, 0.5)
+          : 0;
+
+        const noteRange = track.maxNote - track.minNote;
+        const verticalRatio = noteRange === 0
+          ? 0.5
+          : (note.noteNumber - track.minNote) / noteRange;
+        const topPercent = 100 - (verticalRatio * 100);
+
+        noteEl.style.left = `${leftPercent}%`;
+        noteEl.style.width = `${widthPercent}%`;
+        noteEl.style.top = `${topPercent}%`;
+        body.appendChild(noteEl);
+      });
+
+      wrapper.appendChild(body);
+      container.appendChild(wrapper);
+    });
+
+    this.updatePlaybackPositionLine(0);
   }
 
-  private resetLineHighlights(): void {
-    this.clearHighlightState();
-    if (this.lineHighlightContainer) {
-      this.lineHighlightContainer.innerHTML = '';
+  private buildPlaybackTracks(events: SequenceEvent[]): { tracks: PlaybackTrackData[]; totalDuration: number } {
+    const trackMap = new Map<number, PlaybackTrackData>();
+    const nodeTypeMap = new Map<number, string>();
+    let maxEndTime = 0;
+    let loopEndSeconds: number | null = null;
+
+    events.forEach(event => {
+      if (event.eventType === 'createNode') {
+        nodeTypeMap.set(event.nodeId, event.nodeType);
+        return;
+      }
+
+      if (event.eventType === 'loopEnd' && 'args' in event && Array.isArray(event.args) && event.args.length > 0) {
+        const parsedLoopEnd = this.parseTimeValue(event.args[event.args.length - 1]);
+        if (parsedLoopEnd !== null) {
+          loopEndSeconds = loopEndSeconds === null ? parsedLoopEnd : Math.max(loopEndSeconds, parsedLoopEnd);
+        }
+        return;
+      }
+
+      if (event.eventType !== 'triggerAttackRelease' || !('args' in event) || !Array.isArray(event.args)) {
+        return;
+      }
+
+      if (event.args.length < 3) {
+        return;
+      }
+
+      const noteNumber = this.parseNoteNumber(event.args[0]);
+      const duration = this.parseTimeValue(event.args[1]);
+      const start = this.parseTimeValue(event.args[event.args.length - 1]);
+
+      if (noteNumber === null || duration === null || start === null) {
+        return;
+      }
+
+      const endTime = start + duration;
+      maxEndTime = Math.max(maxEndTime, endTime);
+
+      const existing = trackMap.get(event.nodeId);
+      const label = nodeTypeMap.has(event.nodeId)
+        ? `Node ${event.nodeId} (${nodeTypeMap.get(event.nodeId)})`
+        : `Node ${event.nodeId}`;
+
+      const track: PlaybackTrackData = existing ?? {
+        nodeId: event.nodeId,
+        nodeLabel: label,
+        minNote: noteNumber,
+        maxNote: noteNumber,
+        notes: []
+      };
+
+      track.minNote = Math.min(track.minNote, noteNumber);
+      track.maxNote = Math.max(track.maxNote, noteNumber);
+      track.notes.push({ start, duration, noteNumber, nodeId: event.nodeId });
+      trackMap.set(event.nodeId, track);
+    });
+
+    const tracks = Array.from(trackMap.values()).sort((a, b) => a.nodeId - b.nodeId);
+    const totalDuration = loopEndSeconds !== null && loopEndSeconds > 0 ? loopEndSeconds : maxEndTime;
+
+    return {
+      tracks,
+      totalDuration
+    };
+  }
+
+  private parseNoteNumber(value: unknown): number | null {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return value;
     }
-    this.lineHighlightElements = [];
-    this.updateCurrentLineIndicator(null);
+
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      const numeric = Number(trimmed);
+      if (Number.isFinite(numeric)) {
+        return numeric;
+      }
+
+      try {
+        const midi = Tone.Frequency(trimmed).toMidi();
+        return Number.isFinite(midi) ? midi : null;
+      } catch {
+        return null;
+      }
+    }
+
+    return null;
   }
 
-  private clearHighlightState(): void {
-    this.lineHighlightElements.forEach(el => el.classList.remove('active'));
-    this.clearLineHighlightTimers();
-    this.updateCurrentLineIndicator(null);
+  private parseTimeValue(value: unknown): number | null {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return value;
+    }
+
+    if (typeof value !== 'string') {
+      return null;
+    }
+
+    const trimmed = value.trim();
+    const withoutPlus = trimmed.startsWith('+') ? trimmed.substring(1) : trimmed;
+
+    try {
+      const ticksSeconds = Tone.Ticks(withoutPlus).toSeconds();
+      if (Number.isFinite(ticksSeconds)) {
+        return ticksSeconds;
+      }
+    } catch {
+      // Fall through
+    }
+
+    try {
+      const seconds = Tone.Time(withoutPlus).toSeconds();
+      if (Number.isFinite(seconds)) {
+        return seconds;
+      }
+    } catch {
+      // Fall through
+    }
+
+    const numeric = Number(withoutPlus);
+    return Number.isFinite(numeric) ? numeric : null;
   }
 
-  private clearLineHighlightTimers(): void {
-    this.lineHighlightTimers.forEach(timerId => window.clearTimeout(timerId));
-    this.lineHighlightTimers.clear();
+  private getEventStartTime(event: SequenceEvent): number | null {
+    if (!('args' in event) || !Array.isArray(event.args) || event.args.length === 0) {
+      return null;
+    }
+    return this.parseTimeValue(event.args[event.args.length - 1]);
   }
 
-  private handleEventScheduled(info: { eventIndex: number }): void {
-    this.highlightEventLine(info.eventIndex);
+  private startPlaybackPositionUpdates(): void {
+    this.stopPlaybackPositionUpdates();
+    this.playbackStartTime = Tone.now() + this.PLAYBACK_LOOKAHEAD_SECONDS;
+    this.updatePlaybackProgressLineFromNow();
+  }
+
+  private stopPlaybackPositionUpdates(): void {
+    if (this.playbackAnimationFrameId !== null) {
+      cancelAnimationFrame(this.playbackAnimationFrameId);
+      this.playbackAnimationFrameId = null;
+    }
+    this.playbackStartTime = null;
+    this.updatePlaybackPositionLine(0);
+  }
+
+  private updatePlaybackProgressLineFromNow(): void {
+    if (this.playbackStartTime === null || this.playbackDurationSeconds <= 0) {
+      return;
+    }
+
+    const now = Tone.now();
+    const elapsed = Math.max(0, now - this.playbackStartTime);
+    const loopCycle = this.playbackDurationSeconds + this.playbackLoopWaitSeconds;
+    const position = this.playbackLoopEnabled && loopCycle > 0
+      ? elapsed % loopCycle
+      : Math.min(elapsed, this.playbackDurationSeconds);
+
+    this.updatePlaybackPositionLine(position);
+    this.playbackAnimationFrameId = requestAnimationFrame(() => this.updatePlaybackProgressLineFromNow());
+  }
+
+  private updatePlaybackPositionLine(positionSeconds: number): void {
+    if (this.playbackDurationSeconds <= 0) {
+      this.playbackTrackLines.forEach(line => {
+        line.style.left = '0%';
+      });
+      return;
+    }
+
+    const percent = Math.max(0, Math.min(100, (positionSeconds / this.playbackDurationSeconds) * 100));
+    this.playbackTrackLines.forEach(line => {
+      line.style.left = `${percent}%`;
+    });
+  }
+
+  private flashPlaybackEvent(info: EventScheduledInfo): void {
+    if (this.playbackDurationSeconds <= 0) {
+      return;
+    }
+
+    const eventStartTime = this.getEventStartTime(info.event);
+    const nodeId = 'nodeId' in info.event ? (info.event as any).nodeId : null;
+    if (eventStartTime === null || nodeId === null) {
+      return;
+    }
+    const targetBody = this.playbackTrackBodies.get(nodeId);
+    if (!targetBody) {
+      return;
+    }
+
+    const loopCycle = this.playbackDurationSeconds + this.playbackLoopWaitSeconds;
+    if (this.playbackStartTime === null) {
+      const loopOffset = info.loopIteration * loopCycle;
+      this.playbackStartTime = info.absoluteTime - eventStartTime - loopOffset;
+    }
+
+    const baseStart = this.playbackStartTime ?? info.absoluteTime;
+    const elapsedFromStart = info.absoluteTime - baseStart;
+    const relativeTime = this.playbackLoopEnabled && loopCycle > 0
+      ? elapsedFromStart % loopCycle
+      : elapsedFromStart;
+
+    const percent = Math.max(0, Math.min(100, (relativeTime / this.playbackDurationSeconds) * 100));
+
+    const flashLine = document.createElement('div');
+    flashLine.className = 'playback-flash-line';
+    flashLine.style.left = `${percent}%`;
+    targetBody.appendChild(flashLine);
+
+    window.setTimeout(() => {
+      flashLine.remove();
+    }, this.EVENT_FLASH_DURATION_MS);
   }
 
   private updateStatus(status: string): void {
