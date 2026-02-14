@@ -108,12 +108,23 @@
     <pre id="debugOutput"></pre>
   </div>
 
+  <h3>演奏位置ビュー（簡易ピアノロール）:</h3>
+  <div class="playback-viewer">
+    <div class="playback-viewer-header">
+      <div class="playback-viewer-title">全イベントを横方向に展開</div>
+      <div class="playback-viewer-legend">
+        <span class="legend-box legend-current"></span> 現在位置
+        <span class="legend-box legend-flash"></span> 発火(200ms)
+      </div>
+    </div>
+    <div id="playbackTrackContainer" class="playback-track-container"></div>
+  </div>
+
   <h3>シーケンス（NDJSON形式 - 1行につき1イベント）:</h3>
   <div class="sequence-meta">
     <div id="currentLineIndicator" aria-live="off">現在の演奏行: -</div>
   </div>
   <div class="sequence-editor-wrapper">
-    <div id="sequenceHighlightOverlay" aria-hidden="true"></div>
     <textarea id="sequenceEditor" rows="30" cols="80"></textarea>
   </div>
   <div class="sequence-debug-wrapper">

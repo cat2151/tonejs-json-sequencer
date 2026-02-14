@@ -24,6 +24,7 @@ export {
   parseNDJSON,
   type NDJSONStreamingConfig,
   type EventPrediction,
+  type EventScheduledInfo,
   type DebugCallback
 } from './ndjson-streaming.js';
 
