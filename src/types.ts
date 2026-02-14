@@ -75,8 +75,10 @@ export interface LFOEvent {
   eventType: 'LFO';
   nodeId: number;
   /**
-   * Arguments for the LFO event: [...Tone.LFO constructor args, targetPath, time]
-   * targetPath can be a dot-delimited string (e.g., "filter.Q") or string[]
+   * Arguments for the LFO event: [options, targetPath, time?]
+   * - options: Tone.LFO options object (Tone time values are relative to Transport start)
+   * - targetPath: dot-delimited string (e.g., "filter.Q") or string[]
+   * - time: optional start time for the LFO
    */
   args: any[];
 }

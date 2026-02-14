@@ -335,7 +335,7 @@ This section lists features that are possible with Tone.js but not yet implement
 - `triggerAttackRelease` - Trigger note playback
 - `depth.rampTo` - Smoothly change the `depth` parameter
 - `volume.rampTo` - Smoothly change the `volume` parameter
-- `LFO` - Create and start a low-frequency oscillator to modulate a parameter path
+- `LFO` - Create and start a low-frequency oscillator to modulate a parameter path (start time optional, follows Tone.Transport time)
 - `set` - Global settings (currently only supports `Transport.bpm.value`)
 - `loopEnd` - Explicit loop boundary marker for streaming playback (metadata event)
 

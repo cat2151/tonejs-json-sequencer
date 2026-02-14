@@ -12,6 +12,10 @@ function resolveTarget(node, path, label, nodeId) {
         : String(path)
             .split('.')
             .filter(part => part.length > 0);
+    if (segments.length === 0) {
+        console.warn(`Node ${nodeId} has an empty path for ${label}; expected at least one property segment`);
+        return null;
+    }
     let target = node;
     for (const key of segments) {
         if (target == null) {
@@ -98,13 +102,14 @@ function scheduleOrExecuteEvent(Tone, nodes, element) {
                 break;
             }
             const args = Array.isArray(element.args) ? element.args : [];
-            if (args.length < 2) {
-                console.warn(`LFO event for node ${element.nodeId} requires a target path and time`);
+            if (args.length < 1) {
+                console.warn(`LFO event for node ${element.nodeId} requires a target path`);
                 break;
             }
-            const targetPath = args[args.length - 2];
-            const startTime = args[args.length - 1];
-            const lfoArgs = args.slice(0, -2);
+            const hasStartTime = args.length >= 2;
+            const targetPath = hasStartTime ? args[args.length - 2] : args[args.length - 1];
+            const startTime = hasStartTime ? args[args.length - 1] : undefined;
+            const lfoArgs = hasStartTime ? args.slice(0, -2) : args.slice(0, -1);
             const target = resolveTarget(node, targetPath, 'LFO target', element.nodeId);
             if (!target) {
                 break;

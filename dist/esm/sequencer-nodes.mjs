@@ -26,6 +26,7 @@ export class SequencerNodes {
                         console.warn('Failed to dispose LFO:', error);
                     }
                 });
+                delete node.__sequencerLFOs;
             }
             if (node && typeof node.dispose === 'function') {
                 try {

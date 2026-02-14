@@ -73,7 +73,7 @@ export interface LoopEndEvent {
 export interface LFOEvent {
   eventType: 'LFO';
   nodeId: number;
-  /** [...Tone.LFO constructor args, targetPath, time] */
+  /** [options, targetPath, time?] where options is a Tone.LFO options object and time is optional */
   args: any[];
 }
 
