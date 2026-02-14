@@ -55,4 +55,13 @@ export interface LoopEndEvent {
     nodeId: number;
     args: string[];
 }
-export type SequenceEvent = CreateNodeEvent | ConnectEvent | TriggerAttackReleaseEvent | DepthRampToEvent | VolumeRampToEvent | FrequencyRampToEvent | QRampToEvent | FilterFrequencyRampToEvent | FilterQRampToEvent | SetEvent | LoopEndEvent;
+export interface LFOEvent {
+    eventType: 'LFO';
+    nodeId: number;
+    /**
+     * Arguments for the LFO event: [...Tone.LFO constructor args, targetPath, time]
+     * targetPath can be a dot-delimited string (e.g., "filter.Q") or string[]
+     */
+    args: any[];
+}
+export type SequenceEvent = CreateNodeEvent | ConnectEvent | TriggerAttackReleaseEvent | DepthRampToEvent | VolumeRampToEvent | FrequencyRampToEvent | QRampToEvent | FilterFrequencyRampToEvent | FilterQRampToEvent | SetEvent | LoopEndEvent | LFOEvent;

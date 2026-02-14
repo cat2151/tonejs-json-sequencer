@@ -7,6 +7,35 @@ import type { SequenceEvent } from './types.js';
 import type { SequencerNodes } from './sequencer-nodes.js';
 import { createNode, connectNode } from './node-factory.js';
 
+function resolveTarget(
+  node: any,
+  path: string | string[],
+  label: string,
+  nodeId: number
+): any | null {
+  const segments = Array.isArray(path)
+    ? path
+    : String(path)
+        .split('.')
+        .filter(part => part.length > 0);
+
+  let target = node;
+  for (const key of segments) {
+    if (target == null) {
+      console.warn(`Node ${nodeId} not found or doesn't support ${label}`);
+      return null;
+    }
+    target = target[key];
+  }
+
+  if (target == null) {
+    console.warn(`Node ${nodeId} not found or doesn't support ${label}`);
+    return null;
+  }
+
+  return target;
+}
+
 function rampParameter(
   node: any,
   path: string[],
@@ -14,16 +43,11 @@ function rampParameter(
   label: string,
   nodeId: number
 ): void {
-  let target = node;
-  for (const key of path) {
-    if (target == null) {
-      console.warn(`Node ${nodeId} not found or doesn't support ${label}`);
-      return;
-    }
-    target = target[key];
-  }
+  const target = resolveTarget(node, path, label, nodeId);
 
-  if (target && typeof target.rampTo === 'function') {
+  if (!target) return;
+
+  if (typeof target.rampTo === 'function') {
     target.rampTo(...args);
   } else {
     console.warn(`Node ${nodeId} not found or doesn't support ${label}`);
@@ -85,6 +109,43 @@ export function scheduleOrExecuteEvent(
     case 'filter.Q.rampTo': {
       const node = nodes.get(element.nodeId);
       rampParameter(node, ['filter', 'Q'], element.args, 'filter.Q.rampTo', element.nodeId);
+      break;
+    }
+    case 'LFO': {
+      const node = nodes.get(element.nodeId);
+      if (!node) {
+        console.warn(`Node ${element.nodeId} not found for LFO event`);
+        break;
+      }
+
+      const args = Array.isArray(element.args) ? element.args : [];
+      if (args.length < 2) {
+        console.warn(`LFO event for node ${element.nodeId} requires a target path and time`);
+        break;
+      }
+
+      const targetPath = args[args.length - 2];
+      const startTime = args[args.length - 1];
+      const lfoArgs = args.slice(0, -2);
+      const target = resolveTarget(node, targetPath, 'LFO target', element.nodeId);
+      if (!target) {
+        break;
+      }
+
+      const lfo = new Tone.LFO(...lfoArgs);
+      lfo.connect(target);
+      if (startTime !== undefined) {
+        lfo.start(startTime);
+      } else {
+        lfo.start();
+      }
+
+      const lfoBucket = (node as any).__sequencerLFOs;
+      if (Array.isArray(lfoBucket)) {
+        lfoBucket.push(lfo);
+      } else {
+        (node as any).__sequencerLFOs = [lfo];
+      }
       break;
     }
     case 'set': {
