@@ -44,6 +44,7 @@ import * as stereowidener from './effect/stereowidener.js';
 import * as lpfSweep from './effect/lpf-sweep.js';
 import * as lpfEnvelope from './effect/lpf-envelope.js';
 import * as lpfQLfo from './effect/lpf-q-lfo.js';
+import * as genericRampTo from './effect/generic-ramp-to.js';
 
 export interface SequenceDefinition {
   name: string;
@@ -93,7 +94,8 @@ const allSequenceModules = [
   stereowidener,
   lpfSweep,
   lpfEnvelope,
-  lpfQLfo
+  lpfQLfo,
+  genericRampTo
 ];
 
 export function loadAllSequences(): SequenceDefinition[] {

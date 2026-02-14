@@ -45,7 +45,7 @@ function resolveTarget(
 
 function rampParameter(
   node: any,
-  path: string[],
+  path: string | string[],
   args: any[],
   label: string,
   nodeId: number
@@ -116,6 +116,41 @@ export function scheduleOrExecuteEvent(
     case 'filter.Q.rampTo': {
       const node = nodes.get(element.nodeId);
       rampParameter(node, ['filter', 'Q'], element.args, 'filter.Q.rampTo', element.nodeId);
+      break;
+    }
+    case 'rampTo': {
+      const node = nodes.get(element.nodeId);
+      if (!node) {
+        console.warn(`Node ${element.nodeId} not found for rampTo event`);
+        break;
+      }
+
+      const args = Array.isArray(element.args) ? element.args : [];
+      if (args.length < 2) {
+        console.warn(`rampTo event for node ${element.nodeId} requires at least value and target path`);
+        break;
+      }
+
+      const hasStartTime = args.length >= 3;
+      const targetPath = hasStartTime ? args[args.length - 2] : args[args.length - 1];
+      const startTime = hasStartTime ? args[args.length - 1] : undefined;
+      const rampArgs = hasStartTime ? args.slice(0, -2) : args.slice(0, -1);
+
+      if (targetPath === undefined) {
+        console.warn(`rampTo event for node ${element.nodeId} is missing target path`);
+        break;
+      }
+
+      if (rampArgs.length === 0) {
+        console.warn(`rampTo event for node ${element.nodeId} requires at least a value for rampTo`);
+        break;
+      }
+
+      if (startTime !== undefined) {
+        rampArgs.push(startTime);
+      }
+
+      rampParameter(node, targetPath, rampArgs, `rampTo(${String(targetPath)})`, element.nodeId);
       break;
     }
     case 'LFO': {
