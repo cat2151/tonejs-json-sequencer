@@ -60,7 +60,7 @@ export interface FilterQRampToEvent {
 export interface GenericRampToEvent {
   eventType: 'rampTo';
   nodeId: number;
-  /** [value, rampTime?, targetPath, time?] where targetPath is dot string or string[] */
+  /** [value, targetPath] or [value, rampTime, targetPath, time?]; targetPath is dot string or string[] */
   args: any[];
 }
 

@@ -106,20 +106,17 @@ function scheduleOrExecuteEvent(Tone, nodes, element) {
                 console.warn(`rampTo event for node ${element.nodeId} requires at least value and target path`);
                 break;
             }
-            const hasStartTime = args.length >= 3;
-            const targetPath = hasStartTime ? args[args.length - 2] : args[args.length - 1];
-            const startTime = hasStartTime ? args[args.length - 1] : undefined;
-            const rampArgs = hasStartTime ? args.slice(0, -2) : args.slice(0, -1);
+            const targetPath = args.length >= 3 ? args[2] : args[1];
+            const rampArgs = [args[0]];
+            if (args.length >= 3) {
+                rampArgs.push(args[1]);
+            }
+            if (args.length >= 4) {
+                rampArgs.push(args[3]);
+            }
             if (targetPath === undefined) {
                 console.warn(`rampTo event for node ${element.nodeId} is missing target path`);
                 break;
-            }
-            if (rampArgs.length === 0) {
-                console.warn(`rampTo event for node ${element.nodeId} requires at least a value for rampTo`);
-                break;
-            }
-            if (startTime !== undefined) {
-                rampArgs.push(startTime);
             }
             rampParameter(node, targetPath, rampArgs, `rampTo(${String(targetPath)})`, element.nodeId);
             break;
