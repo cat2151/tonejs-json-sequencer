@@ -13,7 +13,7 @@ export const sequence = [
                     "attack": 0.1,
                     "decay": 0.05,
                     "sustain": 0.8,
-                    "release": 9999999999
+                    "release": 2
                 },
             }
         }
