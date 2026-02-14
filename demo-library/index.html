@@ -158,7 +158,6 @@ npm install tone</code></pre>
     // In your own project after npm install, you would use:
     // import { SequencerNodes, playSequence } from 'tonejs-json-sequencer';
     import { SequencerNodes, playSequence } from '../dist/index.mjs';
-    import { loadAllSequences } from '../dist/demo/sequenceLoader.js';
 
     // Define a minimal sequence - creates a synth and plays a simple melody
     const baseSequence = [
@@ -233,20 +232,22 @@ npm install tone</code></pre>
       }
     ];
 
-    const sequenceOptions = [
-      { name: 'Library Minimal Example', data: baseSequence },
-      ...loadAllSequences()
-    ];
+    const sequenceOptions = [{ name: 'Library Minimal Example', data: baseSequence }];
+    let demosLoaded = false;
 
     const selector = document.getElementById('sequenceSelector');
     const sequenceDisplay = document.getElementById('sequenceDisplay');
 
-    sequenceOptions.forEach(option => {
-      const optionElement = document.createElement('option');
-      optionElement.value = option.name;
-      optionElement.textContent = option.name;
-      selector.appendChild(optionElement);
-    });
+    function appendOptions(options) {
+      options.forEach(option => {
+        const optionElement = document.createElement('option');
+        optionElement.value = option.name;
+        optionElement.textContent = option.name;
+        selector.appendChild(optionElement);
+      });
+    }
+
+    appendOptions(sequenceOptions);
 
     let currentSequence = sequenceOptions[0].data;
 
@@ -254,7 +255,22 @@ npm install tone</code></pre>
       sequenceDisplay.textContent = JSON.stringify(sequence, null, 2);
     }
 
-    selector.addEventListener('change', () => {
+    async function ensureDemoSequencesLoaded() {
+      if (demosLoaded) return;
+      const module = await import('../dist/demo/sequenceLoader.js');
+      const demoSequences = module.loadAllSequences();
+      sequenceOptions.push(...demoSequences);
+      appendOptions(demoSequences);
+      demosLoaded = true;
+    }
+
+    selector.addEventListener('focus', () => {
+      // Lazy-load demo sequences when the selector is first used
+      ensureDemoSequencesLoaded();
+    }, { once: true });
+
+    selector.addEventListener('change', async () => {
+      await ensureDemoSequencesLoaded();
       const selected = sequenceOptions.find(option => option.name === selector.value);
       if (selected) {
         currentSequence = selected.data;
