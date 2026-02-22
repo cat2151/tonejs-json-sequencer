@@ -1,4 +1,4 @@
-Last updated: 2026-02-15
+Last updated: 2026-02-23
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -898,8 +898,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 139.md
   📖 162.md
   📖 170.md
-  📖 176.md
-  📖 178.md
+  📖 180.md
   📖 89.md
 📊 package-lock.json
 📊 package.json
@@ -1810,4 +1809,4 @@ googled947dc864c270e07.html
 
 
 ---
-Generated at: 2026-02-15 07:08:53 JST
+Generated at: 2026-02-23 07:09:48 JST

@@ -1,50 +1,67 @@
-Last updated: 2026-02-15
+Last updated: 2026-02-23
 
 # Development Status
 
 ## 現在のIssues
-- 現在、[Issue #124](../issue-notes/124.md) では `demo-library` の動作確認が、[Issue #89](../issue-notes/89.md) ではstreaming機能のテストが、それぞれ人力で進行中です。
-- これらのissueは、プロジェクトの主要なデモ機能とリアルタイム処理の安定性確保に焦点を当てており、品質保証の重要なフェーズにあります。
-- いずれのタスクも手動での確認を伴うため、作業の効率化や一部自動化による支援が考えられます。
+- NDJSON欄を書き換えても楽器の音色が即座に反映されず、再生し直さないと変更が適用されないというstreaming demoの不具合 ([Issue #180](../issue-notes/180.md)) がオープンしています。
+- `demo-lib`が正しく動作することを確認するための手動テスト ([Issue #124](../issue-notes/124.md)) が必要です。
+- `streaming`機能の全体的な動作と安定性を確認するための手動テスト ([Issue #89](../issue-notes/89.md)) が求められています。
 
 ## 次の一手候補
-1. [Issue #124](../issue-notes/124.md) `demo-library` のデモ項目を抽出し、テスト計画の骨子を生成する
-   - 最初の小さな一歩: `demo-library/index.html` からデモ一覧（ファイル名やタイトル）を抽出し、それらを列挙したMarkdownファイルを作成する。
-   - Agent実行プロンプト:
-     ```
-     対象ファイル: `demo-library/index.html`
+1.  [Issue #180](../issue-notes/180.md): streaming demoでの楽器変更の即時反映問題を解決する
+    -   最初の小さな一歩: `src/demo/streaming.ts`、`src/streaming/event-processor.ts`、`src/streaming/playback-state.ts`を分析し、NDJSON更新後の楽器インスタンスのライフサイクルと、オーディオコンテキストへの反映メカニズムを把握する。
+    -   Agent実行プロンプ:
+        ```
+        対象ファイル: src/demo/streaming.ts, src/streaming/event-processor.ts, src/streaming/playback-state.ts
 
-     実行内容: `demo-library/index.html` を解析し、ページ内で動的に読み込まれているデモファイル（例: `dist/demo/instrument/minimal.js` など）のリストを抽出してください。また、それらのデモに表示されるであろうタイトルや説明を推測し、Markdown形式で一覧として出力してください。
+        実行内容: `streaming`デモにおいて、NDJSON欄の書き換え後に楽器の音色が即座に反映されず、再生し直さないと変更が適用されない問題（[Issue #180](../issue-notes/180.md)）の原因を特定するため、以下の点を分析してください：
+        1) NDJSONのパースと楽器インスタンスの生成・更新ロジック。
+        2) `event-processor.ts`が既存の楽器インスタンスを再利用しているか、あるいは新しいインスタンスに切り替えるメカニズム。
+        3) `playback-state.ts`における楽器状態の管理と、それがオーディオコンテキストにどのように反映されるか。
+        4) 特に、`Synth`から`FMSynth`への変更が、再生中のシーケンスにどのように影響するか。
+        分析結果を、問題の根本原因を特定するための仮説と共にmarkdown形式で出力してください。
 
-     確認事項: `demo-library/index.html` がどのようにデモファイルをロードしているか（スクリプトタグ、JavaScriptによる動的ロードなど）を確認し、正確なファイルパスと表示名を特定してください。
+        確認事項: 既存の`Tone.js`インスタンスがどのように管理され、新しい設定が適用されるか、特に`Tone.Transport`の状態とイベントキューへの影響を確認してください。また、関連する先行事例（`tonejs-step-sequencer`のissue #98）で示唆される修正点も考慮に入れてください。
 
-     期待する出力: `demo-library` 内のデモ項目を一覧化したMarkdownファイル。各項目について、ファイルパスと推測されるデモタイトルを記載してください。
-     ```
+        期待する出力: `streaming`デモにおける楽器変更の即時反映に関する問題の原因仮説、およびその検証方法を含む詳細な分析結果をmarkdown形式で出力してください。
+        ```
 
-2. [Issue #89](../issue-notes/89.md) streaming機能のテストシナリオと検証ポイントを抽出する
-   - 最初の小さな一歩: `src/streaming` ディレクトリ内の主要ファイル（`event-processor.ts`, `playback-state.ts`, `ndjson-streaming.ts`）のコードを分析し、streamingの核となるイベント処理と状態管理のロジックを把握する。
-   - Agent実行プロンプト:
-     ```
-     対象ファイル: `src/streaming/event-processor.ts`, `src/streaming/playback-state.ts`, `src/ndjson-streaming.ts`, `src/demo/streaming.ts`
+2.  [Issue #124](../issue-notes/124.md): `demo-lib`の動作確認計画を策定する
+    -   最初の小さな一歩: `demo-library/README.md`と`demo-library/index.html`を調査し、`demo-library`の意図された使用方法、依存関係、および基本的な構成要素を特定する。
+    -   Agent実行プロンプ:
+        ```
+        対象ファイル: demo-library/README.md, demo-library/index.html, package.json, src/demo/**/*.ts
 
-     実行内容: 上記ファイル群を分析し、Tone.jsのstreaming機能がどのようにイベントを処理し、再生状態を管理しているかを説明してください。また、この機能で特に検証すべきシナリオ（例: イベントの順序性、遅延、エラーハンドリング、同時再生など）と検証ポイントをリストアップしてください。
+        実行内容: `demo-library`の動作確認を行うために、その構造と依存関係を分析し、動作確認に必要な情報と手順をまとめてください。具体的には：
+        1) `demo-library`の目的と想定される利用方法。
+        2) `index.html`がどのように他のデモファイルを読み込んでいるか。
+        3) `package.json`から推測されるビルドや実行に関する依存関係。
+        4) 動作確認を行う上で考慮すべき点や、事前に準備すべき環境設定（もしあれば）。
+        結果をmarkdown形式で出力してください。
 
-     確認事項: streamingにおけるイベント処理のライフサイクル、データの入力形式（NDJSON）と出力、時間管理のロジック、およびデモでの利用方法を確認してください。
+        確認事項: `demo-library`がプロジェクトの他の`demo`ディレクトリ (`demo/`) とどのように連携しているか、または独立しているかを確認してください。また、ビルドプロセスが`dist/demo`以下に正しくファイルを生成しているかも考慮してください。
 
-     期待する出力: streaming機能の主要な処理フローの概要と、最低5つの具体的なテストシナリオとそれぞれの検証ポイントを記載したMarkdownファイル。
-     ```
+        期待する出力: `demo-library`の動作確認手順書をmarkdown形式で生成してください。これには、セットアップ方法、テストシナリオの提案、期待される動作に関する説明を含めてください。
+        ```
 
-3. 開発状況生成プロンプトのハルシネーション抑制に関するレビューと改善提案
-   - 最初の小さな一歩: 現在の `development-status-prompt.md` の内容を読み込み、ハルシネーションを誘発する可能性のある曖昧な表現や、具体的でない指示がないかを確認する。
-   - Agent実行プロンプト:
-     ```
-     対象ファイル: `.github/actions-tmp/.github_automation/project_summary/prompts/development-status-prompt.md` (現在のプロンプト), このプロンプト自体 (今回の生成ガイドライン)
+3.  [Issue #89](../issue-notes/89.md): `streaming`機能の包括的なテスト計画を策定する
+    -   最初の小さな一歩: `src/demo/streaming.ts`と`demo/streaming.html`をレビューし、`streaming`機能の主要な要素（NDJSONの読み込み、イベント処理、再生制御）と、ユーザーが操作可能なインタフェースを特定する。
+    -   Agent実行プロンプ:
+        ```
+        対象ファイル: src/demo/streaming.ts, demo/streaming.html, src/streaming/event-processor.ts, src/streaming/playback-state.ts
 
-     実行内容: `.github/actions-tmp/.github_automation/project_summary/prompts/development-status-prompt.md` を分析し、今回の「開発状況生成プロンプト（開発者向け）」ガイドラインと比較して、改善点やハルシネーションを抑制するための具体的な変更案を提案してください。特に「生成しないもの」の項目と照らし合わせて評価してください。
+        実行内容: `streaming`機能（[Issue #89](../issue-notes/89.md)）のテスト計画を作成するために、以下の点を分析してください：
+        1) `streaming.html`のUI要素と、`streaming.ts`がそれらをどのように制御しているか。
+        2) NDJSONストリームのデータ形式とその処理ロジック。
+        3) リアルタイムでのイベントスケジューリングと再生ロジック。
+        4) 楽器の動的な変更（[Issue #180](../issue-notes/180.md)のようなシナリオを含む）と、その反映状況。
+        5) 再生の開始、停止、一時停止、シークといった基本操作。
+        結果をmarkdown形式で出力してください。
 
-     確認事項: プロンプトが具体的な指示を含んでいるか、曖昧な解釈の余地がないか、無価値なタスクの提案を誘発しないかを確認してください。出力形式の指定が明確かどうかも重要です。
+        確認事項: `event-processor.ts`がイベントを効率的かつ正確に処理しているか、`playback-state.ts`が再生状態を適切に管理しているかを確認してください。また、ネットワーク遅延や大量のイベントがストリームされた場合の挙動も考慮に入れてください。
 
-     期待する出力: プロンプトの改善提案をMarkdown形式で出力してください。具体的には、既存のプロンプトのどの部分をどのように変更すべきか、その理由とともに記述してください。
+        期待する出力: `streaming`機能の包括的なテストシナリオと、各シナリオで検証すべき項目をリストアップしたテスト計画書をmarkdown形式で出力してください。
+        ```
 
 ---
-Generated at: 2026-02-15 07:09:10 JST
+Generated at: 2026-02-23 07:10:03 JST

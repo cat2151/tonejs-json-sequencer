@@ -1,4 +1,4 @@
-Last updated: 2026-02-15
+Last updated: 2026-02-23
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -372,8 +372,7 @@ Last updated: 2026-02-15
 - issue-notes/139.md
 - issue-notes/162.md
 - issue-notes/170.md
-- issue-notes/176.md
-- issue-notes/178.md
+- issue-notes/180.md
 - issue-notes/89.md
 - package-lock.json
 - package.json
@@ -448,6 +447,23 @@ Last updated: 2026-02-15
 - tsconfig.json
 
 ## 現在のオープンIssues
+## [Issue #180](../issue-notes/180.md): streaming demoで、NDJSON欄を書き換えてSynthをFMSynthにしても、音色がSynthのまま。再生しなおすとFMSynthになる
+[issue-notes/180.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/180.md)
+
+...
+ラベル: 
+--- issue-notes/180.md の内容 ---
+
+```markdown
+# issue streaming demoで、NDJSON欄を書き換えてSynthをFMSynthにしても、音色がSynthのまま。再生しなおすとFMSynthになる #180
+[issues #180](https://github.com/cat2151/tonejs-json-sequencer/issues/180)
+
+# 対策案
+- まず以下の先行事例を参考に分析せよ
+  - https://github.com/cat2151/tonejs-step-sequencer/issues/98
+
+```
+
 ## [Issue #124](../issue-notes/124.md): （人力）demo-libの動作確認をする
 [issue-notes/124.md](https://github.com/cat2151/tonejs-json-sequencer/blob/main/issue-notes/124.md)
 
@@ -695,6 +711,19 @@ jobs:
 {% endraw %}
 ```
 
+### issue-notes/180.md
+```md
+{% raw %}
+# issue streaming demoで、NDJSON欄を書き換えてSynthをFMSynthにしても、音色がSynthのまま。再生しなおすとFMSynthになる #180
+[issues #180](https://github.com/cat2151/tonejs-json-sequencer/issues/180)
+
+# 対策案
+- まず以下の先行事例を参考に分析せよ
+  - https://github.com/cat2151/tonejs-step-sequencer/issues/98
+
+{% endraw %}
+```
+
 ### issue-notes/89.md
 ```md
 {% raw %}
@@ -708,25 +737,13 @@ jobs:
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-7c28e06 Merge pull request #179 from cat2151/codex/fix-demo-library-sound-issue
-4ba0f3c Lazy-load demo sequences in demo-library
-720128a Add dropdown playback fixes to demo library
-02ed93c Initial plan
-d150f9f Merge pull request #177 from cat2151/codex/add-loopend-to-examples
-7c4afc4 Adjust supersaw envelope release for loopEnd
-337e50d Add loopEnd markers to demo sequences
-f337bb0 Add issue note for #178 [auto]
-260a5d0 Initial plan
-8376d5a Add issue note for #176 [auto]
+64f2b0d Update issue notes for issue #180
+d06cc04 Update issue notes for streaming demo issue #180
+5dbc96b Add issue note for #180 [auto]
 
 ### 変更されたファイル:
-README.ja.md
-README.md
 demo-library/README.md
 demo-library/index.html
-dist/cjs/event-scheduler.js
-dist/cjs/index.d.ts
-dist/cjs/types.d.ts
 dist/demo/effect/autofilter.js
 dist/demo/effect/autopanner.js
 dist/demo/effect/autowah.js
@@ -766,17 +783,12 @@ dist/demo/instrument/streaming-test-doremi.js
 dist/demo/instrument/supersaw.js
 dist/demo/instrument/tempo-test.js
 dist/demo/instrument/volume-control.js
-dist/demo/sequenceLoader.js
-dist/esm/event-scheduler.mjs
-dist/esm/index.d.ts
-dist/esm/types.d.ts
-dist/event-scheduler.js
-dist/index.d.ts
-dist/types.d.ts
-issue-notes/172.md
+generated-docs/development-status-generated-prompt.md
+generated-docs/development-status.md
+generated-docs/project-overview-generated-prompt.md
+generated-docs/project-overview.md
 issue-notes/176.md
-issue-notes/178.md
-src/demo/demo-types.ts
+issue-notes/180.md
 src/demo/effect/autofilter.ts
 src/demo/effect/autopanner.ts
 src/demo/effect/autowah.ts
@@ -816,11 +828,7 @@ src/demo/instrument/streaming-test-doremi.ts
 src/demo/instrument/supersaw.ts
 src/demo/instrument/tempo-test.ts
 src/demo/instrument/volume-control.ts
-src/demo/sequenceLoader.ts
-src/event-scheduler.ts
-src/index.ts
-src/types.ts
 
 
 ---
-Generated at: 2026-02-15 07:08:53 JST
+Generated at: 2026-02-23 07:09:48 JST
