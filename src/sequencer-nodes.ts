@@ -16,11 +16,8 @@ export class SequencerNodes {
     this.nodes[nodeId] = node;
   }
 
-  disposeNode(nodeId: number): void {
-    const node = this.nodes[nodeId];
-    if (!node) return;
-
-    const lfos = (node as any)?.__sequencerLFOs;
+  private disposeSingle(node: any): void {
+    const lfos = node?.__sequencerLFOs;
     if (Array.isArray(lfos)) {
       lfos.forEach(lfo => {
         try {
@@ -29,41 +26,27 @@ export class SequencerNodes {
           console.warn('Failed to dispose LFO:', error);
         }
       });
-      delete (node as any).__sequencerLFOs;
+      delete node.__sequencerLFOs;
     }
 
-    if (typeof node.dispose === 'function') {
+    if (node && typeof node.dispose === 'function') {
       try {
         node.dispose();
       } catch (error) {
         console.warn('Failed to dispose node:', error);
       }
     }
-    delete this.nodes[nodeId];
+  }
+
+  disposeNode(nodeId: number): void {
+    const node = this.nodes[nodeId];
+    if (!node) return;
+    this.disposeSingle(node);
+    this.nodes[nodeId] = undefined;
   }
 
   disposeAll(): void {
-    this.nodes.forEach(node => {
-      const lfos = (node as any)?.__sequencerLFOs;
-      if (Array.isArray(lfos)) {
-        lfos.forEach(lfo => {
-          try {
-            lfo.dispose?.();
-          } catch (error) {
-            console.warn('Failed to dispose LFO:', error);
-          }
-        });
-        delete (node as any).__sequencerLFOs;
-      }
-
-      if (node && typeof node.dispose === 'function') {
-        try {
-          node.dispose();
-        } catch (error) {
-          console.warn('Failed to dispose node:', error);
-        }
-      }
-    });
+    this.nodes.forEach(node => this.disposeSingle(node));
     this.nodes = [];
   }
 }

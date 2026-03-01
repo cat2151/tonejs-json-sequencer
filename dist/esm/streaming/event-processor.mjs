@@ -43,10 +43,10 @@ export class EventProcessor {
                 if (event.eventType === 'createNode') {
                     const previousNodeType = createdNodeIds.get(event.nodeId);
                     if (previousNodeType !== undefined) {
-                        if (previousNodeType === event.nodeType) {
-                            return; // Skip if node already created with the same type
+                        if (previousNodeType === event.nodeType && this.nodes.get(event.nodeId)) {
+                            return; // Skip if node already created with the same type and still exists
                         }
-                        // nodeType changed - dispose old node and recreate
+                        // nodeType changed (or prior creation failed) - dispose old node and recreate
                         this.nodes.disposeNode(event.nodeId);
                     }
                     createdNodeIds.set(event.nodeId, event.nodeType);
