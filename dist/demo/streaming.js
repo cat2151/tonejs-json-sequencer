@@ -230,6 +230,9 @@ class StreamingDemo {
             const events = parseNDJSON(ndjson);
             // Start playback
             await this.player.start(events);
+            // Rebuild viewer after player.start() so time values (e.g. ticks→seconds) use the
+            // BPM that was applied by the sequence's "set" event, not the pre-play default BPM.
+            this.syncHighlightLines(ndjson);
             this.startPlaybackPositionUpdates();
             this.updateStatus(loop ? '再生中（ループ有効）' : '再生中');
             // Disable play button, enable stop button
