@@ -13,11 +13,11 @@ export declare class EventProcessor {
     /**
      * Create nodes and connections from events
      */
-    createNodesAndConnections(events: SequenceEvent[], createdNodeIds: Set<number>): Promise<void>;
+    createNodesAndConnections(events: SequenceEvent[], createdNodeIds: Map<number, string>): Promise<void>;
     /**
      * Process new node creation and connection events (for live editing)
      */
-    processNewCreateAndConnectEvents(events: SequenceEvent[], createdNodeIds: Set<number>): void;
+    processNewCreateAndConnectEvents(events: SequenceEvent[], createdNodeIds: Map<number, string>): void;
     /**
      * Schedule an event at a specific time
      */

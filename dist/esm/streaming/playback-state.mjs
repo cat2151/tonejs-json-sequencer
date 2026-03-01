@@ -12,7 +12,7 @@ export class PlaybackState {
         this._processedEventIndices = new Set();
         this._loopCount = 0;
         this._cachedSequenceDuration = 0;
-        this._createdNodeIds = new Set();
+        this._createdNodeIds = new Map();
         this._processLoopCount = 0;
     }
     get isPlaying() {

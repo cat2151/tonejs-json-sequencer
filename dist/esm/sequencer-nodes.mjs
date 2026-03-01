@@ -14,29 +14,37 @@ export class SequencerNodes {
     set(nodeId, node) {
         this.nodes[nodeId] = node;
     }
-    disposeAll() {
-        this.nodes.forEach(node => {
-            const lfos = node?.__sequencerLFOs;
-            if (Array.isArray(lfos)) {
-                lfos.forEach(lfo => {
-                    try {
-                        lfo.dispose?.();
-                    }
-                    catch (error) {
-                        console.warn('Failed to dispose LFO:', error);
-                    }
-                });
-                delete node.__sequencerLFOs;
-            }
-            if (node && typeof node.dispose === 'function') {
+    disposeSingle(node) {
+        const lfos = node?.__sequencerLFOs;
+        if (Array.isArray(lfos)) {
+            lfos.forEach(lfo => {
                 try {
-                    node.dispose();
+                    lfo.dispose?.();
                 }
                 catch (error) {
-                    console.warn('Failed to dispose node:', error);
+                    console.warn('Failed to dispose LFO:', error);
                 }
+            });
+            delete node.__sequencerLFOs;
+        }
+        if (node && typeof node.dispose === 'function') {
+            try {
+                node.dispose();
             }
-        });
+            catch (error) {
+                console.warn('Failed to dispose node:', error);
+            }
+        }
+    }
+    disposeNode(nodeId) {
+        const node = this.nodes[nodeId];
+        if (!node)
+            return;
+        this.disposeSingle(node);
+        this.nodes[nodeId] = undefined;
+    }
+    disposeAll() {
+        this.nodes.forEach(node => this.disposeSingle(node));
         this.nodes = [];
     }
 }

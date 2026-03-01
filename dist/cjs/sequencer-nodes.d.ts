@@ -5,5 +5,7 @@ export declare class SequencerNodes {
     private nodes;
     get(nodeId: number): any;
     set(nodeId: number, node: any): void;
+    private disposeSingle;
+    disposeNode(nodeId: number): void;
     disposeAll(): void;
 }
