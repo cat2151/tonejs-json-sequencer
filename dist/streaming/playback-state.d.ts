@@ -21,7 +21,7 @@ export declare class PlaybackState {
     set loopCount(value: number);
     get cachedSequenceDuration(): number;
     set cachedSequenceDuration(value: number);
-    get createdNodeIds(): Set<number>;
+    get createdNodeIds(): Map<number, string>;
     get processLoopCount(): number;
     incrementProcessLoopCount(): void;
     /**

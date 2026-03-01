@@ -17,6 +17,32 @@ class SequencerNodes {
     set(nodeId, node) {
         this.nodes[nodeId] = node;
     }
+    disposeNode(nodeId) {
+        const node = this.nodes[nodeId];
+        if (!node)
+            return;
+        const lfos = node?.__sequencerLFOs;
+        if (Array.isArray(lfos)) {
+            lfos.forEach(lfo => {
+                try {
+                    lfo.dispose?.();
+                }
+                catch (error) {
+                    console.warn('Failed to dispose LFO:', error);
+                }
+            });
+            delete node.__sequencerLFOs;
+        }
+        if (typeof node.dispose === 'function') {
+            try {
+                node.dispose();
+            }
+            catch (error) {
+                console.warn('Failed to dispose node:', error);
+            }
+        }
+        delete this.nodes[nodeId];
+    }
     disposeAll() {
         this.nodes.forEach(node => {
             const lfos = node?.__sequencerLFOs;
