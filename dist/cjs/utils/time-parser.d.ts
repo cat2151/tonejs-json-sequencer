@@ -18,6 +18,11 @@ export declare class TimeParser {
     private config;
     constructor(config: TimeParserConfig);
     /**
+     * Update the beats per minute used for time conversion.
+     * Call this after processing any 'set' event that changes Transport.bpm.value.
+     */
+    updateBPM(bpm: number): void;
+    /**
      * Parse time string to seconds
      */
     parseTimeToSeconds(timeStr: string): number;

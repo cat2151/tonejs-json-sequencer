@@ -310,6 +310,11 @@ export class NDJSONStreamingPlayer {
       this.playbackState.createdNodeIds
     );
 
+    // Sync TimeParser BPM with Transport BPM in case a 'set' event changed it.
+    // createNodesAndConnections processes 'set' events (e.g. Transport.bpm.value = 180),
+    // so we must re-read the BPM before calculating duration and scheduling events.
+    this.timeParser.updateBPM(this.Tone.Transport.bpm.value);
+
     // Cache sequence duration
     // When loop mode is enabled, don't add end buffer to avoid unwanted gaps between loops
     const endBuffer = this.config.loop ? 0 : this.config.endBufferSeconds;
