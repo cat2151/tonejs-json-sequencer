@@ -372,7 +372,10 @@ export class NDJSONStreamingPlayer {
       events,
       this.playbackState.createdNodeIds
     );
-    
+
+    // Sync TimeParser BPM in case a 'set' event changed Transport.bpm.value during live editing.
+    this.timeParser.updateBPM(this.Tone.Transport.bpm.value);
+
     // Store previous values before updating
     const previousEvents = this.playbackState.currentEvents;
     const previousDuration = this.playbackState.cachedSequenceDuration;

@@ -244,6 +244,8 @@ export class NDJSONStreamingPlayer {
         });
         // Process any new node creation or connection events (idempotent)
         this.eventProcessor.processNewCreateAndConnectEvents(events, this.playbackState.createdNodeIds);
+        // Sync TimeParser BPM in case a 'set' event changed Transport.bpm.value during live editing.
+        this.timeParser.updateBPM(this.Tone.Transport.bpm.value);
         // Store previous values before updating
         const previousEvents = this.playbackState.currentEvents;
         const previousDuration = this.playbackState.cachedSequenceDuration;
