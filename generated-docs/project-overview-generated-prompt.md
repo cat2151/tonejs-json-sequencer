@@ -1,4 +1,4 @@
-Last updated: 2026-02-23
+Last updated: 2026-03-04
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -899,6 +899,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 162.md
   📖 170.md
   📖 180.md
+  📖 185.md
   📖 89.md
 📊 package-lock.json
 📊 package.json
@@ -1063,23 +1064,23 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: audioBufferToWav, writeString, downloadWav, constructor, render, if, for, calculateSequenceDuration, forEach, getEventTime
   - インポート: ./sequencer-nodes.js, ./event-scheduler.js, ./utils/time-parser.js
 
-**dist/cjs/sequencer-nodes.d.ts** (10行, 206バイト)
+**dist/cjs/sequencer-nodes.d.ts** (12行, 272バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/cjs/sequencer-nodes.js** (47行, 1331バイト)
-  - 関数: constructor, get, set, disposeAll, catch, if
+**dist/cjs/sequencer-nodes.js** (55行, 1482バイト)
+  - 関数: constructor, get, set, disposeSingle, catch, if, disposeNode, disposeAll
   - インポート: なし
 
-**dist/cjs/streaming/event-processor.d.ts** (41行, 1513バイト)
+**dist/cjs/streaming/event-processor.d.ts** (41行, 1529バイト)
   - 関数: なし
   - インポート: tone, ../types.js, ../sequencer-nodes.js
 
-**dist/cjs/streaming/event-processor.js** (192行, 8737バイト)
+**dist/cjs/streaming/event-processor.js** (197行, 9176バイト)
   - 関数: constructor, createNodesAndConnections, forEach, if, catch, processNewCreateAndConnectEvents, scheduleEvent, adjustEventTime, getEventTime, calculateSequenceDuration
   - インポート: ../event-scheduler.js
 
-**dist/cjs/streaming/playback-state.d.ts** (45行, 1300バイト)
+**dist/cjs/streaming/playback-state.d.ts** (45行, 1308バイト)
   - 関数: なし
   - インポート: ../types.js
 
@@ -1303,7 +1304,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**dist/demo/streaming.js** (692行, 28334バイト)
+**dist/demo/streaming.js** (695行, 28571バイト)
   - 関数: constructor, createInitialTimingStats, initializeUI, if, catch, initializeCollapsibleSections, loadInitialSequence, loadSelectedSequence, sequenceToNDJSON, getNDJSONFromTextarea, play, stop, onSequenceEdit, onSequenceEditDebounced, clearDebounceTimer, buildEventLineMap, syncHighlightLines, updateNumberedNDJSON, updateCurrentLineIndicator, updateCurrentLineFromEvent, handleEventScheduled, rebuildPlaybackViewer, buildPlaybackTracks, forEach, parseNoteNumber, parseTimeValue, getEventStartTime, startPlaybackPositionUpdates, stopPlaybackPositionUpdates, updatePlaybackProgressLineFromNow, updatePlaybackPositionLine, flashPlaybackEvent, updateStatus, handleDebugMessage, updateDebugOutput, updateTimingVisualization, clearDebugOutput
   - インポート: ./sequenceLoader.js, ../../dist/index.mjs
 
@@ -1335,15 +1336,15 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: audioBufferToWav, downloadWav
   - インポート: tone, ./types.js
 
-**dist/esm/sequencer-nodes.d.ts** (10行, 206バイト)
+**dist/esm/sequencer-nodes.d.ts** (12行, 272バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/esm/streaming/event-processor.d.ts** (41行, 1513バイト)
+**dist/esm/streaming/event-processor.d.ts** (41行, 1529バイト)
   - 関数: なし
   - インポート: tone, ../types.js, ../sequencer-nodes.js
 
-**dist/esm/streaming/playback-state.d.ts** (45行, 1300バイト)
+**dist/esm/streaming/playback-state.d.ts** (45行, 1308バイト)
   - 関数: なし
   - インポート: ../types.js
 
@@ -1411,23 +1412,23 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: audioBufferToWav, writeString, downloadWav, constructor, render, if, for, calculateSequenceDuration, forEach, getEventTime
   - インポート: ./sequencer-nodes.js, ./event-scheduler.js, ./utils/time-parser.js
 
-**dist/sequencer-nodes.d.ts** (10行, 206バイト)
+**dist/sequencer-nodes.d.ts** (12行, 272バイト)
   - 関数: なし
   - インポート: なし
 
-**dist/sequencer-nodes.js** (47行, 1331バイト)
-  - 関数: constructor, get, set, disposeAll, catch, if
+**dist/sequencer-nodes.js** (55行, 1482バイト)
+  - 関数: constructor, get, set, disposeSingle, catch, if, disposeNode, disposeAll
   - インポート: なし
 
-**dist/streaming/event-processor.d.ts** (41行, 1513バイト)
+**dist/streaming/event-processor.d.ts** (41行, 1529バイト)
   - 関数: なし
   - インポート: tone, ../types.js, ../sequencer-nodes.js
 
-**dist/streaming/event-processor.js** (192行, 8737バイト)
+**dist/streaming/event-processor.js** (197行, 9176バイト)
   - 関数: constructor, createNodesAndConnections, forEach, if, catch, processNewCreateAndConnectEvents, scheduleEvent, adjustEventTime, getEventTime, calculateSequenceDuration
   - インポート: ../event-scheduler.js
 
-**dist/streaming/playback-state.d.ts** (45行, 1300バイト)
+**dist/streaming/playback-state.d.ts** (45行, 1308バイト)
   - 関数: なし
   - インポート: ../types.js
 
@@ -1671,7 +1672,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: ../demo-types.js, ../sequenceLoader.js
 
-**src/demo/streaming.ts** (818行, 26981バイト)
+**src/demo/streaming.ts** (821行, 27200バイト)
   - 関数: constructor, createInitialTimingStats, if, catch, forEach, play
   - インポート: ./demo-types.js, ./sequenceLoader.js, ../../dist/index.mjs
 
@@ -1707,15 +1708,15 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: audioBufferToWav, writeString, downloadWav, constructor, if, for, forEach, render
   - インポート: tone, ./types.js, ./sequencer-nodes.js
 
-**src/sequencer-nodes.ts** (44行, 1006バイト)
+**src/sequencer-nodes.ts** (53行, 1186バイト)
   - 関数: catch, if
   - インポート: なし
 
-**src/streaming/event-processor.ts** (222行, 8007バイト)
+**src/streaming/event-processor.ts** (227行, 8402バイト)
   - 関数: constructor, forEach, if, catch, createNodesAndConnections
   - インポート: tone, ../types.js, ../sequencer-nodes.js
 
-**src/streaming/playback-state.ts** (112行, 2548バイト)
+**src/streaming/playback-state.ts** (112行, 2564バイト)
   - 関数: startTime, currentEvents, loopCount, cachedSequenceDuration
   - インポート: ../types.js
 
@@ -1751,6 +1752,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
     - updateImports ()
   - createEffect (dist/cjs/factories/effect-factory.d.ts)
     - startIfAvailable ()
+  - disposeSingle ()
+  - disposeNode ()
 - for (dist/cjs/event-scheduler.js)
 - switch (dist/cjs/event-scheduler.js)
 - catch (dist/cjs/event-scheduler.js)
@@ -1809,4 +1812,4 @@ googled947dc864c270e07.html
 
 
 ---
-Generated at: 2026-02-23 07:09:48 JST
+Generated at: 2026-03-04 07:12:16 JST
