@@ -14,7 +14,7 @@ export class PlaybackState {
   private _processedEventIndices: Set<number> = new Set();
   private _loopCount: number = 0;
   private _cachedSequenceDuration: number = 0;
-  private _createdNodeIds: Set<number> = new Set();
+  private _createdNodeIds: Map<number, string> = new Map();
   private _processLoopCount: number = 0;
 
   get isPlaying(): boolean {
@@ -57,7 +57,7 @@ export class PlaybackState {
     this._cachedSequenceDuration = value;
   }
 
-  get createdNodeIds(): Set<number> {
+  get createdNodeIds(): Map<number, string> {
     return this._createdNodeIds;
   }
 

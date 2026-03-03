@@ -19,7 +19,7 @@ export class EventProcessor {
             try {
                 if (event.eventType === 'createNode' || event.eventType === 'connect' || event.eventType === 'set') {
                     if (event.eventType === 'createNode') {
-                        createdNodeIds.add(event.nodeId);
+                        createdNodeIds.set(event.nodeId, event.nodeType);
                     }
                     scheduleOrExecuteEvent(this.Tone, this.nodes, event);
                 }
@@ -41,10 +41,15 @@ export class EventProcessor {
             try {
                 // Check if node already exists for createNode events
                 if (event.eventType === 'createNode') {
-                    if (createdNodeIds.has(event.nodeId)) {
-                        return; // Skip if node already created
+                    const previousNodeType = createdNodeIds.get(event.nodeId);
+                    if (previousNodeType !== undefined) {
+                        if (previousNodeType === event.nodeType && this.nodes.get(event.nodeId)) {
+                            return; // Skip if node already created with the same type and still exists
+                        }
+                        // nodeType changed (or prior creation failed) - dispose old node and recreate
+                        this.nodes.disposeNode(event.nodeId);
                     }
-                    createdNodeIds.add(event.nodeId);
+                    createdNodeIds.set(event.nodeId, event.nodeType);
                 }
                 scheduleOrExecuteEvent(this.Tone, this.nodes, event);
             }
