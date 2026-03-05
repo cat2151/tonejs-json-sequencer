@@ -9,6 +9,13 @@ export class TimeParser {
         this.config = config;
     }
     /**
+     * Update the beats per minute used for time conversion.
+     * Call this after processing any 'set' event that changes Transport.bpm.value.
+     */
+    updateBPM(bpm) {
+        this.config.beatsPerMinute = bpm;
+    }
+    /**
      * Parse time string to seconds
      */
     parseTimeToSeconds(timeStr) {
