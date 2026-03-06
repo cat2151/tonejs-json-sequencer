@@ -3,62 +3,27 @@ import type { SequenceEvent } from './demo-types.js';
 import { loadAllSequences } from './sequenceLoader.js';
 // @ts-ignore - Using built library
 import { SequencerNodes, NDJSONStreamingPlayer, parseNDJSON, type EventScheduledInfo } from '../../dist/index.mjs';
-
-interface PlaybackNoteBlock {
-  start: number;
-  duration: number;
-  noteNumber: number;
-  nodeId: number;
-}
-
-interface PlaybackTrackData {
-  nodeId: number;
-  nodeLabel: string;
-  minNote: number;
-  maxNote: number;
-  notes: PlaybackNoteBlock[];
-}
+import { PlaybackViewer } from './streaming-modules/playback-viewer.js';
+import { DebugOutput } from './streaming-modules/debug-output.js';
 
 class StreamingDemo {
   private player: NDJSONStreamingPlayer | null = null;
   private nodes = new SequencerNodes();
   private sequences = loadAllSequences();
-  private debugMessages: string[] = [];
-  private maxDebugMessages = 100;
   private debounceTimer: number | null = null;
   private updateMode: 'manual' | 'debounce' = 'debounce';
   private readonly DEBOUNCE_DELAY_MS = 1000;
-  private timingStats = this.createInitialTimingStats();
   private eventLineMap: number[] = [];
   private currentLineIndicator: HTMLElement | null = null;
   private numberedNDJSONTextarea: HTMLTextAreaElement | null = null;
-  private playbackTrackContainer: HTMLDivElement | null = null;
-  private playbackTrackLines: Map<number, HTMLDivElement> = new Map();
-  private playbackTrackBodies: Map<number, HTMLDivElement> = new Map();
-  private playbackDurationSeconds = 0;
   private playbackLoopEnabled = false;
-  private playbackLoopWaitSeconds = 0;
-  private playbackStartTime: number | null = null;
-  private playbackAnimationFrameId: number | null = null;
-  private readonly EVENT_FLASH_DURATION_MS = 200;
-  private readonly PLAYBACK_LOOKAHEAD_SECONDS = 0.05;
+  private playbackViewer: PlaybackViewer = new PlaybackViewer('playbackTrackContainer');
+  private debugOutput: DebugOutput = new DebugOutput(100);
 
   constructor() {
     this.initializeUI();
     this.initializeCollapsibleSections();
     this.loadInitialSequence();
-  }
-
-  private createInitialTimingStats() {
-    return {
-      totalEvents: 0,
-      onTimeEvents: 0,
-      lateEvents: 0,
-      earlyEvents: 0,
-      loopCount: 0,
-      lastLoopStatus: 'N/A',
-      lastLoopDriftMs: null as number | null
-    };
   }
 
   private initializeUI(): void {
@@ -120,7 +85,7 @@ class StreamingDemo {
         timingVisualization.style.display = enabled ? 'block' : 'none';
       }
       if (!enabled) {
-        this.clearDebugOutput();
+        this.debugOutput.clear();
       }
       // If playing, restart with new debug setting
       if (this.player && this.player.playing) {
@@ -131,7 +96,7 @@ class StreamingDemo {
 
     // Clear debug button
     document.getElementById('clearDebugButton')?.addEventListener('click', () => {
-      this.clearDebugOutput();
+      this.debugOutput.clear();
     });
 
     // Update mode radio buttons
@@ -153,7 +118,6 @@ class StreamingDemo {
     const textarea = document.getElementById('sequenceEditor') as HTMLTextAreaElement;
     this.currentLineIndicator = document.getElementById('currentLineIndicator');
     this.numberedNDJSONTextarea = document.getElementById('sequenceEditorDebug') as HTMLTextAreaElement | null;
-    this.playbackTrackContainer = document.getElementById('playbackTrackContainer') as HTMLDivElement | null;
     this.updateCurrentLineIndicator(null);
     this.syncHighlightLines();
     
@@ -247,7 +211,6 @@ class StreamingDemo {
 
       // Loop wait is fixed to 0 seconds
       const loopWaitSeconds = 0;
-      this.playbackLoopWaitSeconds = loopWaitSeconds;
 
       // Create player only if it doesn't exist or isn't playing
       if (!this.player || !this.player.playing) {
@@ -260,7 +223,7 @@ class StreamingDemo {
           loop: loop,
           loopWaitSeconds: loopWaitSeconds,
           debug: debug,
-          onDebug: (message: string, data?: any) => this.handleDebugMessage(message, data),
+          onDebug: (message: string, data?: any) => this.debugOutput.handleMessage(message, data),
           onEventScheduled: (info: EventScheduledInfo) => this.handleEventScheduled(info),
           onLoopComplete: () => {
             this.updateStatus('再生中（ループ）');
@@ -279,7 +242,7 @@ class StreamingDemo {
       // Rebuild viewer after player.start() so time values (e.g. ticks→seconds) use the
       // BPM that was applied by the sequence's "set" event, not the pre-play default BPM.
       this.syncHighlightLines(ndjson);
-      this.startPlaybackPositionUpdates();
+      this.playbackViewer.startPositionUpdates(loop, loopWaitSeconds);
       
       this.updateStatus(loop ? '再生中（ループ有効）' : '再生中');
       
@@ -299,7 +262,7 @@ class StreamingDemo {
       this.player = null;
     }
 
-    this.stopPlaybackPositionUpdates();
+    this.playbackViewer.stopPositionUpdates();
     
     // Clear any pending debounce timer
     this.clearDebounceTimer();
@@ -369,7 +332,7 @@ class StreamingDemo {
   private syncHighlightLines(ndjson?: string): void {
     const source = ndjson ?? this.getNDJSONFromTextarea();
     this.updateNumberedNDJSON(source);
-    this.rebuildPlaybackViewer(source);
+    this.playbackViewer.rebuild(source);
   }
 
   private updateNumberedNDJSON(ndjson?: string): void {
@@ -404,301 +367,7 @@ class StreamingDemo {
 
   private handleEventScheduled(info: EventScheduledInfo): void {
     this.updateCurrentLineFromEvent(info.eventIndex);
-    this.flashPlaybackEvent(info);
-  }
-
-  private rebuildPlaybackViewer(ndjson: string): void {
-    const container = this.playbackTrackContainer;
-    if (!container) {
-      return;
-    }
-
-    let events: SequenceEvent[];
-    try {
-      events = parseNDJSON(ndjson);
-    } catch {
-      container.innerHTML = '<div class="playback-viewer-empty">NDJSONのパースに失敗しました</div>';
-      this.playbackTrackLines.clear();
-      this.playbackTrackBodies.clear();
-      this.playbackDurationSeconds = 0;
-      return;
-    }
-
-    const { tracks, totalDuration } = this.buildPlaybackTracks(events);
-    this.playbackDurationSeconds = totalDuration;
-    container.innerHTML = '';
-    this.playbackTrackLines.clear();
-    this.playbackTrackBodies.clear();
-
-    if (tracks.length === 0) {
-      const empty = document.createElement('div');
-      empty.className = 'playback-viewer-empty';
-      empty.textContent = 'triggerAttackReleaseイベントがありません';
-      container.appendChild(empty);
-      return;
-    }
-
-    tracks.forEach(track => {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'playback-track';
-
-      const label = document.createElement('div');
-      label.className = 'playback-track-label';
-      label.textContent = track.nodeLabel;
-      wrapper.appendChild(label);
-
-      const body = document.createElement('div');
-      body.className = 'playback-track-body';
-
-      const progressLine = document.createElement('div');
-      progressLine.className = 'playback-progress-line';
-      body.appendChild(progressLine);
-      this.playbackTrackLines.set(track.nodeId, progressLine);
-      this.playbackTrackBodies.set(track.nodeId, body);
-
-      track.notes.forEach(note => {
-        const noteEl = document.createElement('div');
-        noteEl.className = 'playback-note';
-
-        const leftPercent = this.playbackDurationSeconds > 0
-          ? Math.max(0, Math.min(100, (note.start / this.playbackDurationSeconds) * 100))
-          : 0;
-        const widthPercent = this.playbackDurationSeconds > 0
-          ? Math.max((note.duration / this.playbackDurationSeconds) * 100, 0.5)
-          : 0;
-
-        const noteRange = track.maxNote - track.minNote;
-        const verticalRatio = noteRange === 0
-          ? 0.5
-          : (note.noteNumber - track.minNote) / noteRange;
-        const topPercent = 100 - (verticalRatio * 100);
-
-        noteEl.style.left = `${leftPercent}%`;
-        noteEl.style.width = `${widthPercent}%`;
-        noteEl.style.top = `${topPercent}%`;
-        body.appendChild(noteEl);
-      });
-
-      wrapper.appendChild(body);
-      container.appendChild(wrapper);
-    });
-
-    this.updatePlaybackPositionLine(0);
-  }
-
-  private buildPlaybackTracks(events: SequenceEvent[]): { tracks: PlaybackTrackData[]; totalDuration: number } {
-    const trackMap = new Map<number, PlaybackTrackData>();
-    const nodeTypeMap = new Map<number, string>();
-    let maxEndTime = 0;
-    let loopEndSeconds: number | null = null;
-
-    events.forEach(event => {
-      if (event.eventType === 'createNode') {
-        nodeTypeMap.set(event.nodeId, event.nodeType);
-        return;
-      }
-
-      if (event.eventType === 'loopEnd' && 'args' in event && Array.isArray(event.args) && event.args.length > 0) {
-        const parsedLoopEnd = this.parseTimeValue(event.args[event.args.length - 1]);
-        if (parsedLoopEnd !== null) {
-          loopEndSeconds = loopEndSeconds === null ? parsedLoopEnd : Math.max(loopEndSeconds, parsedLoopEnd);
-        }
-        return;
-      }
-
-      if (event.eventType !== 'triggerAttackRelease' || !('args' in event) || !Array.isArray(event.args)) {
-        return;
-      }
-
-      if (event.args.length < 3) {
-        return;
-      }
-
-      const noteNumber = this.parseNoteNumber(event.args[0]);
-      const duration = this.parseTimeValue(event.args[1]);
-      const start = this.parseTimeValue(event.args[event.args.length - 1]);
-
-      if (noteNumber === null || duration === null || start === null) {
-        return;
-      }
-
-      const endTime = start + duration;
-      maxEndTime = Math.max(maxEndTime, endTime);
-
-      const existing = trackMap.get(event.nodeId);
-      const label = nodeTypeMap.has(event.nodeId)
-        ? `Node ${event.nodeId} (${nodeTypeMap.get(event.nodeId)})`
-        : `Node ${event.nodeId}`;
-
-      const track: PlaybackTrackData = existing ?? {
-        nodeId: event.nodeId,
-        nodeLabel: label,
-        minNote: noteNumber,
-        maxNote: noteNumber,
-        notes: []
-      };
-
-      track.minNote = Math.min(track.minNote, noteNumber);
-      track.maxNote = Math.max(track.maxNote, noteNumber);
-      track.notes.push({ start, duration, noteNumber, nodeId: event.nodeId });
-      trackMap.set(event.nodeId, track);
-    });
-
-    const tracks = Array.from(trackMap.values()).sort((a, b) => a.nodeId - b.nodeId);
-    const totalDuration = loopEndSeconds !== null && loopEndSeconds > 0 ? loopEndSeconds : maxEndTime;
-
-    return {
-      tracks,
-      totalDuration
-    };
-  }
-
-  private parseNoteNumber(value: unknown): number | null {
-    if (typeof value === 'number' && Number.isFinite(value)) {
-      return value;
-    }
-
-    if (typeof value === 'string') {
-      const trimmed = value.trim();
-      const numeric = Number(trimmed);
-      if (Number.isFinite(numeric)) {
-        return numeric;
-      }
-
-      try {
-        const midi = Tone.Frequency(trimmed).toMidi();
-        return Number.isFinite(midi) ? midi : null;
-      } catch {
-        return null;
-      }
-    }
-
-    return null;
-  }
-
-  private parseTimeValue(value: unknown): number | null {
-    if (typeof value === 'number' && Number.isFinite(value)) {
-      return value;
-    }
-
-    if (typeof value !== 'string') {
-      return null;
-    }
-
-    const trimmed = value.trim();
-    const withoutPlus = trimmed.startsWith('+') ? trimmed.substring(1) : trimmed;
-
-    try {
-      const ticksSeconds = Tone.Ticks(withoutPlus).toSeconds();
-      if (Number.isFinite(ticksSeconds)) {
-        return ticksSeconds;
-      }
-    } catch {
-      // Fall through
-    }
-
-    try {
-      const seconds = Tone.Time(withoutPlus).toSeconds();
-      if (Number.isFinite(seconds)) {
-        return seconds;
-      }
-    } catch {
-      // Fall through
-    }
-
-    const numeric = Number(withoutPlus);
-    return Number.isFinite(numeric) ? numeric : null;
-  }
-
-  private getEventStartTime(event: SequenceEvent): number | null {
-    if (!('args' in event) || !Array.isArray(event.args) || event.args.length === 0) {
-      return null;
-    }
-    return this.parseTimeValue(event.args[event.args.length - 1]);
-  }
-
-  private startPlaybackPositionUpdates(): void {
-    this.stopPlaybackPositionUpdates();
-    this.playbackStartTime = Tone.now() + this.PLAYBACK_LOOKAHEAD_SECONDS;
-    this.updatePlaybackProgressLineFromNow();
-  }
-
-  private stopPlaybackPositionUpdates(): void {
-    if (this.playbackAnimationFrameId !== null) {
-      cancelAnimationFrame(this.playbackAnimationFrameId);
-      this.playbackAnimationFrameId = null;
-    }
-    this.playbackStartTime = null;
-    this.updatePlaybackPositionLine(0);
-  }
-
-  private updatePlaybackProgressLineFromNow(): void {
-    if (this.playbackStartTime === null || this.playbackDurationSeconds <= 0) {
-      return;
-    }
-
-    const now = Tone.now();
-    const elapsed = Math.max(0, now - this.playbackStartTime);
-    const loopCycle = this.playbackDurationSeconds + this.playbackLoopWaitSeconds;
-    const position = this.playbackLoopEnabled && loopCycle > 0
-      ? elapsed % loopCycle
-      : Math.min(elapsed, this.playbackDurationSeconds);
-
-    this.updatePlaybackPositionLine(position);
-    this.playbackAnimationFrameId = requestAnimationFrame(() => this.updatePlaybackProgressLineFromNow());
-  }
-
-  private updatePlaybackPositionLine(positionSeconds: number): void {
-    if (this.playbackDurationSeconds <= 0) {
-      this.playbackTrackLines.forEach(line => {
-        line.style.left = '0%';
-      });
-      return;
-    }
-
-    const percent = Math.max(0, Math.min(100, (positionSeconds / this.playbackDurationSeconds) * 100));
-    this.playbackTrackLines.forEach(line => {
-      line.style.left = `${percent}%`;
-    });
-  }
-
-  private flashPlaybackEvent(info: EventScheduledInfo): void {
-    if (this.playbackDurationSeconds <= 0) {
-      return;
-    }
-
-    const eventStartTime = this.getEventStartTime(info.event);
-    const nodeId = info.event.nodeId;
-    if (eventStartTime === null) {
-      return;
-    }
-    const targetBody = this.playbackTrackBodies.get(nodeId);
-    if (!targetBody) {
-      return;
-    }
-
-    const loopCycle = this.playbackDurationSeconds + this.playbackLoopWaitSeconds;
-    if (this.playbackStartTime === null) {
-      const loopOffset = info.loopIteration * loopCycle;
-      this.playbackStartTime = info.absoluteTime - eventStartTime - loopOffset;
-    }
-
-    const baseStart = this.playbackStartTime ?? info.absoluteTime;
-    const elapsedFromStart = info.absoluteTime - baseStart;
-    const relativeTime = this.playbackLoopEnabled && loopCycle > 0
-      ? elapsedFromStart % loopCycle
-      : elapsedFromStart;
-
-    const percent = Math.max(0, Math.min(100, (relativeTime / this.playbackDurationSeconds) * 100));
-
-    const flashLine = document.createElement('div');
-    flashLine.className = 'playback-flash-line';
-    flashLine.style.left = `${percent}%`;
-    targetBody.appendChild(flashLine);
-
-    window.setTimeout(() => {
-      flashLine.remove();
-    }, this.EVENT_FLASH_DURATION_MS);
+    this.playbackViewer.flashEvent(info);
   }
 
   private updateStatus(status: string): void {
@@ -706,111 +375,6 @@ class StreamingDemo {
     if (statusElement) {
       statusElement.textContent = `ステータス: ${status}`;
     }
-  }
-
-  private handleDebugMessage(message: string, data?: any): void {
-    const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
-    let debugLine = `[${timestamp}] ${message}`;
-    
-    if (data !== undefined && data !== null && data !== '') {
-      if (typeof data === 'object') {
-        debugLine += ': ' + JSON.stringify(data);
-      } else {
-        debugLine += ': ' + data;
-      }
-    }
-
-    // Parse timing information from debug messages
-    if (message.includes('⚪') || message.includes('🔴') || message.includes('🟢')) {
-      // Event scheduling message
-      this.timingStats.totalEvents++;
-      if (message.includes('⚪')) {
-        this.timingStats.onTimeEvents++;
-      } else if (message.includes('🔴')) {
-        this.timingStats.lateEvents++;
-      } else if (message.includes('🟢')) {
-        this.timingStats.earlyEvents++;
-      }
-    } else if (message.includes('🔄') && message.includes('Loop')) {
-      // Loop completion message
-      if (data && typeof data === 'object') {
-        this.timingStats.loopCount = data.currentLoop || 0;
-        if (data.timingStatus) {
-          this.timingStats.lastLoopStatus = data.timingStatus;
-        }
-        if (data.loopTimingDriftMs !== undefined) {
-          this.timingStats.lastLoopDriftMs = parseFloat(data.loopTimingDriftMs);
-        }
-      }
-    } else if (message.includes('🎵') && message.includes('Initializing')) {
-      // Reset stats on playback initialization
-      this.timingStats = this.createInitialTimingStats();
-    }
-
-    this.debugMessages.push(debugLine);
-    
-    // Keep only the last N messages
-    if (this.debugMessages.length > this.maxDebugMessages) {
-      this.debugMessages.shift();
-    }
-
-    this.updateDebugOutput();
-    this.updateTimingVisualization();
-  }
-
-  private updateDebugOutput(): void {
-    const debugOutput = document.getElementById('debugOutput');
-    if (debugOutput) {
-      debugOutput.textContent = this.debugMessages.join('\n');
-      // Auto-scroll to bottom
-      debugOutput.scrollTop = debugOutput.scrollHeight;
-    }
-  }
-
-  private updateTimingVisualization(): void {
-    const eventSchedulingStats = document.getElementById('eventSchedulingStats');
-    const loopTimingStats = document.getElementById('loopTimingStats');
-    
-    if (eventSchedulingStats) {
-      const total = this.timingStats.totalEvents;
-      const onTime = this.timingStats.onTimeEvents;
-      const late = this.timingStats.lateEvents;
-      const early = this.timingStats.earlyEvents;
-      
-      const onTimePercent = total > 0 ? ((onTime / total) * 100).toFixed(1) : '0.0';
-      const latePercent = total > 0 ? ((late / total) * 100).toFixed(1) : '0.0';
-      const earlyPercent = total > 0 ? ((early / total) * 100).toFixed(1) : '0.0';
-      
-      eventSchedulingStats.innerHTML = `
-        <div>総イベント数: ${total}</div>
-        <div style="margin-top: 5px;">
-          <div>⚪ 正常: ${onTime} (${onTimePercent}%)</div>
-          <div>🔴 遅延: ${late} (${latePercent}%)</div>
-          <div>🟢 早い: ${early} (${earlyPercent}%)</div>
-        </div>
-      `;
-    }
-    
-    if (loopTimingStats) {
-      const driftDisplay = this.timingStats.lastLoopDriftMs !== null
-        ? `${this.timingStats.lastLoopDriftMs > 0 ? '+' : ''}${this.timingStats.lastLoopDriftMs.toFixed(2)}ms`
-        : '-';
-      
-      loopTimingStats.innerHTML = `
-        <div>ループ回数: ${this.timingStats.loopCount}</div>
-        <div style="margin-top: 5px;">
-          <div>ステータス: ${this.timingStats.lastLoopStatus}</div>
-          <div>タイミングずれ: ${driftDisplay}</div>
-        </div>
-      `;
-    }
-  }
-
-  private clearDebugOutput(): void {
-    this.debugMessages = [];
-    this.timingStats = this.createInitialTimingStats();
-    this.updateDebugOutput();
-    this.updateTimingVisualization();
   }
 }
 
