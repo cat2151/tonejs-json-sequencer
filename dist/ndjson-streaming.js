@@ -3,44 +3,15 @@
 // Based on tonejs-json-sequencer by cat2151
 // https://github.com/cat2151/tonejs-json-sequencer
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NDJSONStreamingPlayer = void 0;
-exports.parseNDJSON = parseNDJSON;
+exports.NDJSONStreamingPlayer = exports.parseNDJSON = void 0;
 const time_parser_js_1 = require("./utils/time-parser.js");
 const playback_state_js_1 = require("./streaming/playback-state.js");
 const event_processor_js_1 = require("./streaming/event-processor.js");
-/**
- * Parse NDJSON string into array of events
- * @param ndjson - NDJSON string (newline-delimited JSON)
- * @returns Array of sequence events
- * @throws Error if any line fails to parse
- */
-function parseNDJSON(ndjson) {
-    const lines = ndjson.split('\n');
-    const events = [];
-    lines.forEach((rawLine, index) => {
-        const line = rawLine.trim();
-        // Skip empty or whitespace-only lines
-        if (line.length === 0) {
-            return;
-        }
-        try {
-            const parsed = JSON.parse(line);
-            events.push(parsed);
-        }
-        catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            // Log detailed information for debugging
-            console.error('Failed to parse NDJSON line:', {
-                lineNumber: index + 1,
-                lineContent: line,
-                error,
-            });
-            // Surface a clear, user-facing error so invalid NDJSON can be fixed
-            throw new Error(`Failed to parse NDJSON input at line ${index + 1}: ${errorMessage}`);
-        }
-    });
-    return events;
-}
+const prediction_manager_js_1 = require("./streaming/prediction-manager.js");
+const ndjson_parser_js_1 = require("./streaming/ndjson-parser.js");
+// Re-export public API from sub-modules
+var ndjson_parser_js_2 = require("./streaming/ndjson-parser.js");
+Object.defineProperty(exports, "parseNDJSON", { enumerable: true, get: function () { return ndjson_parser_js_2.parseNDJSON; } });
 /**
  * NDJSON Streaming Player
  * Processes events with lookahead timing and supports live editing and loop playback
@@ -48,7 +19,7 @@ function parseNDJSON(ndjson) {
 class NDJSONStreamingPlayer {
     constructor(Tone, nodes, config = {}) {
         this.animationFrameId = null;
-        this.eventPredictions = new Map(); // key: "loopIteration-eventIndex"
+        this.predictionManager = new prediction_manager_js_1.PredictionManager();
         this.Tone = Tone;
         this.nodes = nodes;
         this.config = {
@@ -105,61 +76,12 @@ class NDJSONStreamingPlayer {
      * Creates predictions for the first loop and the first event of the next loop
      */
     generatePredictions(events, startTime, sequenceDuration) {
-        this.eventPredictions.clear();
-        const predictions = [];
-        // Generate predictions for first loop (loop 0)
-        events.forEach((event, index) => {
-            // Skip non-schedulable events
-            if (!this.isSchedulableEvent(event)) {
-                return;
-            }
-            const eventTime = this.eventProcessor.getEventTime(event);
-            if (eventTime === null)
-                return;
-            const prediction = {
-                eventIndex: index,
-                eventType: event.eventType,
-                timeNotation: this.getTimeNotation(event),
-                timeSeconds: eventTime,
-                expectedScheduleTime: startTime + eventTime,
-                loopIteration: 0
-            };
-            predictions.push(prediction);
-            this.eventPredictions.set(`0-${index}`, prediction);
+        this.predictionManager.generate(events, startTime, sequenceDuration, this.config.loop, this.config.loopWaitSeconds, {
+            isSchedulableEvent: this.isSchedulableEvent.bind(this),
+            getTimeNotation: this.getTimeNotation.bind(this),
+            getEventTime: this.eventProcessor.getEventTime.bind(this.eventProcessor),
+            debug: this.config.debug ? this.debug.bind(this) : () => { }
         });
-        // Add prediction for first event of next loop (if loop mode enabled)
-        if (this.config.loop && events.length > 0) {
-            const firstSchedulableEvent = events.find(e => this.isSchedulableEvent(e));
-            if (firstSchedulableEvent) {
-                const firstEventIndex = events.indexOf(firstSchedulableEvent);
-                const eventTime = this.eventProcessor.getEventTime(firstSchedulableEvent);
-                if (eventTime !== null) {
-                    const loopOffset = sequenceDuration + this.config.loopWaitSeconds;
-                    const prediction = {
-                        eventIndex: firstEventIndex,
-                        eventType: firstSchedulableEvent.eventType,
-                        timeNotation: this.getTimeNotation(firstSchedulableEvent),
-                        timeSeconds: eventTime,
-                        expectedScheduleTime: startTime + loopOffset + eventTime,
-                        loopIteration: 1
-                    };
-                    predictions.push(prediction);
-                    this.eventPredictions.set(`1-${firstEventIndex}`, prediction);
-                }
-            }
-        }
-        // Log predictions
-        if (this.config.debug && predictions.length > 0) {
-            this.debug('📋 === Event Scheduling Predictions ===');
-            this.debug(`t0 (playback start + lookahead) = ${startTime.toFixed(3)}s`);
-            this.debug('');
-            this.debug('Expected schedule times:');
-            predictions.forEach(pred => {
-                const loopLabel = pred.loopIteration > 0 ? ` [Loop ${pred.loopIteration}]` : '';
-                this.debug(`  Event #${pred.eventIndex} (${pred.eventType})${loopLabel}: ${pred.timeNotation} → ${pred.timeSeconds.toFixed(3)}s → t0+${pred.timeSeconds.toFixed(3)}s = ${pred.expectedScheduleTime.toFixed(3)}s`);
-            });
-            this.debug('');
-        }
     }
     /**
      * Start or update the streaming playback
@@ -168,7 +90,7 @@ class NDJSONStreamingPlayer {
     async start(eventsOrNDJSON) {
         // Parse events if NDJSON string is provided
         const events = typeof eventsOrNDJSON === 'string'
-            ? parseNDJSON(eventsOrNDJSON)
+            ? (0, ndjson_parser_js_1.parseNDJSON)(eventsOrNDJSON)
             : eventsOrNDJSON;
         // If not playing, initialize playback
         if (!this.playbackState.isPlaying) {
@@ -384,7 +306,7 @@ class NDJSONStreamingPlayer {
                     if (this.config.debug) {
                         // Look up prediction for this event
                         const predictionKey = `${checkLoop}-${index}`;
-                        const prediction = this.eventPredictions.get(predictionKey);
+                        const prediction = this.predictionManager.get(predictionKey);
                         if (prediction) {
                             // Compare actual scheduled time with prediction
                             const expectedTime = prediction.expectedScheduleTime;
