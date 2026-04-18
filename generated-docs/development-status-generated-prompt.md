@@ -1,4 +1,4 @@
-Last updated: 2026-03-07
+Last updated: 2026-04-19
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -104,10 +104,13 @@ Last updated: 2026-03-07
 
 ## プロジェクトのファイル一覧
 - .editorconfig
+- .github/actions-tmp/.gitattributes
 - .github/actions-tmp/.github/workflows/call-callgraph.yml
 - .github/actions-tmp/.github/workflows/call-check-large-files.yml
 - .github/actions-tmp/.github/workflows/call-daily-project-summary.yml
 - .github/actions-tmp/.github/workflows/call-issue-note.yml
+- .github/actions-tmp/.github/workflows/call-rust-fmt-commit.yml
+- .github/actions-tmp/.github/workflows/call-rust-windows-cargo-check.yml
 - .github/actions-tmp/.github/workflows/call-rust-windows-check.yml
 - .github/actions-tmp/.github/workflows/call-translate-readme.yml
 - .github/actions-tmp/.github/workflows/callgraph.yml
@@ -115,6 +118,8 @@ Last updated: 2026-03-07
 - .github/actions-tmp/.github/workflows/check-recent-human-commit.yml
 - .github/actions-tmp/.github/workflows/daily-project-summary.yml
 - .github/actions-tmp/.github/workflows/issue-note.yml
+- .github/actions-tmp/.github/workflows/rust-fmt-commit.yml
+- .github/actions-tmp/.github/workflows/rust-windows-cargo-check.yml
 - .github/actions-tmp/.github/workflows/rust-windows-check.yml
 - .github/actions-tmp/.github/workflows/translate-readme.yml
 - .github/actions-tmp/.github_automation/callgraph/codeql-queries/callgraph.ql
@@ -158,6 +163,7 @@ Last updated: 2026-03-07
 - .github/actions-tmp/.github_automation/translate/scripts/translate-readme.cjs
 - .github/actions-tmp/.gitignore
 - .github/actions-tmp/.vscode/settings.json
+- .github/actions-tmp/AGENTS.md
 - .github/actions-tmp/LICENSE
 - .github/actions-tmp/README.ja.md
 - .github/actions-tmp/README.md
@@ -198,7 +204,8 @@ Last updated: 2026-03-07
 - .github/actions-tmp/issue-notes/4.md
 - .github/actions-tmp/issue-notes/40.md
 - .github/actions-tmp/issue-notes/44.md
-- .github/actions-tmp/issue-notes/52.md
+- .github/actions-tmp/issue-notes/57.md
+- .github/actions-tmp/issue-notes/67.md
 - .github/actions-tmp/issue-notes/7.md
 - .github/actions-tmp/issue-notes/8.md
 - .github/actions-tmp/issue-notes/9.md
@@ -381,6 +388,7 @@ Last updated: 2026-03-07
 - examples/cdn-example.html
 - examples/npm-example.mjs
 - examples/offline-rendering-example.html
+- generated-docs/project-overview-generated-prompt.md
 - googled947dc864c270e07.html
 - issue-notes/100.md
 - issue-notes/108.md
@@ -395,7 +403,7 @@ Last updated: 2026-03-07
 - issue-notes/162.md
 - issue-notes/170.md
 - issue-notes/180.md
-- issue-notes/185.md
+- issue-notes/188.md
 - issue-notes/89.md
 - package-lock.json
 - package.json
@@ -738,28 +746,23 @@ jobs:
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-ac724c8 Merge pull request #187 from cat2151/copilot/add-tests-for-large-files
-063c0da Refactor 3 large files (>500 lines) into focused sub-modules
-0269f6f Initial plan
-83b6ec2 Merge pull request #186 from cat2151/copilot/investigate-headless-browser-issue
-4c508b4 Update project summaries (overview & development status) [auto]
-2317a4a Sync TimeParser BPM in live-editing (updateEvents) path too
-0641ece Fix BPM-dependent playback position alignment in streaming demo
-f2611c0 Initial plan
-961a15a Add issue note for #185 [auto]
-1c0b0fd Merge branch 'main' of github.com:cat2151/tonejs-json-sequencer into main
+a09c13a Merge pull request #189 from cat2151/copilot/fix-demo-lib-bug
+30e1636 fix: correct queued playback request logging
+5ad3016 fix: clarify queued playback logging
+9d7fdc4 fix: log queued playback errors
+6e72b32 fix: serialize demo-library playback requests
+5d6d92d fix: clarify replay handling in demo-library
+a4de2af fix: guard empty demo-library sequences
+cfc9d85 fix: update demo-library sequence selection behavior
+09f2651 Initial plan
+ab77c7f Add issue note for #188 [auto]
 
 ### 変更されたファイル:
-.github/workflows/call-check-large-files.yml
+demo-library/README.md
+demo-library/index.html
 dist/cjs/ndjson-streaming.d.ts
 dist/cjs/ndjson-streaming.js
-dist/cjs/sequencer-nodes.d.ts
-dist/cjs/sequencer-nodes.js
-dist/cjs/streaming/event-processor.d.ts
-dist/cjs/streaming/event-processor.js
 dist/cjs/streaming/ndjson-parser.d.ts
-dist/cjs/streaming/playback-state.d.ts
-dist/cjs/streaming/playback-state.js
 dist/cjs/streaming/prediction-manager.d.ts
 dist/cjs/streaming/streaming-types.d.ts
 dist/cjs/utils/time-parser.d.ts
@@ -773,14 +776,8 @@ dist/demo/streaming-modules/playback-viewer.js
 dist/demo/streaming.js
 dist/esm/ndjson-streaming.d.ts
 dist/esm/ndjson-streaming.mjs
-dist/esm/sequencer-nodes.d.ts
-dist/esm/sequencer-nodes.mjs
-dist/esm/streaming/event-processor.d.ts
-dist/esm/streaming/event-processor.mjs
 dist/esm/streaming/ndjson-parser.d.ts
 dist/esm/streaming/ndjson-parser.mjs
-dist/esm/streaming/playback-state.d.ts
-dist/esm/streaming/playback-state.mjs
 dist/esm/streaming/prediction-manager.d.ts
 dist/esm/streaming/prediction-manager.mjs
 dist/esm/streaming/streaming-types.d.ts
@@ -789,14 +786,8 @@ dist/esm/utils/time-parser.d.ts
 dist/esm/utils/time-parser.mjs
 dist/ndjson-streaming.d.ts
 dist/ndjson-streaming.js
-dist/sequencer-nodes.d.ts
-dist/sequencer-nodes.js
-dist/streaming/event-processor.d.ts
-dist/streaming/event-processor.js
 dist/streaming/ndjson-parser.d.ts
 dist/streaming/ndjson-parser.js
-dist/streaming/playback-state.d.ts
-dist/streaming/playback-state.js
 dist/streaming/prediction-manager.d.ts
 dist/streaming/prediction-manager.js
 dist/streaming/streaming-types.d.ts
@@ -807,7 +798,8 @@ generated-docs/development-status-generated-prompt.md
 generated-docs/development-status.md
 generated-docs/project-overview-generated-prompt.md
 generated-docs/project-overview.md
-issue-notes/185.md
+issue-notes/182.md
+issue-notes/188.md
 src/demo/sequences/effect-sequences/delay-distortion-sequences.ts
 src/demo/sequences/effect-sequences/modulation-sequences.ts
 src/demo/sequences/effect-sequences/reverb-sequences.ts
@@ -816,14 +808,11 @@ src/demo/streaming-modules/debug-output.ts
 src/demo/streaming-modules/playback-viewer.ts
 src/demo/streaming.ts
 src/ndjson-streaming.ts
-src/sequencer-nodes.ts
-src/streaming/event-processor.ts
 src/streaming/ndjson-parser.ts
-src/streaming/playback-state.ts
 src/streaming/prediction-manager.ts
 src/streaming/streaming-types.ts
 src/utils/time-parser.ts
 
 
 ---
-Generated at: 2026-03-07 07:11:53 JST
+Generated at: 2026-04-19 07:14:37 JST

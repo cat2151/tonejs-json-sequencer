@@ -1,4 +1,4 @@
-Last updated: 2026-03-07
+Last updated: 2026-04-19
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -921,7 +921,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 162.md
   📖 170.md
   📖 180.md
-  📖 185.md
+  📖 188.md
   📖 89.md
 📊 package-lock.json
 📊 package.json
@@ -1036,7 +1036,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   - 関数: なし
   - インポート: なし
 
-**demo-library/index.html** (305行, 8140バイト)
+**demo-library/index.html** (265行, 7159バイト)
   - 関数: なし
   - インポート: なし
 
@@ -1951,4 +1951,4 @@ googled947dc864c270e07.html
 
 
 ---
-Generated at: 2026-03-07 07:11:53 JST
+Generated at: 2026-04-19 07:14:37 JST
