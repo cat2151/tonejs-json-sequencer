@@ -158,85 +158,13 @@ npm install tone</code></pre>
     // In your own project after npm install, you would use:
     // import { SequencerNodes, playSequence } from 'tonejs-json-sequencer';
     import { SequencerNodes, playSequence } from '../dist/index.mjs';
+    import { loadAllSequences } from '../dist/demo/sequenceLoader.js';
 
-    // Define a minimal sequence - creates a synth and plays a simple melody
-    const baseSequence = [
-      {
-        eventType: 'createNode',
-        nodeId: 0,
-        nodeType: 'FMSynth',
-        args: {
-          harmonicity: 3,
-          modulationIndex: 10,
-          detune: 0,
-          portamento: 0,
-          volume: 0,
-          oscillator: { type: 'sine', phase: 0 },
-          envelope: {
-            attack: 0.01,
-            attackCurve: 'linear',
-            decay: 0.1,
-            decayCurve: 'exponential',
-            sustain: 0.2,
-            release: 0.5,
-            releaseCurve: 'exponential'
-          },
-          modulation: { type: 'square', phase: 0 },
-          modulationEnvelope: { attack: 0.5, decay: 0, sustain: 1, release: 0.5 }
-        }
-      },
-      {
-        eventType: 'createNode',
-        nodeId: 1,
-        nodeType: 'Reverb',
-        args: {
-          decay: 2.5,
-          preDelay: 0.01,
-          wet: 0.25
-        }
-      },
-      {
-        eventType: 'connect',
-        nodeId: 0,
-        connectTo: 1
-      },
-      {
-        eventType: 'connect',
-        nodeId: 1,
-        connectTo: 'toDestination'
-      },
-      {
-        eventType: 'triggerAttackRelease',
-        nodeId: 0,
-        args: ['C4', '8n', '0']
-      },
-      {
-        eventType: 'triggerAttackRelease',
-        nodeId: 0,
-        args: ['E4', '8n', '0:0:2']
-      },
-      {
-        eventType: 'triggerAttackRelease',
-        nodeId: 0,
-        args: ['G4', '8n', '0:1:0']
-      },
-      {
-        eventType: 'triggerAttackRelease',
-        nodeId: 0,
-        args: ['C5', '4n', '0:1:2']
-      },
-      {
-        eventType: 'loopEnd',
-        nodeId: 0,
-        args: ['0:5:0']
-      }
-    ];
-
-    const sequenceOptions = [{ name: 'Library Minimal Example', data: baseSequence }];
-    let demosLoaded = false;
+    const sequenceOptions = loadAllSequences();
 
     const selector = document.getElementById('sequenceSelector');
     const sequenceDisplay = document.getElementById('sequenceDisplay');
+    const playButton = document.getElementById('playButton');
 
     function appendOptions(options) {
       options.forEach(option => {
@@ -248,33 +176,73 @@ npm install tone</code></pre>
     }
 
     appendOptions(sequenceOptions);
+    if (sequenceOptions.length > 0) {
+      selector.value = sequenceOptions[0].name;
+    } else {
+      selector.disabled = true;
+      playButton.disabled = true;
+    }
 
-    let currentSequence = sequenceOptions[0].data;
+    let currentSequence = sequenceOptions[0]?.data ?? [];
 
     function updateSequenceDisplay(sequence) {
       sequenceDisplay.textContent = JSON.stringify(sequence, null, 2);
     }
 
-    async function ensureDemoSequencesLoaded() {
-      if (demosLoaded) return;
-      const module = await import('../dist/demo/sequenceLoader.js');
-      const demoSequences = module.loadAllSequences();
-      sequenceOptions.push(...demoSequences);
-      appendOptions(demoSequences);
-      demosLoaded = true;
+    function handlePlaybackError(error) {
+      console.error('Error playing sequence:', error);
+      alert('Error playing sequence. Check console for details.');
     }
 
-    selector.addEventListener('focus', () => {
-      // Lazy-load demo sequences when the selector is first used
-      ensureDemoSequencesLoaded();
-    }, { once: true });
+    let latestPlaybackRequestId = 0;
+    let playbackChain = Promise.resolve();
+
+    async function playSequenceData(sequence, requestId) {
+      if (sequence.length === 0) {
+        return;
+      }
+
+      // Start Tone.js audio context (required for browser audio)
+      await Tone.start();
+      console.log('Audio context started');
+
+      if (requestId !== latestPlaybackRequestId) {
+        return;
+      }
+
+      // Play the sequence
+      await playSequence(Tone, nodes, sequence);
+
+      if (requestId !== latestPlaybackRequestId) {
+        return;
+      }
+
+      Tone.Transport.start();
+      console.log('Sequence playing');
+    }
+
+    function queuePlayback(sequence) {
+      latestPlaybackRequestId += 1;
+      const requestId = latestPlaybackRequestId;
+      playbackChain = playbackChain
+        // Keep the queue moving so a failed stale request does not block later replay requests.
+        .catch(error => {
+          console.error(`Playback request #${requestId} failed:`, error);
+        })
+        .then(() => playSequenceData(sequence, requestId));
+      return playbackChain;
+    }
 
     selector.addEventListener('change', async () => {
-      await ensureDemoSequencesLoaded();
       const selected = sequenceOptions.find(option => option.name === selector.value);
       if (selected) {
         currentSequence = selected.data;
         updateSequenceDisplay(currentSequence);
+        try {
+          await queuePlayback(selected.data);
+        } catch (error) {
+          handlePlaybackError(error);
+        }
       }
     });
 
@@ -284,19 +252,11 @@ npm install tone</code></pre>
     const nodes = new SequencerNodes();
 
     // Play button handler
-    document.getElementById('playButton').addEventListener('click', async () => {
+    playButton.addEventListener('click', async () => {
       try {
-        // Start Tone.js audio context (required for browser audio)
-        await Tone.start();
-        console.log('Audio context started');
-        
-        // Play the sequence
-        await playSequence(Tone, nodes, currentSequence);
-        Tone.Transport.start();
-        console.log('Sequence playing');
+        await queuePlayback(currentSequence);
       } catch (error) {
-        console.error('Error playing sequence:', error);
-        alert('Error playing sequence. Check console for details.');
+        handlePlaybackError(error);
       }
     });
   </script>
