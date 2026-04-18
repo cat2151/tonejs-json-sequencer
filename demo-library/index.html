@@ -222,9 +222,12 @@ npm install tone</code></pre>
     }
 
     function queuePlayback(sequence) {
-      const requestId = ++latestPlaybackRequestId;
+      latestPlaybackRequestId += 1;
+      const requestId = latestPlaybackRequestId;
       playbackChain = playbackChain
-        .catch(() => {})
+        .catch(error => {
+          console.error('Previous playback failed:', error);
+        })
         .then(() => playSequenceData(sequence, requestId));
       return playbackChain;
     }
