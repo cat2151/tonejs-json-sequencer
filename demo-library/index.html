@@ -194,8 +194,11 @@ npm install tone</code></pre>
       alert('Error playing sequence. Check console for details.');
     }
 
-    async function playCurrentSequence() {
-      if (currentSequence.length === 0) {
+    let latestPlaybackRequestId = 0;
+    let playbackChain = Promise.resolve();
+
+    async function playSequenceData(sequence, requestId) {
+      if (sequence.length === 0) {
         return;
       }
 
@@ -203,13 +206,27 @@ npm install tone</code></pre>
       await Tone.start();
       console.log('Audio context started');
 
-      Tone.Transport.stop();
-      Tone.Transport.cancel();
+      if (requestId !== latestPlaybackRequestId) {
+        return;
+      }
 
       // Play the sequence
-      await playSequence(Tone, nodes, currentSequence);
+      await playSequence(Tone, nodes, sequence);
+
+      if (requestId !== latestPlaybackRequestId) {
+        return;
+      }
+
       Tone.Transport.start();
       console.log('Sequence playing');
+    }
+
+    function queuePlayback(sequence) {
+      const requestId = ++latestPlaybackRequestId;
+      playbackChain = playbackChain
+        .catch(() => {})
+        .then(() => playSequenceData(sequence, requestId));
+      return playbackChain;
     }
 
     selector.addEventListener('change', async () => {
@@ -218,7 +235,7 @@ npm install tone</code></pre>
         currentSequence = selected.data;
         updateSequenceDisplay(currentSequence);
         try {
-          await playCurrentSequence();
+          await queuePlayback(selected.data);
         } catch (error) {
           handlePlaybackError(error);
         }
@@ -233,7 +250,7 @@ npm install tone</code></pre>
     // Play button handler
     playButton.addEventListener('click', async () => {
       try {
-        await playCurrentSequence();
+        await queuePlayback(currentSequence);
       } catch (error) {
         handlePlaybackError(error);
       }
