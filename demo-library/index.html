@@ -227,7 +227,7 @@ npm install tone</code></pre>
       playbackChain = playbackChain
         // Keep the queue moving so a failed stale request does not block later replay requests.
         .catch(error => {
-          console.error(`Playback request #${requestId - 1} failed:`, error);
+          console.error(`Playback request #${requestId} failed:`, error);
         })
         .then(() => playSequenceData(sequence, requestId));
       return playbackChain;
