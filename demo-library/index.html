@@ -164,6 +164,7 @@ npm install tone</code></pre>
 
     const selector = document.getElementById('sequenceSelector');
     const sequenceDisplay = document.getElementById('sequenceDisplay');
+    const playButton = document.getElementById('playButton');
 
     function appendOptions(options) {
       options.forEach(option => {
@@ -175,12 +176,22 @@ npm install tone</code></pre>
     }
 
     appendOptions(sequenceOptions);
-    selector.value = sequenceOptions[0].name;
+    if (sequenceOptions.length > 0) {
+      selector.value = sequenceOptions[0].name;
+    } else {
+      selector.disabled = true;
+      playButton.disabled = true;
+    }
 
-    let currentSequence = sequenceOptions[0].data;
+    let currentSequence = sequenceOptions[0]?.data ?? [];
 
     function updateSequenceDisplay(sequence) {
       sequenceDisplay.textContent = JSON.stringify(sequence, null, 2);
+    }
+
+    function handlePlaybackError(error) {
+      console.error('Error playing sequence:', error);
+      alert('Error playing sequence. Check console for details.');
     }
 
     async function playCurrentSequence() {
@@ -202,8 +213,7 @@ npm install tone</code></pre>
         try {
           await playCurrentSequence();
         } catch (error) {
-          console.error('Error playing sequence:', error);
-          alert('Error playing sequence. Check console for details.');
+          handlePlaybackError(error);
         }
       }
     });
@@ -214,12 +224,11 @@ npm install tone</code></pre>
     const nodes = new SequencerNodes();
 
     // Play button handler
-    document.getElementById('playButton').addEventListener('click', async () => {
+    playButton.addEventListener('click', async () => {
       try {
         await playCurrentSequence();
       } catch (error) {
-        console.error('Error playing sequence:', error);
-        alert('Error playing sequence. Check console for details.');
+        handlePlaybackError(error);
       }
     });
   </script>
