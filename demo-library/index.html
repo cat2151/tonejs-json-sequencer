@@ -195,9 +195,16 @@ npm install tone</code></pre>
     }
 
     async function playCurrentSequence() {
+      if (currentSequence.length === 0) {
+        return;
+      }
+
       // Start Tone.js audio context (required for browser audio)
       await Tone.start();
       console.log('Audio context started');
+
+      Tone.Transport.stop();
+      Tone.Transport.cancel();
 
       // Play the sequence
       await playSequence(Tone, nodes, currentSequence);
