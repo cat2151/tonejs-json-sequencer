@@ -1,4 +1,4 @@
-Last updated: 2026-04-19
+Last updated: 2026-05-19
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -142,6 +142,7 @@ Last updated: 2026-04-19
 - .github/actions-tmp/.github_automation/check-large-files/README.md
 - .github/actions-tmp/.github_automation/check-large-files/check-large-files.toml.default
 - .github/actions-tmp/.github_automation/check-large-files/scripts/check_large_files.py
+- .github/actions-tmp/.github_automation/check-large-files/scripts/test_check_large_files.py
 - .github/actions-tmp/.github_automation/check_recent_human_commit/scripts/check-recent-human-commit.cjs
 - .github/actions-tmp/.github_automation/project_summary/docs/daily-summary-setup.md
 - .github/actions-tmp/.github_automation/project_summary/prompts/development-status-prompt.md
@@ -205,7 +206,7 @@ Last updated: 2026-04-19
 - .github/actions-tmp/issue-notes/40.md
 - .github/actions-tmp/issue-notes/44.md
 - .github/actions-tmp/issue-notes/57.md
-- .github/actions-tmp/issue-notes/67.md
+- .github/actions-tmp/issue-notes/69.md
 - .github/actions-tmp/issue-notes/7.md
 - .github/actions-tmp/issue-notes/8.md
 - .github/actions-tmp/issue-notes/9.md
@@ -746,73 +747,22 @@ jobs:
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-a09c13a Merge pull request #189 from cat2151/copilot/fix-demo-lib-bug
-30e1636 fix: correct queued playback request logging
-5ad3016 fix: clarify queued playback logging
-9d7fdc4 fix: log queued playback errors
-6e72b32 fix: serialize demo-library playback requests
-5d6d92d fix: clarify replay handling in demo-library
-a4de2af fix: guard empty demo-library sequences
-cfc9d85 fix: update demo-library sequence selection behavior
-09f2651 Initial plan
-ab77c7f Add issue note for #188 [auto]
+e78a52c Auto-translate README.ja.md to README.md [auto]
+969fa55 Update README.ja.md with capabilities reference
+f6e7170 README.ja.mdにTone.jsの補足情報を追加
 
 ### 変更されたファイル:
+README.ja.md
+README.md
 demo-library/README.md
 demo-library/index.html
-dist/cjs/ndjson-streaming.d.ts
-dist/cjs/ndjson-streaming.js
-dist/cjs/streaming/ndjson-parser.d.ts
-dist/cjs/streaming/prediction-manager.d.ts
-dist/cjs/streaming/streaming-types.d.ts
-dist/cjs/utils/time-parser.d.ts
-dist/cjs/utils/time-parser.js
-dist/demo/sequences/effect-sequences/delay-distortion-sequences.js
-dist/demo/sequences/effect-sequences/modulation-sequences.js
-dist/demo/sequences/effect-sequences/reverb-sequences.js
-dist/demo/sequences/effectSequences.js
-dist/demo/streaming-modules/debug-output.js
-dist/demo/streaming-modules/playback-viewer.js
-dist/demo/streaming.js
-dist/esm/ndjson-streaming.d.ts
-dist/esm/ndjson-streaming.mjs
-dist/esm/streaming/ndjson-parser.d.ts
-dist/esm/streaming/ndjson-parser.mjs
-dist/esm/streaming/prediction-manager.d.ts
-dist/esm/streaming/prediction-manager.mjs
-dist/esm/streaming/streaming-types.d.ts
-dist/esm/streaming/streaming-types.mjs
-dist/esm/utils/time-parser.d.ts
-dist/esm/utils/time-parser.mjs
-dist/ndjson-streaming.d.ts
-dist/ndjson-streaming.js
-dist/streaming/ndjson-parser.d.ts
-dist/streaming/ndjson-parser.js
-dist/streaming/prediction-manager.d.ts
-dist/streaming/prediction-manager.js
-dist/streaming/streaming-types.d.ts
-dist/streaming/streaming-types.js
-dist/utils/time-parser.d.ts
-dist/utils/time-parser.js
 generated-docs/development-status-generated-prompt.md
 generated-docs/development-status.md
 generated-docs/project-overview-generated-prompt.md
 generated-docs/project-overview.md
-issue-notes/182.md
+issue-notes/185.md
 issue-notes/188.md
-src/demo/sequences/effect-sequences/delay-distortion-sequences.ts
-src/demo/sequences/effect-sequences/modulation-sequences.ts
-src/demo/sequences/effect-sequences/reverb-sequences.ts
-src/demo/sequences/effectSequences.ts
-src/demo/streaming-modules/debug-output.ts
-src/demo/streaming-modules/playback-viewer.ts
-src/demo/streaming.ts
-src/ndjson-streaming.ts
-src/streaming/ndjson-parser.ts
-src/streaming/prediction-manager.ts
-src/streaming/streaming-types.ts
-src/utils/time-parser.ts
 
 
 ---
-Generated at: 2026-04-19 07:14:37 JST
+Generated at: 2026-05-19 07:27:51 JST

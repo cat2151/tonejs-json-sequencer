@@ -1,51 +1,50 @@
-Last updated: 2026-04-19
+Last updated: 2026-05-19
 
 # Development Status
 
 ## 現在のIssues
-- `demo-library` に最近多数の修正がマージされたため、`demo-lib` の動作確認 `[Issue #124](../issue-notes/124.md)` が引き続き重要です。
-- `streaming` 機能にも関連ファイルの変更があり、機能の安定性確保のため手動テスト `[Issue #89](../issue-notes/89.md)` が必要とされています。
-- これらの手動検証タスクは、コードベースの継続的な変更に対して自動テストを導入することで効率化できる可能性があります。
+- 現在、[Issue #124](../issue-notes/124.md)でdemo-libの動作確認が、[Issue #89](../issue-notes/89.md)でstreaming機能のテストが、それぞれ人力での検証が求められています。
+- これら2つのオープンIssueは、手動での確認とテストが中心であり、プロジェクト全体として自動化されたテストや検証体制の強化が望まれます。
+- 特に、重要なデモ機能とストリーミング機能の安定性確保には、体系的な検証が不可欠です。
 
 ## 次の一手候補
-1. `demo-library` の主要機能に対する単体テストの導入 `[Issue #124](../issue-notes/124.md)`
-   - 最初の小さな一歩: `demo-library/index.html` が利用する `src/demo/streaming.ts` や `src/demo/main.ts` から、`demo-library` に特化したロジックを特定し、その関数に対するテストファイル (`test/demo-library.test.ts` など) を新規作成する準備をします。
-   - Agent実行プロンプト:
-     ```
-     対象ファイル: `demo-library/index.html`, `src/demo/streaming.ts`, `src/demo/main.ts`, `package.json`
+1.  [Issue #124](../issue-notes/124.md): demo-libの動作確認と自動化されたテストの検討
+    -   最初の小さな一歩: `demo-library/index.html` をブラウザで開き、基本的な機能（例: 音声再生、UI操作）が期待通りに動作するかを手動で確認し、現状の問題点を洗い出す。
+    -   Agent実行プロンプ:
+        ```
+        対象ファイル: `demo-library/index.html`, `demo-library/README.md`, `src/demo/` 以下の関連ファイル（特に `src/demo/main.ts`, `src/demo/sequenceLoader.ts`）
 
-     実行内容: `demo-library` が `src/demo/streaming.ts` や `src/demo/main.ts` 内のどの機能を呼び出しているかを分析し、その主要なインタラクションポイントを特定してください。その後、Node.js環境で実行可能なテストフレームワーク（例: `jest`）を `package.json` に追加し、`demo-library` の主要な再生機能（例: シーケンスのロード、再生開始/停止）のモック環境での単体テストを記述するための基本的な構造を `test/demo-library.test.ts` として作成してください。
+        実行内容: `demo-library`がどのように動作するのか、主要なコンポーネントとその相互作用を分析してください。特に、どのJavaScriptファイルやCSSが読み込まれ、どのように初期化され、Tone.jsのインスタンスが利用されているかを調査し、現状の動作を把握してください。
 
-     確認事項: `demo-library/index.html` がどのように `dist/demo` 内のスクリプトをロードしているか、および `src/demo/streaming.ts` や `src/demo/main.ts` の依存関係を確認してください。また、Tone.js のAudioContextに依存しない形でテスト可能な範囲を特定してください。
+        確認事項: `demo-library`が依存する`dist/`内のファイルパスが正しいか、サンプルコードが意図通りに動くか、ブラウザのコンソールにエラーが表示されていないか。
 
-     期待する出力: `package.json` に`jest`などのテストフレームワークが追加され、`test/demo-library.test.ts` というファイルに、`demo-library` の主要な再生機能をテストするためのスケルトンコード（テストブロックと主要な関数呼び出しのモック）がMarkdown形式で出力される。
-     ```
+        期待する出力: `demo-library`の現状の動作概要と、手動テストに必要な具体的な手順書をmarkdown形式で出力してください。また、将来的には自動テストを導入するための検討課題も示してください。
+        ```
 
-2. `ndjson-streaming` 機能のイベント処理に関する単体テストの導入 `[Issue #89](../issue-notes/89.md)`
-   - 最初の小さな一歩: `src/streaming/event-processor.ts` と `src/streaming/ndjson-parser.ts` の主要なクラスや関数を特定し、これらがNDJSONデータをパースし、イベントを処理するロジックを検証するためのテストファイルを新規作成する準備をします。
-   - Agent実行プロンプト:
-     ```
-     対象ファイル: `src/ndjson-streaming.ts`, `src/streaming/event-processor.ts`, `src/streaming/ndjson-parser.ts`, `package.json`
+2.  [Issue #89](../issue-notes/89.md): streaming機能のテスト戦略策定
+    -   最初の小さな一歩: `src/streaming/` ディレクトリ内の主要なファイル（`event-processor.ts`, `ndjson-parser.ts`, `playback-state.ts`, `prediction-manager.ts`）を読み、それぞれのファイルが担当する役割と、全体としてのストリーミング処理の流れを概観する。
+    -   Agent実行プロンプト:
+        ```
+        対象ファイル: `src/streaming/event-processor.ts`, `src/streaming/ndjson-parser.ts`, `src/streaming/playback-state.ts`, `src/streaming/prediction-manager.ts`, `src/ndjson-streaming.ts`, `src/demo/streaming.ts`
 
-     実行内容: `src/streaming/event-processor.ts` と `src/streaming/ndjson-parser.ts` がNDJSON形式のイベントデータをどのように処理しているか、その入力と出力を分析してください。これらのモジュールがNDJSONデータを正確にパースし、イベントキューに渡すロジックについて、モックデータを用いた単体テストコードを `test/streaming.test.ts` として作成してください。テストには、不正なNDJSON形式や、複数のイベントが連続して渡された場合の処理も考慮に入れてください。
+        実行内容: Streaming機能の主要コンポーネントと、それらがどのように連携してNDJSONデータから音声を生成・再生しているかを分析してください。特に、NDJSONデータのパース、イベントのスケジューリング、再生状態の管理、および予測メカニズムのフローを詳細に把握してください。
 
-     確認事項: `ndjson-streaming` が `event-processor` や `ndjson-parser` をどのように利用しているか、およびこれらのクラスの公開メソッドとその役割を確認してください。また、AudioContextへの依存がない純粋なデータ処理ロジックに焦点を当ててください。
+        確認事項: `src/ndjson-streaming.ts`と`src/streaming/`下のファイル間の依存関係、および`dist/esm/streaming/`内のコンパイル結果との整合性。既存のデモ (`src/demo/streaming.ts`) がどのようにストリーミング機能を利用しているか。
 
-     期待する出力: `test/streaming.test.ts` というファイルに、`ndjson-parser` と `event-processor` の主要なデータ処理ロジックをテストするための具体的な単体テストコードがMarkdown形式で出力される。
-     ```
+        期待する出力: Streaming機能のアーキテクチャ図（簡単なテキストベースで可）と、既存のテストがない場合に、主要なコンポーネントやフローをカバーするためのテストケースを設計するためのポイント（何をテストすべきか、テストデータの例など）をmarkdown形式で出力してください。
+        ```
 
-3. `project-summary` 生成プロンプトの出力形式と内容の整合性検証
-   - 最初の小さな一歩: `generated-docs/development-status.md` と `generated-docs/project-overview.md` の最新の出力を目視で確認し、この「開発状況生成プロンプト」で指定された出力フォーマット、生成しないもののルール、Markdownリンクの形式が遵守されているかを確認します。
-   - Agent実行プロンプト:
-     ```
-     対象ファイル: `.github/actions-tmp/.github_automation/project_summary/prompts/development-status-prompt.md`, `.github/actions-tmp/.github_automation/project_summary/prompts/project-overview-prompt.md`, `generated-docs/development-status.md`, `generated-docs/project-overview.md`
+3.  GitHub ActionsにおけるLLM生成物の信頼性向上策の検討
+    -   最初の小さな一歩: 過去の関連Issueノート（`issue-notes/4.md`, `issue-notes/9.md`, `issue-notes/24.md`）を再読し、LLMのハルシネーションやエラー隠蔽、リトライ不足といった問題が具体的にどのワークフローやスクリプトで発生し、どのような影響があったかをまとめる。
+    -   Agent実行プロンプト:
+        ```
+        対象ファイル: `.github/actions-tmp/.github_automation/project_summary/scripts/development/DevelopmentStatusGenerator.cjs`, `.github/actions-tmp/.github_automation/project_summary/prompts/development-status-prompt.md`, `issue-notes/4.md`, `issue-notes/9.md`, `issue-notes/24.md`
 
-     実行内容: `development-status-prompt.md` と `project-overview-prompt.md` を用いて生成された `generated-docs/development-status.md` と `generated-docs/project-overview.md` の内容を分析し、**このプロンプトの指示（開発状況生成プロンプト）で指定されている「生成しないもの」のルールに違反していないか、および指定の「出力フォーマット」に厳密に準拠しているか**を検証してください。特に、ハルシネーションや不必要な提案がないか、Markdownリンクの形式が正しいか、フォーマットが崩れていないかを確認してください。
+        実行内容: 過去のIssueノートで指摘されたGitHub ActionsのLLMハルシネーションとエラー発生事例を分析し、それがどのワークフローやスクリプト、プロンプト設計に起因している可能性が高いかを特定してください。特に、LLMによって生成される情報の信頼性を向上させるための具体的なアプローチ（例: 出力フォーマットの厳格なスキーマ定義とバリデーション、生成前のコンテキスト情報の精緻化、複数モデルによるクロスチェック、失敗時の詳細なログ記録と通知メカニズム）について検討してください。
 
-     確認事項: `development-status-prompt.md` と `project-overview-prompt.md` の最終出力結果（`generated-docs` 内のファイル）と、この「開発状況生成プロンプト」の全てのルールとガイドラインを厳密に比較すること。
+        確認事項: 既存のワークフロー（例: `daily-project-summary.yml`）でのLLM呼び出し箇所、そのプロンプトの内容、および生成された出力の利用方法。過去のコミットログやアクションの実行履歴でエラー発生時の具体的な挙動。
 
-     期待する出力: 検証結果をMarkdown形式で出力してください。具体的には、どのファイルでどのルール違反（例: ハルシネーションの検出、不適切な出力フォーマット、指定されたMarkdownリンク形式の不遵守など）が見つかったか、およびその具体的な箇所を指摘し、改善提案を含めてください。違反がなければ「全て期待通り」と記述してください。
-     ```
+        期待する出力: LLM生成物の信頼性を向上させるための具体的な改善案リストをmarkdown形式で出力してください。それぞれの案について、実装の難易度（高/中/低）と、期待される効果を簡潔に記述してください。
 
 ---
-Generated at: 2026-04-19 07:14:58 JST
+Generated at: 2026-05-19 07:28:11 JST
