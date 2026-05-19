@@ -1,4 +1,4 @@
-Last updated: 2026-05-19
+Last updated: 2026-05-20
 
 # Project Overview
 
@@ -8,14 +8,13 @@ Last updated: 2026-05-19
 - 時間順のイベントをデータとして扱い、緻密な演奏表現が可能に
 
 ## 技術スタック
-- フロントエンド: **HTML, CSS, JavaScript, TypeScript**: Webブラウザ上で動作するユーザーインターフェースやデモの構築に使用されます。Tone.jsもWeb上で動作するJavaScriptライブラリです。
-- 音楽・オーディオ: **Tone.js**: Web Audio APIを抽象化し、Web上で高度な音楽表現を可能にする強力なJavaScriptフレームワークです。本プロジェクトのオーディオ処理の基盤となります。
-- 開発ツール: **TypeScript**: 型安全なJavaScript開発を可能にし、大規模なプロジェクトでの保守性を高めます。**Node.js**: 開発環境の実行基盤およびビルドスクリプトの実行に利用されます。**npm**: JavaScriptパッケージの管理とインストールに使用されます。
-- テスト: 現状、プロジェクト情報からは具体的なテスト関連技術は確認できません。
-- ビルドツール: **TypeScript Compiler (tsc)**: TypeScriptコードを標準JavaScriptに変換します。**スクリプト**: `scripts/`ディレクトリに存在するファイルコピーやファイル名変更などのビルド補助スクリプトが使用されます。
-- 言語機能: **TypeScript, JavaScript**: プロジェクトの主要なプログラミング言語です。
-- 自動化・CI/CD: **GitHub Actions**: READMEの自動英訳などに利用されており、継続的な統合・デリバリーのワークフローに活用されています。
-- 開発標準: **EditorConfig**: 複数のエディタやIDEでコードのスタイル（インデント、改行コードなど）を統一するために使用されます。
+- フロントエンド: Tone.js（Web Audio APIを抽象化し、音楽的な表現を可能にするJavaScriptライブラリ）、Web Audio API（ブラウザでオーディオ処理を行う標準API）
+- 音楽・オーディオ: JSON/NDJSON（音楽の音色定義、演奏内容、タイミング情報などをデータとして記述するためのフォーマット）
+- 開発ツール: TypeScript（JavaScriptに静的型付けを追加する言語）、npm（Node.jsのパッケージマネージャ）
+- ビルドツール: TypeScript Compiler（tsc、TypeScriptコードをJavaScriptにコンパイル）、CommonJS/ES Modules（異なるモジュール形式へのビルド出力）
+- 言語機能: JavaScript（ES ModulesおよびCommonJS形式でのモジュール実装）、TypeScript（型安全な開発）
+- 自動化・CI/CD: GitHub Actions（リポジトリの自動化ワークフロー、例としてドキュメントの自動翻訳に利用）、カスタムスクリプト（ビルド後のファイル操作など）
+- 開発標準: EditorConfig（異なるエディタやIDE間でコードスタイルを統一するための設定）
 
 ## ファイル階層ツリー
 ```
@@ -321,139 +320,136 @@ Last updated: 2026-05-19
 ```
 
 ## ファイル詳細説明
-- **README.md / README.ja.md**: プロジェクトの目的、機能、インストール方法、使用例などを日本語と英語で説明する主要なドキュメントです。
-- **src/ディレクトリ**: プロジェクトのコアとなるTypeScriptソースコードが格納されています。
-    - **src/event-scheduler.ts**: JSON形式のイベントを解析し、Tone.jsのオーディオ操作（音符の発音、パラメータ変更など）を適切なタイミングでスケジュールまたは即時実行する中心的なロジックを担います。
-    - **src/ndjson-streaming.ts**: NDJSON（改行区切りJSON）形式のイベントストリームをリアルタイムで処理し、ライブ編集やループ再生といった動的な音楽再生機能を提供します。
-    - **src/sequencer-nodes.ts**: Tone.jsで作成された各種オーディオノード（シンセサイザー、エフェクトなど）のインスタンスを一元的に管理し、IDによるアクセスや破棄を可能にします。
-    - **src/node-factory.ts**: JSONで定義された情報に基づいて、Tone.jsのオーディオノード（楽器やエフェクト）を動的に生成するための主要なファクトリです。
-    - **src/factories/instrument-factory.ts**: Tone.jsの様々な楽器（例: Synth, PolySynth, Sampler）ノードの生成ロジックを専門に扱います。
-    - **src/factories/effect-factory.ts**: Tone.jsの各種エフェクト（例: Reverb, Chorus, Distortion）ノードの生成ロジックを専門に扱います。
-    - **src/utils/time-parser.ts**: "4n"（4分音符）や"0:0:2"（0小節0拍2連符）のような音楽的な時間表記を、Tone.jsが理解できる正確な秒数形式に変換するユーティリティ機能を提供します。
-    - **src/offline-renderer.ts**: JSONシーケンスをWebブラウザ上で再生するだけでなく、その結果をWAV形式のオーディオファイルとしてオフラインでレンダリングし、ダウンロードする機能を提供します。
-    - **src/types.ts**: プロジェクト全体で使用されるカスタム型定義（TypeScriptのインターフェースや型エイリアス）が記述されており、コードの型安全性を保証します。
-- **dist/ディレクトリ**: TypeScriptソースコードをJavaScriptにコンパイルし、配布可能な形式にビルドしたファイル群が格納されています。ES Modules (`.mjs`) と CommonJS (`.js`) 形式の両方を提供します。
-- **demo/ディレクトリ**: プロジェクトの様々な機能を示すブラウザベースのデモンストレーションページと、それらを駆動するJavaScriptコードが含まれています。ユーザーが実際にプロジェクトの動作を確認できる場所です。
-    - **demo/index.html**: メインデモページのHTML構造を定義し、基本的な再生機能を提供します。
-    - **demo/streaming.html**: NDJSONストリーミング機能のインタラクティブなデモを提供し、ライブ編集やループ再生を体験できます。
-    - **demo/offline-rendering.html**: オフラインレンダリング機能のデモページです。
-- **examples/ディレクトリ**: プロジェクトライブラリの具体的な使用方法を示す簡潔なコード例が含まれています。他のプロジェクトからライブラリとして利用する際の参考になります。
-- **docs/ディレクトリ**: Tone.jsコンポーネントのJSON対応ロードマップなど、より詳細な技術ドキュメントが格納されています。
-- **scripts/ディレクトリ**: ビルドプロセスを補助するスクリプト（例: ビルド成果物のコピー、ファイル名のリネーム）が格納されています。
-- **package.json**: プロジェクトのメタデータ（名前、バージョン、説明など）および依存関係（使用している外部ライブラリ）を定義するファイルです。
+- **README.md / README.ja.md**: プロジェクトの概要、使い方、設計思想などを説明する主要なドキュメント。日本語版と英語版がある。
+- **LICENSE**: プロジェクトのライセンス情報（著作権や利用条件）。
+- **package.json**: プロジェクトのメタデータ、依存関係、スクリプトなどを定義するファイル。
+- **src/index.ts**: ライブラリのエントリポイント。SequencerNodes、playSequence、NDJSONStreamingPlayerなどの主要モジュールをエクスポートする。
+- **src/sequencer-nodes.ts**: Tone.jsのオーディオノードを管理（作成、取得、破棄）するためのクラス。ノードIDによってTone.jsオブジェクトを追跡する。
+- **src/event-scheduler.ts**: JSONで記述されたイベント（ノード作成、接続、音符の発音、パラメータ変更など）をTone.jsのタイムラインにスケジュールし、実行するコアロジックを実装。
+- **src/ndjson-streaming.ts**: NDJSON（改行区切りJSON）形式の音楽データをリアルタイムでストリーミング再生、ライブ編集、ループ再生する機能を提供するクラス。
+- **src/node-factory.ts**: Tone.jsの楽器（Instrument）とエフェクト（Effect）のファクトリを統合し、JSONイベントに基づいて新しいTone.jsノードを作成し、接続する役割を担う。
+- **src/factories/instrument-factory.ts**: JSON定義からTone.jsの楽器ノード（Synth, FMSynthなど）を作成する。
+- **src/factories/effect-factory.ts**: JSON定義からTone.jsのエフェクトノード（Reverb, Chorusなど）を作成する。
+- **src/offline-renderer.ts**: JSONシーケンスをWeb Audio APIを使ってオフラインでレンダリングし、結果のAudioBufferをWAVファイルとしてダウンロードする機能を提供する。
+- **src/utils/time-parser.ts**: "0:0:0"のようなTone.jsの時刻表記や、相対的な時間指定（例: "4n"）を実際の秒数に変換するためのユーティリティ。
+- **src/types.ts**: プロジェクト全体で使用されるカスタムの型定義（SequenceEvent, NodeEventなど）。
+- **src/streaming/**: NDJSONストリーミング機能に関連するサブモジュール群。
+    - **event-processor.ts**: NDJSONストリーミング中に新しいイベントの作成、接続、スケジュールを処理する。
+    - **ndjson-parser.ts**: NDJSON文字列をパースして`SequenceEvent`の配列に変換する。
+    - **playback-state.ts**: NDJSONストリーミング再生の状態（再生時刻、ループ回数、処理済みイベント）を管理する。
+    - **prediction-manager.ts**: 将来のイベントを予測し、スムーズな再生を可能にする。
+- **demo/index.html**: プロジェクトの基本的なウェブデモページ。
+- **demo/streaming.html**: NDJSONストリーミングとライブ編集機能を示すデモページ。
+- **demo/offline-rendering.html**: シーケンスのオフラインレンダリング機能を示すデモページ。
+- **dist/**: TypeScriptで書かれたソースコードがコンパイルされたJavaScriptファイルと型定義ファイルが格納されるディレクトリ。CommonJS (cjs/) と ES Modules (esm/) の両形式で提供される。
+- **examples/**: ライブラリの基本的な使用例を示すコードとHTMLファイル。
 
 ## 関数詳細説明
-- **scheduleOrExecuteEvent(Tone, nodes, event)**
-    - **役割**: JSON形式の単一イベントをTone.jsのオーディオグラフに適用します。イベントは指定された時刻にスケジュールされるか、即座に実行されます。
-    - **引数**: `Tone` (Tone.jsライブラリ), `nodes` (`SequencerNodes`インスタンス), `event` (JSONイベントオブジェクト)。
-    - **機能**: `eventType`（例: `createNode`, `triggerAttackRelease`, `rampTo`など）に応じて、対応するTone.jsの操作を呼び出し、音の生成やパラメータ変更を行います。
-- **playSequence(Tone, nodes, sequence)**
-    - **役割**: JSON形式のイベント配列全体を受け取り、Tone.jsのTransport時刻に沿ってシーケンスとして再生します。
-    - **引数**: `Tone` (Tone.jsライブラリ), `nodes` (`SequencerNodes`インスタンス), `sequence` (JSONイベントの配列)。
-    - **機能**: シーケンス内の各イベントを順番に処理し、`scheduleOrExecuteEvent`を呼び出すことで、音楽的なフレーズやエフェクトチェインを構築・再生します。
-- **createNode(Tone, type, args)**
-    - **役割**: 指定されたTone.jsのタイプ（例: 'Synth'、'Reverb'）とコンストラクタ引数を使用して、新しいオーディオノードのインスタンスを作成します。
-    - **引数**: `Tone` (Tone.jsライブラリ), `type` (ノードタイプ文字列), `args` (コンストラクタ引数オブジェクト)。
-    - **機能**: 内部的に`createInstrument`または`createEffect`を呼び出し、適切なTone.jsノードを生成して返します。
-- **connectNode(nodes, sourceId, destination)**
-    - **役割**: 2つのTone.jsノード間、またはノードと最終出力（`toDestination`）との接続を確立します。
-    - **引数**: `nodes` (`SequencerNodes`インスタンス), `sourceId` (接続元ノードのID), `destination` (接続先ノードのIDまたは'toDestination'文字列)。
-    - **機能**: `SequencerNodes`から接続元ノードを取得し、指定された接続先に接続します。
-- **createInstrument(Tone, instrumentType, args)**
-    - **役割**: 指定された楽器タイプと引数に基づいて、Tone.jsの楽器（例: `Synth`, `PolySynth`, `Sampler`など）インスタンスを作成します。
-    - **引数**: `Tone` (Tone.jsライブラリ), `instrumentType` (楽器タイプ文字列), `args` (コンストラクタ引数)。
-    - **機能**: 各楽器タイプに対応するTone.js楽器オブジェクトを生成し、必要に応じて`PolySynth`や`Sampler`といった特殊な設定を処理します。
-- **createEffect(Tone, effectType, args)**
-    - **役割**: 指定されたエフェクトタイプと引数に基づいて、Tone.jsのエフェクト（例: `Reverb`, `Chorus`, `Distortion`など）インスタンスを作成します。
-    - **引数**: `Tone` (Tone.jsライブラリ), `effectType` (エフェクトタイプ文字列), `args` (コンストラクタ引数)。
-    - **機能**: 各エフェクトタイプに対応するTone.jsエフェクトオブジェクトを生成します。
-- **audioBufferToWav(audioBuffer)**
-    - **役割**: Web Audio APIの`AudioBuffer`オブジェクトを標準的なWAV形式のバイナリデータ（`Blob`）に変換します。
-    - **引数**: `audioBuffer` (変換元の`AudioBuffer`オブジェクト)。
-    - **機能**: 音声データをサンプリングレート、チャンネル数、ビット深度などのメタデータと共にWAVフォーマットにエンコードします。
-- **downloadWav(wavBlob, filename)**
-    - **役割**: `Blob`形式のWAVファイルをユーザーのブラウザにダウンロードさせます。
-    - **引数**: `wavBlob` (ダウンロードするWAV形式の`Blob`オブジェクト), `filename` (ダウンロード時のファイル名)。
-    - **機能**: ブラウザのダウンロード機能を利用して、生成されたWAVファイルをユーザーのローカルに保存します。
-- **parseNDJSON(ndjsonStringOrArray)**
-    - **役割**: NDJSON（改行区切りJSON）形式の文字列、またはJSONイベントの配列を、アプリケーションで処理可能なJSONイベントの配列にパースします。
-    - **引数**: `ndjsonStringOrArray` (NDJSON文字列またはイベント配列)。
-    - **機能**: 各行をJSONとして解析し、有効なイベントオブジェクトの配列を生成します。無効な行はスキップします。
-- **updateBPM(bpm)**
-    - **役割**: Tone.jsのグローバルなテンポ（BPM: Beats Per Minute）を設定します。
-    - **引数**: `bpm` (設定する新しいテンポ値)。
-    - **機能**: Tone.jsの`Transport.bpm.value`プロパティを更新し、すべての時間ベースのイベントの再生速度に影響を与えます。
-- **resolveTarget(toneObject, path)**
-    - **役割**: ドット区切りのパス文字列（例: "filter.frequency.value"）を使用して、Tone.jsオブジェクト内の深くネストされたプロパティやパラメータを解決し、その参照を取得します。
-    - **引数**: `toneObject` (探索対象のTone.jsオブジェクト), `path` (ドット区切りのプロパティパス文字列)。
-    - **機能**: 指定されたパスに沿ってオブジェクトを辿り、最終的なプロパティまたはパラメータへの参照を返します。これにより、動的なパラメータアクセスが可能になります。
-- **rampParameter(param, value, time, delay)**
-    - **役割**: Tone.jsのオーディオパラメータ（例: ボリューム、フィルター周波数）を指定された時間と遅延で滑らかに目標値まで変化させます。
-    - **引数**: `param` (対象のTone.jsパラメータオブジェクト), `value` (目標パラメータ値), `time` (変化にかける時間), `delay` (変化開始までの遅延時間)。
-    - **機能**: `Tone.js`の`rampTo`メソッドを利用して、パラメータにエンベロープのような滑らかな変化を適用し、表現豊かな音の変化を実現します。
-- **SequencerNodesクラス**
-    - **役割**: Tone.jsのオーディオノードを効率的に管理するためのクラスです。
-    - **主要メソッド**:
-        - `get(nodeId)`: 指定されたIDのノードを取得します。
-        - `set(nodeId, node)`: 指定されたIDでノードを登録します。
-        - `disposeSingle(nodeId)`: 特定のノードを破棄し、関連するオーディオリソースを解放します。
-        - `disposeAll()`: 管理している全てのノードを破棄します。
-- **NDJSONStreamingPlayerクラス**
-    - **役割**: NDJSON形式のイベントストリームを処理し、リアルタイムでのライブ編集、ループ再生、50msの先読みスケジューリングをサポートするプレイヤーです。
-    - **主要メソッド**:
-        - `start(ndjson)`: NDJSONイベントストリームの再生を開始または更新します。
-        - `stop()`: 現在の再生を停止します。
-- **OfflineRendererクラス**
-    - **役割**: JSONシーケンスに基づいてオーディオをオフラインでレンダリングし、WAVファイルとして出力するための機能を提供します。
-    - **主要メソッド**:
-        - `render(sequence)`: 指定されたJSONシーケンスをオーディオとしてレンダリングし、`AudioBuffer`を返します。
-- **TimeParserクラス**
-    - **役割**: 音楽的な時間表記（例: "4n", "0:0:2"）を正確な秒数に変換するためのユーティリティクラスです。
-    - **主要メソッド**:
-        - `parseTimeToSeconds(time)`: 様々な時間表記を秒数に変換します。
+- **SequencerNodes クラス**
+    - `constructor()`: 新しい `SequencerNodes` インスタンスを初期化し、Tone.jsノードを管理するためのマップを作成します。
+    - `get(nodeId: number)`: 指定された `nodeId` に関連付けられたTone.jsノードを返します。
+        - 引数: `nodeId` (number) - 取得したいノードのID。
+        - 戻り値: `Tone.ToneAudioNode | undefined` - 対応するTone.jsノード、または見つからない場合は `undefined`。
+    - `set(nodeId: number, node: Tone.ToneAudioNode)`: 指定された `nodeId` にTone.jsノードを関連付けます。
+        - 引数: `nodeId` (number) - 設定したいノードのID、`node` (Tone.ToneAudioNode) - 関連付けるTone.jsノード。
+        - 戻り値: `void`
+    - `disposeSingle(nodeId: number)`: 指定された `nodeId` のノードを解放し、マップから削除します。
+    - `disposeNode(nodeId: number)`: 指定された`nodeId`を持つノードを解放し、関連する参照をクリーンアップします。
+    - `disposeAll()`: 管理している全てのTone.jsノードを解放し、マップをクリアします。
+- **scheduleOrExecuteEvent(Tone: any, nodes: SequencerNodes, event: SequenceEvent, time: number | string, debug: boolean)**
+    - 役割: 単一のJSONイベントをTone.jsのタイムラインにスケジュールするか、即座に実行します。
+    - 引数: `Tone` (any) - Tone.jsライブラリのインスタンス、`nodes` (SequencerNodes) - ノードマネージャ、`event` (SequenceEvent) - 処理するJSONイベント、`time` (number | string) - イベントの実行時刻、`debug` (boolean) - デバッグモードのフラグ。
+    - 戻り値: `Promise<void>`
+- **playSequence(Tone: any, nodes: SequencerNodes, sequence: SequenceEvent[], debug: boolean)**
+    - 役割: JSONで定義されたシーケンス全体を非同期的に再生します。
+    - 引数: `Tone` (any) - Tone.jsライブラリのインスタンス、`nodes` (SequencerNodes) - ノードマネージャ、`sequence` (SequenceEvent[]) - 再生するJSONシーケンス、`debug` (boolean) - デバッグモードのフラグ。
+    - 戻り値: `Promise<void>`
+- **NDJSONStreamingPlayer クラス**
+    - `constructor(Tone: any, nodes: SequencerNodes, options?: NDJSONStreamingPlayerOptions)`: 新しい `NDJSONStreamingPlayer` インスタンスを初期化し、NDJSONストリーミング再生を設定します。
+    - `start(ndjson: string | SequenceEvent[], startTime?: number)`: NDJSON文字列またはイベント配列からストリーミング再生を開始します。
+    - `stop()`: ストリーミング再生を停止します。
+    - `playing()`: 現在再生中かどうかを返します。
+- **createNode(Tone: any, nodes: SequencerNodes, event: CreateNodeEvent)**
+    - 役割: `CreateNodeEvent`に基づいて新しいTone.jsノード（楽器またはエフェクト）を作成し、`SequencerNodes`に登録します。
+    - 引数: `Tone` (any), `nodes` (SequencerNodes), `event` (CreateNodeEvent)。
+    - 戻り値: `Promise<Tone.ToneAudioNode>`
+- **connectNode(nodes: SequencerNodes, event: ConnectEvent)**
+    - 役割: `ConnectEvent`に基づいて、指定されたノード間を接続します。
+    - 引数: `nodes` (SequencerNodes), `event` (ConnectEvent)。
+    - 戻り値: `Promise<void>`
+- **audioBufferToWav(buffer: AudioBuffer)**
+    - 役割: `AudioBuffer`オブジェクトをWAV形式のBlobデータに変換します。
+    - 引数: `buffer` (AudioBuffer) - 変換するオーディオバッファ。
+    - 戻り値: `Blob` - WAV形式のBlobデータ。
+- **downloadWav(buffer: AudioBuffer, filename: string)**
+    - 役割: `AudioBuffer`をWAVファイルとしてダウンロードします。
+    - 引数: `buffer` (AudioBuffer) - ダウンロードするオーディオバッファ、`filename` (string) - ファイル名。
+    - 戻り値: `void`
+- **OfflineRenderer クラス**
+    - `constructor(Tone: any)`: 新しい `OfflineRenderer` インスタンスを初期化します。
+    - `render(nodes: SequencerNodes, sequence: SequenceEvent[], duration: number, callback: (buffer: AudioBuffer) => void, progressCallback?: (progress: number) => void)`: 指定されたシーケンスをオフラインでレンダリングし、結果を`AudioBuffer`としてコールバック関数に渡します。
+        - 引数: `nodes` (SequencerNodes), `sequence` (SequenceEvent[]), `duration` (number) - レンダリングする時間（秒）、`callback` (function), `progressCallback` (function, オプション)。
+        - 戻り値: `void`
+- **createInstrument(Tone: any, instrumentType: InstrumentType, args: any[])**
+    - 役割: 指定された`instrumentType`と引数に基づいてTone.jsの楽器インスタンスを作成します。
+    - 引数: `Tone` (any), `instrumentType` (string) - 楽器の種類、`args` (any[]) - コンストラクタ引数。
+    - 戻り値: `Tone.ToneAudioNode`
+- **createEffect(Tone: any, effectType: EffectType, args: any[])**
+    - 役割: 指定された`effectType`と引数に基づいてTone.jsのエフェクトインスタンスを作成します。
+    - 引数: `Tone` (any), `effectType` (string) - エフェクトの種類、`args` (any[]) - コンストラクタ引数。
+    - 戻り値: `Tone.ToneAudioNode`
+- **resolveTarget(Tone: any, nodes: SequencerNodes, nodeId: number, targetPath: string)**
+    - 役割: `nodeId`とドット区切りの`targetPath`から、対応するTone.jsのパラメータオブジェクトを解決します。
+    - 引数: `Tone` (any), `nodes` (SequencerNodes), `nodeId` (number), `targetPath` (string)。
+    - 戻り値: `any` - 解決されたターゲットオブジェクトまたはパラメータ。
+- **rampParameter(param: Tone.Param, value: number, rampTime: string | number, time?: number | string)**
+    - 役割: Tone.jsのパラメータを、指定された時間で滑らかに目標値へ変化させます。
+    - 引数: `param` (Tone.Param) - 変化させるTone.jsパラメータ、`value` (number) - 目標値、`rampTime` (string | number) - 変化にかかる時間、`time` (number | string, オプション) - スケジュールされた開始時刻。
+    - 戻り値: `void`
+- **parseNDJSON(ndjsonString: string)**
+    - 役割: NDJSON文字列をパースし、`SequenceEvent`オブジェクトの配列を返します。
+    - 引数: `ndjsonString` (string) - NDJSON形式の文字列。
+    - 戻り値: `SequenceEvent[]`
+- **TimeParser クラス**
+    - `constructor(bpm: number)`: 新しい `TimeParser` インスタンスを初期化し、BPMを設定します。
+    - `updateBPM(newBPM: number)`: 現在のBPMを更新します。
+    - `parseTimeToSeconds(time: string | number)`: Tone.jsの時刻表記（例: "4n", "0:0:0"）や数値（秒）を秒数に変換します。
+    - `parseTickTime(tickTime: string)`: tickベースの時刻表記を秒数に変換します。
 
 ## 関数呼び出し階層ツリー
 ```
-- if (dist/cjs/event-scheduler.js)
-  - scheduleOrExecuteEvent (dist/cjs/event-scheduler.d.ts)
-    - playSequence ()
-      - resolveTarget (dist/cjs/event-scheduler.js)
-      - rampParameter ()
-      - forEach ()
-      - defineProperty ()
-      - start ()
-      - stop ()
-      - get ()
-      - disposeAll ()
-      - ensureAudioContextStarted ()
-      - createNode (dist/cjs/node-factory.d.ts)
-      - connectNode ()
-  - createInstrument (dist/cjs/factories/instrument-factory.d.ts)
-    - createPolySynth ()
-      - createSampler ()
-  - set ()
-  - parseNDJSON (dist/cjs/streaming/ndjson-parser.d.ts)
-  - copyRecursive (scripts/copy-to-dist.js)
-  - renameFiles (scripts/rename-to-mjs.js)
-    - updateImports ()
-  - createEffect (dist/cjs/factories/effect-factory.d.ts)
-    - startIfAvailable ()
-  - disposeSingle ()
-  - disposeNode ()
-  - debug ()
-  - isSchedulableEvent ()
-  - getTimeNotation ()
-  - getEventTime ()
-  - clear ()
-  - generate ()
-- for (dist/cjs/event-scheduler.js)
-- switch (dist/cjs/event-scheduler.js)
-- catch (dist/cjs/event-scheduler.js)
+- scheduleOrExecuteEvent (dist/cjs/event-scheduler.d.ts)
+  - playSequence ()
+    - resolveTarget (dist/cjs/event-scheduler.js)
+    - rampParameter ()
+    - start ()
+    - stop ()
+    - get ()
+    - disposeAll ()
+    - createNode (dist/cjs/node-factory.d.ts)
+    - connectNode ()
+- createInstrument (dist/cjs/factories/instrument-factory.d.ts)
+  - createPolySynth ()
+    - createSampler ()
+- set ()
+- parseNDJSON (dist/cjs/streaming/ndjson-parser.d.ts)
+- copyRecursive (scripts/copy-to-dist.js)
+- renameFiles (scripts/rename-to-mjs.js)
+  - updateImports ()
+- createEffect (dist/cjs/factories/effect-factory.d.ts)
+  - startIfAvailable ()
+- disposeSingle ()
+- disposeNode ()
+- debug ()
+- isSchedulableEvent ()
+- getTimeNotation ()
+- getEventTime ()
+- clear ()
+- generate ()
 - audioBufferToWav (dist/cjs/offline-renderer.d.ts)
   - constructor (undefined)
-- i (dist/demo/instrument/loopend-test.js)
 - loadAllSequences (dist/demo/sequenceLoader.js)
 - createInitialTimingStats (dist/demo/streaming-modules/debug-output.js)
 
 ---
-Generated at: 2026-05-19 07:28:51 JST
+Generated at: 2026-05-20 07:35:21 JST

@@ -1,4 +1,4 @@
-Last updated: 2026-05-19
+Last updated: 2026-05-20
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -747,6 +747,9 @@ jobs:
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
+387b2fa Auto-translate README.ja.md to README.md [auto]
+b739696 改善されたREADME.ja.mdの内容
+011c174 Update project summaries (overview & development status) [auto]
 e78a52c Auto-translate README.ja.md to README.md [auto]
 969fa55 Update README.ja.md with capabilities reference
 f6e7170 README.ja.mdにTone.jsの補足情報を追加
@@ -754,15 +757,11 @@ f6e7170 README.ja.mdにTone.jsの補足情報を追加
 ### 変更されたファイル:
 README.ja.md
 README.md
-demo-library/README.md
-demo-library/index.html
 generated-docs/development-status-generated-prompt.md
 generated-docs/development-status.md
 generated-docs/project-overview-generated-prompt.md
 generated-docs/project-overview.md
-issue-notes/185.md
-issue-notes/188.md
 
 
 ---
-Generated at: 2026-05-19 07:27:51 JST
+Generated at: 2026-05-20 07:34:24 JST
